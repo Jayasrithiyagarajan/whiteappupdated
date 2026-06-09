@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Setup - Operator Assessment Module</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        .step h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ffeaa7;
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        .highlight {
+            background: #ffd700;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Operator Assessment Module - Database Setup</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> Please complete this database setup before using the Operator Assessment module.
+        </div>
+
+        <div class="step">
+            <h2>Step 1: Access phpMyAdmin</h2>
+            <p>Open your browser and navigate to:</p>
+            <div class="code-block">
+                http://localhost/phpmyadmin
+            </div>
+            <p>Login with your MySQL credentials (default: username: <span class="highlight">root</span>, password: <span class="highlight">empty</span>)</p>
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Select Database</h2>
+            <p>Click on the database: <span class="highlight">3rdparty</span> from the left sidebar</p>
+        </div>
+
+        <div class="step">
+            <h2>Step 3: Import SQL File</h2>
+            <p>Option A: <strong>Import via phpMyAdmin</strong></p>
+            <ul>
+                <li>Click on the "Import" tab at the top</li>
+                <li>Click "Choose File" and select: <code>setup_operator_assessment.sql</code></li>
+                <li>Location: <code>c:\xampp\htdocs\whiteapp1\operator_assessment\setup_operator_assessment.sql</code></li>
+                <li>Click "Go" at the bottom</li>
+            </ul>
+
+            <p>Option B: <strong>Run SQL Directly</strong></p>
+            <ul>
+                <li>Click on the "SQL" tab at the top</li>
+                <li>Open the file <code>setup_operator_assessment.sql</code> in a text editor</li>
+                <li>Copy all the SQL content</li>
+                <li>Paste it into the SQL query box</li>
+                <li>Click "Go"</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Step 4: Verify Tables Created</h2>
+            <p>After running the SQL, you should see three new tables:</p>
+            <ul>
+                <li>✅ <strong>operator_assessments</strong> - Main assessment records</li>
+                <li>✅ <strong>operator_equipment</strong> - Equipment details</li>
+                <li>✅ <strong>operator_documents</strong> - Document uploads</li>
+            </ul>
+            <p>Check the left sidebar to confirm these tables exist.</p>
+        </div>
+
+        <div class="success">
+            <strong>✅ Setup Complete!</strong> You can now use the Operator Assessment module.
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="../operator_assessment/create-assessment.php" class="btn">Create New Assessment</a>
+            <a href="../operator_assessment/assessment-list.php" class="btn btn-success">View Assessment List</a>
+        </div>
+
+        <div class="step" style="margin-top: 40px;">
+            <h2>📋 Quick Access Links</h2>
+            <ul>
+                <li><a href="../operator_assessment/create-assessment.php">Create Assessment (Admin)</a></li>
+                <li><a href="../operator_assessment/assessment-list.php">Assessment List</a></li>
+                <li><a href="../operator_assessment/README.md">Documentation</a></li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Troubleshooting</h2>
+            <p><strong>Issue:</strong> Tables not showing up</p>
+            <p><strong>Solution:</strong> Refresh phpMyAdmin or check for SQL errors in the import log</p>
+            
+            <p><strong>Issue:</strong> Permission denied for uploads</p>
+            <p><strong>Solution:</strong> Ensure <code>uploads/operator_assessments/</code> folder has write permissions</p>
+        </div>
+    </div>
+</body>
+</html>

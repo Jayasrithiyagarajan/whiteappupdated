@@ -1,0 +1,311 @@
+{
+    "header": {
+        "title1": "Wheel Loader Compact Skid Loader & Pipe Logger",
+        "title2": "(Earth Moving Machinery)",
+        "title3": "DS/EN 474-1:2006+A6:2019"
+    },
+    "clientInfo": {
+        "clientName": " ",
+        "inspectionDate": "2024-07-14",
+        "location": "Location",
+        "reportNo": "Report Number",
+        "equipmentNo": "Equipment Number",
+        "stickerNo": "Sticker Number",
+        "equipmentType": "Equipment Type",
+        "equipmentSerialNo": "Serial Number",
+        "manufacturer": "Manufacturer",
+        "yearModel": "Year Model",
+        "equipmentModelNo": "Model Number",
+        "capacitySWL": "Capacity"
+    },
+    "inspectionData": [
+        {
+            "section": "1",
+            "criteria": "RATINGS & MARKINGS",
+            "items": [
+                {
+                    "sn": "1.1",
+                    "criteria": "Documentation is available.",
+                    "result": {
+                        "pass": true,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "1.2",
+                    "criteria": "Equipment asset ID Number is prominently marked.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "1.3",
+                    "criteria": "Nameplate caution and instruction markings are available on the truck.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                }
+            ]
+        },
+        {
+            "section": "2",
+            "criteria": "RATINGS & MARKINGS",
+            "items": [
+                {
+                    "sn": "2.1",
+                    "criteria": "Carriage & Backrest are not deformed.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.2",
+                    "criteria": "Bucket structure.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                },
+                {
+                    "sn": "2.3",
+                    "criteria": "No excessive corrosion on frames anchorages structures are present.",
+                    "result": {
+                        "pass": false,
+                        "fail": false,
+                        "na": false
+                    },
+                    "remarks": ""
+                }
+            ]
+        }
+    ],
+    "signatures": {
+        "inspectorName": "Inspector's Name",
+        "clientRepName": "Client Representative's Name",
+        "inspectorSignatureDate": "Inspector's Signature Date",
+        "clientRepSignatureDate": "Client Representative's Signature Date"
+    }
+}

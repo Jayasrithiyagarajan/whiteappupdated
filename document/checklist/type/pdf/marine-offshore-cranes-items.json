@@ -1,0 +1,832 @@
+[
+    {
+        "number": "1.1",
+        "text": "Equipment documentation is available",
+        "ref": "ASME B30.5\r\nSec.8-2.1.5"
+    },
+    {
+        "number": "1.2",
+        "text": "Previous inspection reports are checked",
+        "ref": "ASME B30.5\r\nSec.8-2.4.5"
+    },
+    {
+        "number": "1.3",
+        "text": "Operator is certified or qualified for the specific type of equipment.",
+        "ref": "ASME B30.5\r\nSec.5-3.1.3.3.1\r\nASME B30.8 \r\nSec.8-3.1.2"
+    },
+    {
+        "number": "1.4",
+        "text": "Crane manufacturer name, address, serial number and power rates are marked or tagged",
+        "ref": "ASME B30.22\r\nSec. 22-2.1.4n"
+    },
+    {
+        "number": "1.5",
+        "text": "Operator manuals are available",
+        "ref": "ASME B30.8\r\nSec.8-1.2.2"
+    },
+    {
+        "number": "1.6",
+        "text": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+        "ref": "CIMS QHSE-06"
+    },
+    {
+        "number": "1.7",
+        "text": "Rated capacity of crane is marked",
+        "ref": "ASME B30.22 Sec. 22-1.1.3a"
+    },
+    {
+        "number": "1.8",
+        "text": "A durable rating chart with legible letters and figures is provided and fixed at a location visible to the operator while seated at his control station",
+        "ref": "ASME B30.8\r\nSec.8-1.1.3"
+    },
+    {
+        "number": "1.9",
+        "text": "Erection and dismantling procedures are based on manufacturer recommendations",
+        "ref": "ASME B30.8\r\nSec.8-1.1.2 (a)"
+    },
+    {
+        "number": "1.10",
+        "text": "Main structure components are free of defects (bolts, pins, mast sections for cracks, bent structural members, etc.)",
+        "ref": "ASME B30.3\r\nSec.3-1.1.2"
+    },
+    {
+        "number": "1.11",
+        "text": "Flags and/or markers with high visibility are placed and visible to the operator",
+        "ref": "ASME B30.3\r\nSec.3-1.1.4 (f)"
+    },
+    {
+        "number": "1.12",
+        "text": "Essential precautionary or warning notes relative to limitations on equipment, operating procedures, and stability factors are provided on the rating chart or the operating manual",
+        "ref": "ASME B30.8\r\nSec.8-1.1.3 (d)"
+    },
+    {
+        "number": "2.1",
+        "text": "Access ladders to cab are provided (platform surfaces to be skid resistant)",
+        "ref": "ASME B30.4\r\nSec.4-1.15.2a)"
+    },
+    {
+        "number": "2.2",
+        "text": "Foot walks and ladders are provided where appropriate (foot walks to be minimum of 18\" wide, with slip resistant surface)",
+        "ref": "ASME B30.3\r\nSec.3-1.18.1"
+    },
+    {
+        "number": "2.3",
+        "text": "Navigational lights are provided",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (g)"
+    },
+    {
+        "number": "2.4",
+        "text": "Flame arrester on fill and vent lines of gasoline tank is provided",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (d)"
+    },
+    {
+        "number": "2.5",
+        "text": "Fuel tank is equipped with self-closing filler cap",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (c)"
+    },
+    {
+        "number": "2.6",
+        "text": "A fire extinguisher is provided in the cab (minimum rating is 10 BC)",
+        "ref": "ASME B30.4 \r\nSec.4-1.15.4, ASME\r\nB30.3, Sec.3.1.18.4"
+    },
+    {
+        "number": "2.7",
+        "text": "Exhaust piping is guarded or insulated (where personnel could contact it)",
+        "ref": "ASME B30.4\t\r\nSec.4-1.16.4, ASME\r\nB30.3 Sec.3.1.18.4"
+    },
+    {
+        "number": "2.8",
+        "text": "Fuel filler pipes are located or protected so as to avoid spillage",
+        "ref": "ASME B30.4 \r\nSec.4-1.16.7, ASME B30.3 Sec.3.1.18.8"
+    },
+    {
+        "number": "2.9",
+        "text": "Guards are fitted to exposed moving parts and can support 90 kg without deformation",
+        "ref": "ASME B30.4\r\nSec. 4-1.16.2, ASME\r\nB30.3 Sec.3.1.18.2"
+    },
+    {
+        "number": "2.10",
+        "text": "Limiting devices are fully operational for trolley travel, boom luffing, upper hoist limit, crane travel, lifted load and radius",
+        "ref": "ASME B30.3\r\nSec. 3-1.11, ASME\r\nB30.4 Sec.4.1.9"
+    },
+    {
+        "number": "2.11",
+        "text": "Slewing (swing) motion of the crane is smooth for both start and stop",
+        "ref": "ASME B30.3 \r\nSec. 3-1.6.1, ASME\r\nB30.4 Sec.4.1.6.1"
+    },
+    {
+        "number": "2.12",
+        "text": "Slewing brakes are operational and can be set to hold the position without further operator action",
+        "ref": "ASME B30.3\t\r\nSec. 3-1.6.1b, ASME B30.4 Sec.4.1.6.1 (b)"
+    },
+    {
+        "number": "2.13",
+        "text": "Counterweight values are correct",
+        "ref": "ASME B30.3\r\nSec.3-1.14, ASME\r\nB30.4 Sec.4.1.12"
+    },
+    {
+        "number": "2.14",
+        "text": "Counterweight is fixed in place and (for movable weights uncontrolled movement is not possible)",
+        "ref": "ASME B30.3\r\nSec.3-1.14, ASME\r\nB30.4 Sec.4.1.12"
+    },
+    {
+        "number": "2.15",
+        "text": "Welded members/Joints are free of defects (cracks, corrosion, etc.)",
+        "ref": "ASME B30.3\r\nSec.3-1.18.5, ASME B30.4 (4.2.1.4a1)"
+    },
+    {
+        "number": "2.16",
+        "text": "A metal receptacle is in place for storage of small hand tools and lubricating equipment (in cab or machinery housing)",
+        "ref": "ASME B30.4\r\nSec.4-1.15.3 ASME\r\nB30.3, Sec.3.1.17.3"
+    },
+    {
+        "number": "2.17",
+        "text": "Vertical clearance between crane lowest point and floor level of boat or barge is at least 7 feet (if less than 7 feet, barricading is to be provided to protect personnel from rotating Sections)",
+        "ref": "ASME B30.8\r\nSec.8-1.5."
+    },
+    {
+        "number": "2.18",
+        "text": "All controls are within the reach of operator and clearly marked with functions and modes of",
+        "ref": "ASME B30.8\r\nSec.8-1.8.1 (a)"
+    },
+    {
+        "number": "2.19",
+        "text": "Remote control of the crane is properly working and crane stops if control signal becomes ineffective (if fitted)",
+        "ref": "ASME B30.8\r\nSec.8-1.8.1 (b)"
+    },
+    {
+        "number": "2.20",
+        "text": "Electrical motors disconnect on power failure",
+        "ref": "ASME B30.8\r\nSec.8-1.8.1 (c)"
+    },
+    {
+        "number": "2.21",
+        "text": "Electrical motors do not start on power return",
+        "ref": "ASME B30.8\r\nSec.8-1.8.1 (c)"
+    },
+    {
+        "number": "2.22",
+        "text": "Over-speeding preventing device is provided for electric motor operated cranes",
+        "ref": "ASME B30.8\r\nSec.8-1.8.1 (d)"
+    },
+    {
+        "number": "2.23",
+        "text": "Power plant controls are provided to\r\n•\tControl start, stop and lock in off position\r\n•\tControl engine speed\r\n•\tStop diesel engines in emergency, and\r\nShift selective transmissions",
+        "ref": "ASME B30.8\r\nSec.8-1.8.2"
+    },
+    {
+        "number": "2.24",
+        "text": "Control forces are acceptable and within the capabilities of operator",
+        "ref": "ASME B30.8\r\nSec.8-1.8.3 (a)"
+    },
+    {
+        "number": "2.25",
+        "text": "Controls’ travel distances are:\r\n•\tHand levers not greater than 14” (356 mm) from neutral position on two- way and not greater than 24 (610 mm) on one-way levers\r\nFoot pedals not greater than 10” (254 mm)",
+        "ref": "ASME B30.8\r\nSec.8-1.8.3 (a)"
+    },
+    {
+        "number": "2.26",
+        "text": "Clutch is operating properly and within the reach of operator station",
+        "ref": "ASME B30.8\r\nSec.8-1.8.4"
+    },
+    {
+        "number": "2.27",
+        "text": "Electrical control panels are fixed, protected and free of any damages",
+        "ref": "ASME B30.8\r\nSec.8-1.8.5"
+    },
+    {
+        "number": "2.28",
+        "text": "Resistors and connectors are corrosion free, protected, ventilated and installed to prevent the accumulation of combustible matter near hot parts",
+        "ref": "ASME B30.8\r\nSec.8-1.8.6 (a)"
+    },
+    {
+        "number": "2.29",
+        "text": "Resistor units are supported and do not vibrate",
+        "ref": "ASME B30.8\r\nSec.8-1.8.6 (b)"
+    },
+    {
+        "number": "2.30",
+        "text": "Cab is provided with safety glazing glass",
+        "ref": "ASME B30.8\r\nSec.8-1.8.6 (b)"
+    },
+    {
+        "number": "2.31",
+        "text": "Cab door swings out to open or slides rearward for sliding door type (door operation is restrained during machine operation)",
+        "ref": "ASME B30.8\r\nSec.8-1.8.10.1 (c)"
+    },
+    {
+        "number": "2.32",
+        "text": "Cab wipers are in good condition and operating",
+        "ref": "ASME B30.8\r\nSec.8-1.8.10.1 (c)"
+    },
+    {
+        "number": "2.33",
+        "text": "A clear passageway is provided from operator's position to outside the cab",
+        "ref": "ASME B30.8\r\nSec.8-1.8.10.1 (d)"
+    },
+    {
+        "number": "2.34",
+        "text": "Platform to cab walkway is skid resistance",
+        "ref": "ASME B30.8\r\nSec.8-1.8.10.2 (a)"
+    },
+    {
+        "number": "2.35",
+        "text": "Handholds/steps are provided to facilitate access to the cab",
+        "ref": "ASME B30.8\r\nSec.8-1.8.10.3"
+    },
+    {
+        "number": "2.36",
+        "text": "Communication method is one of the following:\r\n•\tHand signals (standard chart is posted in visible location to the operator)\r\n•\tRadio/telephone\r\n•\tBell signal\r\nSpecial signals (to be understood and agreed upon by operator and signalperson)",
+        "ref": "ASME B30.8, \r\nSec.8-3.3.1 \r\nSec.8-3-3.2 \r\nSec.8-3-3.3 \r\nSec.8-3-3.4"
+    },
+    {
+        "number": "2.37",
+        "text": "Load trolley can brake in travel mode (automatically in case of power loss and drive rope breakage)",
+        "ref": "ASME B30.4\r\nSec.4-1.5.4"
+    },
+    {
+        "number": "2.38",
+        "text": "Clutch is in good condition and protected against weather and oil contaminations",
+        "ref": "ASME B30.4\r\nSec.4-1.16.5, ASME\r\nB30.3 Sec.3.1.18.6"
+    },
+    {
+        "number": "2.39",
+        "text": "Brakes are protected from weather and other industrial liquids",
+        "ref": "ASME B30.4\r\nSec.4-1.8.3"
+    },
+    {
+        "number": "2.40",
+        "text": "Wire rope clips are correctly located and secured",
+        "ref": "ASME B30.8. \r\nSec.8-2.4.2 (b-5)"
+    },
+    {
+        "number": "2.41",
+        "text": "The rope does not have more than 6 randomly distributed broken wires in 1 lay or 3 in 1 strand in 1 lay (for running ropes)",
+        "ref": "ASME B30.8, \r\nSec.8-2.4.3 (b-1)"
+    },
+    {
+        "number": "2.42",
+        "text": "The rope does not have more than 6 randomly distributed broken wires in 1 lay or 3 in 1 strand in 1 lay (for running ropes)",
+        "ref": "ASME B30.8,\r\n Sec.8-2.4.3(b-2)"
+    },
+    {
+        "number": "2.43",
+        "text": "The rope wear does not exceed 1/3 of the original diameter (for running ropes)",
+        "ref": "ASME B30.8,\r\n Sec.8-2.4.3 (b-3)"
+    },
+    {
+        "number": "2.44",
+        "text": "The rope does not have kinking, crunching, bird caging, evidence of heat damage, upstanding, core corrosion, main strand displacement or any other damages",
+        "ref": "ASME B30.8, Sec.8-2.4.3 (b4/5)\r\nSec.8-2.4.1 (a)"
+    },
+    {
+        "number": "2.45",
+        "text": "The ropes do not have more than two broken wires in 1 lay in sections beyond end connections or more than 1 broken wire at an end connection (for standing ropes)",
+        "ref": "ASME B30.8, \r\nSec.8 2.4.3 (b-7)"
+    },
+    {
+        "number": "2.46",
+        "text": "Wire rope is not corroded",
+        "ref": "ASME B30.8. \r\nSec.8-2.4.1(b)"
+    },
+    {
+        "number": "2.47",
+        "text": "Rope lubrication is adequate",
+        "ref": "ASME B30.8, \r\nSec.8-2.4.6 (e)"
+    },
+    {
+        "number": "2.48",
+        "text": "Sheaves and drums are not cracked or show worn surfaces",
+        "ref": "ASME B30.8, \r\nSec.8-2.1.3 (a3)"
+    },
+    {
+        "number": "2.49",
+        "text": "Bolts and rivets around the structure are tight",
+        "ref": "ASME B30.8, \r\nSec.8-2.1.3 (a2)"
+    },
+    {
+        "number": "2.50",
+        "text": "Clutch system parts, linings, pawls and ratchet are not excessively worn",
+        "ref": "ASME B30.8, \r\nSec.8-2.1.2 (a11)"
+    },
+    {
+        "number": "2.51",
+        "text": "Brake system parts are not excessively worn",
+        "ref": "ASME B30.8, \r\nSec.8-2.1.2 (a5)"
+    },
+    {
+        "number": "2.52",
+        "text": "Rope reeving is in compliance with manufacturer's recommendations",
+        "ref": "ASME B30.8, \r\nSec.8-2.1.2 (a7)"
+    },
+    {
+        "number": "2.53",
+        "text": "Sheave sizes are not less than 18 times the nominal rope diameter for load hoist",
+        "ref": "ASME B30.8\r\nSec.8-1.9.5 (b)"
+    },
+    {
+        "number": "2.54",
+        "text": "Sheave sizes are not less than 16 times the nominal rope diameter for load blocks.",
+        "ref": "ASME B30.9\r\nSec.8-1.9.5 (c)"
+    },
+    {
+        "number": "2.55",
+        "text": "Eye splices are in accordance with the manufacturer's recommendations and rope thimbles are used",
+        "ref": "ASME B30.8\r\nSec.8-1.9.3 (a)"
+    },
+    {
+        "number": "2.56",
+        "text": "Brakes and clutches are provided with adjustments to compensate for wear",
+        "ref": "ASME B30.8\r\nSec.8-1.6.1 (b)"
+    },
+    {
+        "number": "2.57",
+        "text": "Boom hoist drum is provided with an auxiliary a locking device controllable from the operator’s station to hold the drum from rotating in the lowering direction and to hold the rated load",
+        "ref": "ASME B30.8\r\nSec.8-1.6.1 (f)"
+    },
+    {
+        "number": "2.58",
+        "text": "Boom hoist drum has at least 2 full wraps remaining on the drum when the boom is at lowest position",
+        "ref": "ASME B30.8\r\nSec.8-1.6.1 (g-1)"
+    },
+    {
+        "number": "2.59",
+        "text": "The load hoist mechanism is provided with a suitable clutching or power engaging device, unless directly coupled",
+        "ref": "ASME B30.8\r\nSec.8-1.6.2"
+    },
+    {
+        "number": "2.60",
+        "text": "Over hoist limit devices are operable",
+        "ref": "ASME B30.8\r\nSec.8-2.2.1 (a)"
+    },
+    {
+        "number": "2.61",
+        "text": "All welded members and joints have no cracks, distortions, corrosion or other defects",
+        "ref": "ASME B30.8\r\nSec.8-1.2.1 (c)"
+    },
+    {
+        "number": "2.62",
+        "text": "Boom stops are provided and in good condition (one of the following; fixed or telescopic bumper, shock absorbing umber, hydraulic boom elevation cylinder, or derrick masts)",
+        "ref": "ASME B30.8\r\nSec.8-1.11 (a)"
+    },
+    {
+        "number": "2.63",
+        "text": "Boom angle indicator is provided and readable from operator's cab",
+        "ref": "ASME B30.8\r\nSec.8-1.11 (b)"
+    },
+    {
+        "number": "2.64",
+        "text": "Boom hoist disconnect, shutoff, or hydraulic relief is provided to stop the boom hoist automatically when the boom reaches a predetermined angle",
+        "ref": "ASME B30.8\r\nSec.8-1.11.1 (d)"
+    },
+    {
+        "number": "2.65",
+        "text": "Cords and lacings have no damage",
+        "ref": "ASME B30.8\r\nSec.8-2.1.2. (a2)"
+    },
+    {
+        "number": "2.66",
+        "text": "Guy ropes are correctly tensioned",
+        "ref": "ASME B30.8\r\nSec.8-2.1.2. (a9)"
+    },
+    {
+        "number": "2.67",
+        "text": "Derrick mast fittings and connections are in compliance with the manufacturer's",
+        "ref": "ASME B30.8\r\nSec.8-2.1.2. (a10)"
+    },
+    {
+        "number": "2.68",
+        "text": "Clutch system parts, linings, pawls and ratchet are not excessively worn",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a5)"
+    },
+    {
+        "number": "2.69",
+        "text": "Load, boom angle, and other indicators, over their full range, are accurately functioning",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a6)"
+    },
+    {
+        "number": "2.70",
+        "text": "Chain drive sprockets do not show excessive wear and is not stretched",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a8)"
+    },
+    {
+        "number": "2.71",
+        "text": "Gudgeon pins do not have cracks, wear or distortion",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a11)"
+    },
+    {
+        "number": "2.72",
+        "text": "Supports do not have any defects and have continued ability to sustain the imposed loads",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a12)"
+    },
+    {
+        "number": "2.73",
+        "text": "Hydraulic and pneumatic hoses, fittings and tubes are not damaged and not leaking",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a13)"
+    },
+    {
+        "number": "2.74",
+        "text": "Hydraulic/Pneumatic pumps and motors are correctly functioning",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a14)"
+    },
+    {
+        "number": "2.75",
+        "text": "Hydraulic/Pneumatic pumps and motors have no leaks, excess vibrations, unusual noises, loss of pressure or loss of speed",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a14)"
+    },
+    {
+        "number": "2.76",
+        "text": "Hydraulic/Pneumatic valves and motors are correctly functioning",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a15)"
+    },
+    {
+        "number": "2.77",
+        "text": "Hydraulic/Pneumatic valves and motors have no leaks, corrosion, excess vibrations, unusual noises or loss of pressure",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a15)"
+    },
+    {
+        "number": "2.78",
+        "text": "Hydraulic/ Pneumatic cylinders do not leak (external and internal) at seals and welded joints or any other locations",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a16)"
+    },
+    {
+        "number": "2.79",
+        "text": "Hydraulic/ Pneumatic cylinders are free of scores, dents or nicks on piston rods or cylinder barrels and loose/deformed rod eyes or connecting joints",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a16)"
+    },
+    {
+        "number": "2.80",
+        "text": "Hydraulic filters are clean and free from debris such as rubber or metal particles",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a17)"
+    },
+    {
+        "number": "2.81",
+        "text": "Boom cradle is available and can secure the boom if required",
+        "ref": "ASME B30.8\r\nSec.8-3.2.6 (b)"
+    },
+    {
+        "number": "2.82",
+        "text": "Pins, bearings, shafts, gears, rollers, and locking devices are free of wear, cracks, and distortion",
+        "ref": "ASME B30.8\r\nSec.8-2.1.3 (a4)"
+    },
+    {
+        "number": "2.83",
+        "text": "The swing mechanism is controlling the swing of the rated load under all operating conditions",
+        "ref": "ASME B30.8\r\nSec.8-1.7.1"
+    },
+    {
+        "number": "2.84",
+        "text": "Swing braking operates and capable of restrict the movement of the rotating structure",
+        "ref": "ASME B30.8\r\nSec.8-1.7.2 (a)"
+    },
+    {
+        "number": "2.85",
+        "text": "Swing brake locking device is provided and capable of locking the rotation of rotating structure",
+        "ref": "ASME B30.8\r\nSec.8-1.7.2 (b)"
+    },
+    {
+        "number": "2.86",
+        "text": "Swing brakes are adjustable to compensate for wear",
+        "ref": "ASME B30.8\r\nSec.8-1.7.2 (d)"
+    },
+    {
+        "number": "2.87",
+        "text": "All swing moving parts are lubricated",
+        "ref": "ASME B30.8\r\nSec.8-2.3.4"
+    },
+    {
+        "number": "2.88",
+        "text": "Exhaust pipes are insulated and gases are properly discharged away from the operator's cab",
+        "ref": "ASME B30.8\r\nSec.8-1.10.5"
+    },
+    {
+        "number": "2.89",
+        "text": "A portable fire extinguisher is in place inside cab and outside machinery (minimum rating of 10 BC)",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (a)"
+    },
+    {
+        "number": "2.90",
+        "text": "A tool box with basic maintenance tools is placed inside the cab",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (b)"
+    },
+    {
+        "number": "2.91",
+        "text": "An audible warning device is in place and within reach of the operator",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (c)"
+    },
+    {
+        "number": "2.92",
+        "text": "The load moment indicator (LMI) is installed and properly working",
+        "ref": "ASME B30.8\r\nSec.8-1.4.3 (f)"
+    },
+    {
+        "number": "2.93",
+        "text": "The cab and operating enclosures have good housekeeping",
+        "ref": "ASME B30.8\r\nSec.8-3.4.4 (b)"
+    },
+    {
+        "number": "2.94",
+        "text": "Control levers and/or pedals functions are labeled",
+        "ref": "ASME B30.4\r\nSec.4- 1.13.1(a)   \r\nASME B30.3 Sec.3.1.15.1(b)"
+    },
+    {
+        "number": "2.95",
+        "text": "Engine exhaust gases are piped and discharged away from the operator cab",
+        "ref": "ASME B30.4\r\nSec.4-1.16.4\r\nASME B30.3  Sec.3.1.18.4"
+    },
+    {
+        "number": "2.96",
+        "text": "Operator cab has a safety glazing glass",
+        "ref": "ASME B30.4\t\r\nSec.4- 1.15.1(e) ASME B30.3 Sec.3.1.17.1(e)"
+    },
+    {
+        "number": "2.97",
+        "text": "Cab lighting (artificial or natural) is sufficient to enable the operator to observe the controls",
+        "ref": "ASME B30.\r\nSec.4- 1.15.1(g)\r\nASME B30.3 Sec.3.1.17.1(g)"
+    },
+    {
+        "number": "2.98",
+        "text": "Emergency stop is effective (when there is a remote-control device malfunction)",
+        "ref": "ASME B30.4\r\nSec.4- 1.13.1(f)   \r\nASME B30.3 Sec.3.1.15.1(g)"
+    },
+    {
+        "number": "2.99",
+        "text": "Simultaneous activation of controls is not possible when more than one operator station (remote control) is provided",
+        "ref": "ASME B30.4\r\nSec.4.1.13.1(g)\r\nASME B30.3 Sec.3.1.15.1(h)"
+    },
+    {
+        "number": "3.0",
+        "text": "Pilot lights at boom tip, jib tip and topmost sheave are working and in good condition",
+        "ref": "ASME B30.4 Sec.4.2.1.4(a8)\r\n ASME B30.3 Sec.3.2.1.4(a8)"
+    },
+    {
+        "number": "3.1",
+        "text": "Remaining rope on the drum (load hoist and/or boom hoist) in the extreme low position is at least 2 full wraps",
+        "ref": "ASME B30.4\r\nSec. 4- 1.5.2 (b1)\r\nASME B30.3 Sec.3.1.5.2 (a)"
+    },
+    {
+        "number": "3.2",
+        "text": "The drum end of the rope is attached to the drum as per manufacturer recommendations",
+        "ref": "ASME B30.4\r\nSec.4- 1.5.2b2  \r\nASME B30.3 Sec.3.1.5.2b"
+    },
+    {
+        "number": "3.3",
+        "text": "Hoist brakes are working and can provide 125% or more of the full load hoisting torque and can provide controlled lowering speeds",
+        "ref": "ASME B30.4\r\nSec.4 1.4.3(a)\r\nASME B30.3 Sec.3.1.5.3(b)"
+    },
+    {
+        "number": "3.4",
+        "text": "Relief valves in the hydraulic pneumatic circuits limit the circuit pressure for the correct rated load conditions",
+        "ref": "ASME B30.4\r\nSec.4- 1.16.8(a)   \r\nASME B30.3 3.1.18.9a)"
+    },
+    {
+        "number": "3.5",
+        "text": "Rope is free of damages\r\n•\tMax of 12 randomly broken wires in 1 lay\r\n•\t4 broken wires in 1 strand of 1 lay\r\n•\t1 broken wire protruding from the core (2 for rotation resistant ropes)\r\n•\tWear of 1/3 of the original diameter of outside individual wires\r\nKinking, crushing, bird caging or other distortion",
+        "ref": "ASME B30.4\r\nSec.4- 2.4.2a2a\r\nASME B30.3\r\nSec.3.2.4.2a2a"
+    },
+    {
+        "number": "3.6",
+        "text": "Sheaves are smooth in their grooves and well lubricated",
+        "ref": "ASME B30.4\r\nSec.41.4.4(a)\r\nASME B30.3 Se.3.1.5.4(a)"
+    },
+    {
+        "number": "3.7",
+        "text": "Sheave are fitted with close fittings guards when liable to unload momentarily",
+        "ref": "ASME B30.4\r\nSec.4-1.4.4b  \r\nASME B30.3 Sec.3.1.5.4b"
+    },
+    {
+        "number": "3.8",
+        "text": "Lower load block sheaves have close fitting guards",
+        "ref": "ASME B30.4\r\nSec.4-1.4.4e  \r\nASME B30.3 Sec.3.1.5.4e"
+    },
+    {
+        "number": "3.9",
+        "text": "Over hoist limit (anti-2-Block) device is operational",
+        "ref": "ASME B30.4\t\r\nSec.4-1.9.1\t\r\nASME B30.3 Sec.3.1.5.1f/3.1.11.1b"
+    },
+    {
+        "number": "3.10",
+        "text": "Lower over travel limiting devices are fitted where hook is in areas not visible to the operators",
+        "ref": "ASME B30.4\r\nSec.4-1.9.2"
+    },
+    {
+        "number": "3.11",
+        "text": "Standing ropes are not fiber core or rotation resistant ropes",
+        "ref": "ASME B30.4\r\nSec.4-1.10.1\r\nASME B30.3\r\nSec.3.1.12.1"
+    },
+    {
+        "number": "3.12",
+        "text": "Sagged or poured sockets (pendant ropes) are in good condition",
+        "ref": "ASME B30.4\r\nSec.4-1.10.5"
+    },
+    {
+        "number": "3.13",
+        "text": "Welded members/Joints are free of defects (cracks, corrosion, etc.",
+        "ref": "ASME B30.4\r\nSec.4-2.3.4\r\nASME B30.3\r\nSec.3.1.18.5"
+    },
+    {
+        "number": "3.14",
+        "text": "Boom is free of damage/deformation (cracks, corrosion, dents, etc.",
+        "ref": "ASME B30.4\r\nSec.4- 2.1.4(a1)   ASME B30.3\r\nSec.3.2.1.4(1)"
+    },
+    {
+        "number": "3.15",
+        "text": "Boom stops are in good working condition (fixed, telescopic, shock absorbing or hydraulic)",
+        "ref": "ASME B30.3\r\nSec.3-1.5.1(f)"
+    },
+    {
+        "number": "3.16",
+        "text": "Luffing boom brake can provide 125% or more of the full load torque",
+        "ref": "ASME B30.4\r\nSec.4- 1.5.1(c)   ASME B30.3 Sec.3.15.3(a)"
+    },
+    {
+        "number": "3.17",
+        "text": "Wind velocity measuring device (Anemometer) is rotating freely and sending a signal to the display in the cab",
+        "ref": "ASME B30.4\r\nSec.4-1.16.6\r\nASME B30.3\r\nSec.3.1.18.7"
+    },
+    {
+        "number": "3.18",
+        "text": "Stabilizers are undamaged and secure",
+        "ref": "ASME B30.3\r\nSec.3- 1.3.3(a)"
+    },
+    {
+        "number": "3.19",
+        "text": "Travel rails are level and secure",
+        "ref": "AASME B30.4\r\nSec.4- 1.1.1(c)\r\nASME B30.3   Sec.3.1.1.1(c)"
+    },
+    {
+        "number": "3.20",
+        "text": "Rails are grounded (for electrically powered cranes)",
+        "ref": "ASME B30.4\r\nSec. 4- 1.1.1(f)"
+    },
+    {
+        "number": "3.21",
+        "text": "Stops or buffers are correctly adjusted for simultaneous contact with both sides of the travel base (stops to be fitted not less that 1 meter inboard of last rail support)",
+        "ref": "ASME B30.4\r\nSec.4- 1.1.1(g)\r\nASME B30.3 Sec.3.1.1.3(i)"
+    },
+    {
+        "number": "3.22",
+        "text": "Rail sweeps are in good condition",
+        "ref": "ASME B30.4\t\r\nSec.4- 1.7.2(a) \r\nASME B30.3   Sec.3.1.7.29(a)"
+    },
+    {
+        "number": "3.23",
+        "text": "Means to limit drop of a travel truck are in place and in good condition (in case of axle or wheel failure)",
+        "ref": "ASME B30.4\r\nSec.4- 1.7.2(c)\r\nASME B30.3 Sec.3.1.7.2(c)"
+    },
+    {
+        "number": "3.24",
+        "text": "Truck wheels are guarded",
+        "ref": "ASME B30.4\r\nSec.4- 1.7.2(b)\r\nASME B30.3 Sec.3.1.7.2(b)"
+    },
+    {
+        "number": "3.25",
+        "text": "Travel brakes can lock the wheels",
+        "ref": "ASME B30.4\r\nSec.4- 1.7.3(a)\r\n ASME B30.3 Sec.3.1.7.3(a)"
+    },
+    {
+        "number": "3.26",
+        "text": "Stairs/access ladders are secure and in good condition",
+        "ref": "ASME B30.4\r\nSec.4- 1.15.2(a) ASME B30.3 Sec.3.1.17.2(a)"
+    },
+    {
+        "number": "3.27",
+        "text": "The machinery and electrical equipment are located clear of deck loading areas",
+        "ref": "ASME B30.8\r\nSec.8-1.3.1 (a)"
+    },
+    {
+        "number": "3.28",
+        "text": "Work areas, companion ways and ladders are equipped with anti-slip surface materials",
+        "ref": "ASME B30.8\r\nSec.8-1.3.1 (b)"
+    },
+    {
+        "number": "3.29",
+        "text": "Electrical wiring and equipment are free of damages and of the specified type for shipboard",
+        "ref": "ASME B30.8\r\nSec.8-1.3.1 (c)"
+    },
+    {
+        "number": "3.30",
+        "text": "Manholes and hatches are not less than 15\"x22\"and raised above the deck to prevent accidental entry of spilled liquids",
+        "ref": "ASME B30.8\r\nSec.8-1.3.3"
+    },
+    {
+        "number": "3.31",
+        "text": "Engine speed control is working satisfactorily",
+        "ref": "ASME B30.4 Sec.4.1.13.2(b2) \r\nASME B30.3 Sec3.1.15.1(a2)"
+    },
+    {
+        "number": "3.32",
+        "text": "Transmission selector can be operated satisfactorily",
+        "ref": "ASME B30.4 Sec.4.1.13.2(b4) \r\nASME B30.3 Sec.3.1.15.1(a4"
+    },
+    {
+        "number": "3.33",
+        "text": "Engine emergency stop switch is working properly",
+        "ref": "ASME B30.4 (4.1.13.2b3) \r\nASME B30.3 Sec.3.1.15.1(a3)"
+    },
+    {
+        "number": "3.34",
+        "text": "Pedals and hand levers are easily operated and well-functioning",
+        "ref": "ASME B30.4\r\nSec.4- 1.13.3(a) ASME B30.3 Sec.3.1.15.3(a)"
+    },
+    {
+        "number": "3.35",
+        "text": "Travel distance extremes of hand levers and pedals are acceptable\r\n•\t14”-24” for hand levers\r\n10” for pedals",
+        "ref": "ASME B30.4\t\r\nSec.4- 1.13.3(b)   \r\nASME B.30.3\r\nSec.3.1.15.3(b)"
+    },
+    {
+        "number": "3.36",
+        "text": "Electrical crane has a main disconnect switch at or near the initial base of the crane",
+        "ref": "ASME B30.4\r\nSec.4- 1.14.1(a) ASME B30.3 Sec.3.1.16.1(a)"
+    },
+    {
+        "number": "3.37",
+        "text": "Electrical equipment is so located or guarded that live parts are not exposed to inadvertent contact under normal operating conditions",
+        "ref": "ASME B30.4\r\nSec.4- 1.14.1(b)  \r\n ASME B30.3 Sec.3.1.16.1(b)"
+    },
+    {
+        "number": "3.38",
+        "text": "Electrical equipment is protected from dirt, grease, oil, moisture and other weather conditions",
+        "ref": "ASME B30.4\r\nSec.4- 1.14.1(c)   ASME B30.3 Sec.3.1.16.1(c)"
+    },
+    {
+        "number": "3.39",
+        "text": "An overload device is in place for each motor",
+        "ref": "ASME B30.4\r\nSec.4- 1.14.1(g) ASME B30.3 Sec.3.1.16.1(g)"
+    },
+    {
+        "number": "3.40",
+        "text": "Lighting protection is in place",
+        "ref": "ASME B30.4\r\nSec.4- 1.14.1(h) ASME B30.3 Sec.3.1.16.1(h)"
+    },
+    {
+        "number": "3.41",
+        "text": "Resistor units are supported to minimize vibrations",
+        "ref": "ASME B30.4\r\nSec.4- 1.14.2(b) ASME B30.3 Sec.3.1.16.2(a)"
+    },
+    {
+        "number": "3.42",
+        "text": "Resistor parts are not suffering from corrosion",
+        "ref": "ASME B30.4\r\nSec.41.14.2(a)"
+    },
+    {
+        "number": "3.43",
+        "text": "A separate circuit is in place for the lifting magnet alone (if magnet is used)",
+        "ref": "ASME B30.4\r\nSec.4- 1.9.3(a)"
+    },
+    {
+        "number": "3.44",
+        "text": "An indication light is in place to magnet is energized (if magnet is used)",
+        "ref": "ASME B30.4\r\nSec.4- 1.9.3(c)"
+    },
+    {
+        "number": "3.45",
+        "text": "Labeling and manufacturer data are available and legible",
+        "ref": "ASME B30.10\r\n(10-2.1.1)"
+    },
+    {
+        "number": "3.46",
+        "text": "Hook's weight is clearly marked/printed on the hook",
+        "ref": "ASME B30.10\r\n(10-1.1.1)"
+    },
+    {
+        "number": "3.47",
+        "text": "Safe working load is clearly marked on the hook",
+        "ref": "ASME B30.10\r\n(10-2.1.1)"
+    },
+    {
+        "number": "3.48",
+        "text": "Hook is not bent or twisted\r\n•\tMax. bending or twisting not to exceed 10 degrees from plane of unbent hook or as per manufacturer recommendations",
+        "ref": "ASME B30.10\r\n(10.1.2.1.3c1)"
+    },
+    {
+        "number": "3.49",
+        "text": "Hook is not distorted in the throat opening\r\n•\tMax. allowable throat opening is 15% compared to new hook, or as per manufacturer recommendations",
+        "ref": "ASME B30.10\r\n(10.1.2.1.3c2)"
+    },
+    {
+        "number": "3.50",
+        "text": "Maximum wear in the hook bowl is not exceeding 10% (compared to new hook) or as per manufacturer recommendations",
+        "ref": "ASME B30.10\r\n(10.1.2.1.3c3)"
+    },
+    {
+        "number": "3.51",
+        "text": "Hook is not cracked, gouged or shows nicks",
+        "ref": "ASME B30.10\r\n(10.1.2.1.2c3)"
+    },
+    {
+        "number": "3.52",
+        "text": "Hook can lock (if it is a self-locking hook)",
+        "ref": "ASME B30.10\r\n(10.1.2.1.3c4)"
+    },
+    {
+        "number": "3.53",
+        "text": "Hook latch is operative",
+        "ref": "ASME B30.10\r\n(10.1.2.1.3c5)"
+    },
+    {
+        "number": "3.54",
+        "text": "Hook is free to rotate",
+        "ref": "ASME B30.10\r\nSec.10-1.2."
+    }
+]

@@ -1,0 +1,125 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+   
+}
+h1, h2, h3, h4 {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    
+}
+
+table th{
+background-color: #1b6bab47 !important;
+color: black;
+}
+
+th {
+    background-color: #1b6bab47;
+}
+
+        .large-checkbox {
+width: 27px;
+height: 15px;
+
+
+}
+
+
+.checkbox-cell {
+text-align: center; /* Center horizontally */
+vertical-align: middle; /* Center vertically */
+height: 100%; /* Ensure the cell has enough height */
+}
+
+.table-bordered td, .table-bordered th {
+border: 1px solid black;
+}
+
+
+.table thead th {
+vertical-align: bottom;
+border-bottom: 1px solid black;
+}
+
+.table .thead-dark th {
+color: black;
+
+border-color: #454d55;
+}
+
+
+
+@media (max-width: 768px) {
+    .signature-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .signature {
+        margin-bottom: 20px;
+    }
+}
+
+@media print {
+.no-print {
+display: none;
+}
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+.no-border {
+    border: none;
+}
+.left-align {
+    text-align: left;
+}
+.logo-cell {
+    width: 20%;
+}
+.main-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.status-btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+}
+.status-btn.pending {
+    background-color: #ffc107; /* Yellow for Pending */
+}
+.status-btn.completed {
+    background-color: #28a745; /* Green for Completed */
+}

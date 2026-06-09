@@ -1,0 +1,16 @@
+Options -Indexes
+RewriteEngine On
+
+# Redirect /path/index.php to /path/
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.php[\s?] [NC]
+RewriteRule ^(.*/)?index\.php$ /whiteapp1/$1 [R=301,L]
+
+# Redirect visible .php URLs to extensionless URLs for normal page requests.
+RewriteCond %{REQUEST_METHOD} !POST
+RewriteCond %{THE_REQUEST} \s/+whiteapp1/(.+)\.php[\s?] [NC]
+RewriteRule ^(.+)\.php$ /whiteapp1/$1 [R=301,L]
+
+# Serve extensionless URLs from matching PHP files.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L]

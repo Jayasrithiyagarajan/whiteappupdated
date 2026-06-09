@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Collation Error - Operator Assessment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #f5576c;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-left: 4px solid #f5576c;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .solution-box {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .step h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight {
+            background: #ffd700;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        ul {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔧 Fix Collation Error</h1>
+
+        <div class="error-box">
+            <h3>❌ Error Encountered:</h3>
+            <p><strong>Illegal mix of collations (utf8mb4_unicode_ci,IMPLICIT) and
+                    (utf8mb4_general_ci,IMPLICIT)</strong></p>
+            <p>This error occurs when database tables use different character set collations.</p>
+        </div>
+
+        <div class="solution-box">
+            <h3>✅ Solution:</h3>
+            <p>We need to standardize all tables to use the same collation: <span
+                    class="highlight">utf8mb4_general_ci</span></p>
+        </div>
+
+        <div class="step">
+            <h2>Step 1: Access phpMyAdmin</h2>
+            <p>Open your browser and navigate to:</p>
+            <div class="code-block">
+                http://localhost/phpmyadmin
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Select Database</h2>
+            <p>Click on the database: <span class="highlight">3rdparty</span> from the left sidebar</p>
+        </div>
+
+        <div class="step">
+            <h2>Step 3: Run Collation Fix Script</h2>
+            <p><strong>Option A: Import SQL File</strong></p>
+            <ul>
+                <li>Click on the "Import" tab</li>
+                <li>Choose file: <code>fix_collation.sql</code></li>
+                <li>Location: <code>c:\xampp\htdocs\whiteapp1\operator_assessment\fix_collation.sql</code></li>
+                <li>Click "Go"</li>
+            </ul>
+
+            <p><strong>Option B: Run SQL Directly</strong></p>
+            <ul>
+                <li>Click on the "SQL" tab</li>
+                <li>Copy and paste this SQL:</li>
+            </ul>
+            <div class="code-block">
+                -- Convert all tables to utf8mb4_general_ci
+                ALTER TABLE `operator_assessments` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+                ALTER TABLE `operator_equipment` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+                ALTER TABLE `operator_documents` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+            </div>
+            <ul>
+                <li>Click "Go"</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Step 4: Run Exam Module SQL</h2>
+            <p>After fixing the collation, now run the exam module SQL:</p>
+            <ul>
+                <li>Stay in the "SQL" tab or go to "Import"</li>
+                <li>Import or paste contents of: <code>add_exam_module.sql</code></li>
+                <li>Click "Go"</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Step 5: Verify Tables</h2>
+            <p>Check that these tables now exist:</p>
+            <ul>
+                <li>✅ <strong>operator_assessments</strong> - Should have new exam columns (exam_status, exam_score,
+                    etc.)</li>
+                <li>✅ <strong>operator_exam_answers</strong> - New table for storing exam answers</li>
+            </ul>
+        </div>
+
+        <div class="solution-box">
+            <h3>✅ All Done!</h3>
+            <p>The collation error should now be fixed. You can now use the operator assessment module with the written
+                exam feature.</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="../operator_assessment/assessment-list.php" class="btn">Go to Assessment List</a>
+        </div>
+
+        <div class="step" style="margin-top: 40px;">
+            <h2>🔍 Why This Happened</h2>
+            <p>The original operator assessment tables were created with <code>utf8mb4_unicode_ci</code> collation, but
+                your existing database uses <code>utf8mb4_general_ci</code>. When MySQL tries to join or compare data
+                between tables with different collations, it throws this error.</p>
+            <p><strong>The fix:</strong> We converted all tables to use the same collation
+                (<code>utf8mb4_general_ci</code>) so they can work together seamlessly.</p>
+        </div>
+    </div>
+</body>
+
+</html>
