@@ -423,6 +423,30 @@ body {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
 }
+
+/* Align labels and values neatly */
+.status-list li {
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
+}
+
+.status-list .key {
+    width: 170px !important;
+    min-width: 170px !important;
+    flex-shrink: 0 !important;
+    color: #8a99ad !important;
+    font-weight: 500 !important;
+    display: inline-block !important;
+}
+
+.invoice-right .status-list .key {
+    color: #CAC6FB !important;
+}
+
+.status-list span:not(.key) {
+    flex-grow: 1 !important;
+}
     </style>
 </head>
 <body>
