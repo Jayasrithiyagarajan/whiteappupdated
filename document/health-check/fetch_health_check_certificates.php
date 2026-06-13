@@ -244,7 +244,7 @@ while ($r = $res->fetch_assoc()) {
                 <a href="download.php?project_no=' . $r['project_no'] . '" class="download-icon" title="Download">
                     <i class="fa fa-download"></i>
                 </a>
-                ' . ((($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $r['project_status'] !== 'Completed') ? '
+                ' . ((($role === 'document controller' || $role === 'inspector') && $r['project_status'] !== 'Completed') ? '
                 <a href="edit.php?project_no=' . $r['project_no'] . '" class="edit-icon" title="Edit" style="color: #b45309; background: #fef3c7;">
                     <i class="fa fa-edit"></i>
                 </a>
