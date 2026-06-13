@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../../vendor/autoload.php');
+require_once(__DIR__ . '/../../../vendor/autoload.php');
 include_once(__DIR__ . '/../../../file/config.php');
 
 use Mpdf\Mpdf;
@@ -64,7 +64,7 @@ $mpdf = new Mpdf([
     'margin_bottom' => 20,
     'margin_left' => 10,
     'margin_right' => 10,
-    'tempDir' => __DIR__ . '/../../../../tmp/mpdf',
+    'tempDir' => __DIR__ . '/../../../tmp/mpdf',
     'default_font' => 'DejaVuSans',
 ]);
 
