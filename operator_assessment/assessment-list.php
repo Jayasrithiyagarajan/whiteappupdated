@@ -471,6 +471,9 @@ if (file_exists('../inc/nav.php')) {
                                 <a href="download-certificate.php?id=<?= $row['id']; ?>" class="action-btn btn-success-custom" target="_blank" title="Download Certificate">
                                     <i class="fas fa-file-pdf"></i>
                                 </a>
+                                <a href="../operator_card/view-card.php?id=<?= $row['id']; ?>" class="action-btn" style="background: #eab308;" target="_blank" title="Operator Card">
+                                    <i class="fas fa-id-card"></i>
+                                </a>
                             <?php endif; ?>
                         </td>
                     </tr>
