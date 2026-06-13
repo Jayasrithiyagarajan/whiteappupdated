@@ -2,6 +2,15 @@
 session_start();
 include_once('../../file/config.php');
 
+function getInitialColor($name) {
+    $colors = [
+        '#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#c026d3',
+        '#0891b2', '#15803d', '#b45309', '#be123c', '#4338ca'
+    ];
+    $hash = crc32($name ?? 'A');
+    return $colors[$hash % count($colors)];
+}
+
 $user = $_SESSION['username'];
 $role = $_SESSION['role'];
 
@@ -133,9 +142,9 @@ while ($r = $res->fetch_assoc()) {
 
     if (!empty($r['next_inspection_due_date'])) {
         if (strtotime($r['next_inspection_due_date']) < time()) {
-            $statusBadge = "<span class='oj-pill oj-pill--red'><span class='oj-pill__dot'></span>Expired</span>";
+            $statusBadge = "<span class='oj-pill oj-pill--red'>Expired</span>";
         } else {
-            $statusBadge = "<span class='oj-pill oj-pill--teal'><span class='oj-pill__dot'></span>Active</span>";
+            $statusBadge = "<span class='oj-pill oj-pill--teal'>Active</span>";
         }
     }
 
@@ -143,7 +152,7 @@ while ($r = $res->fetch_assoc()) {
         $r['checklist_no'],
         $r['project_no'],
         "<div style='display:flex;align-items:center;gap:8px'>
-            <div class='avatar-circle'>$initial</div>{$r['inspected_by']}
+            <div class='avatar-circle' style='background-color: " . getInitialColor($r['inspected_by']) . "; color: #fff;'>$initial</div>{$r['inspected_by']}
         </div>",
         $r['equipment_type'],
         $typeFmt,
