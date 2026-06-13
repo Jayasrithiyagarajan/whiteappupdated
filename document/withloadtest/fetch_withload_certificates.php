@@ -119,8 +119,10 @@ SELECT
     w.customer_name,
     w.premises_address,
     w.examination_date,
-    w.latest_date_exam
+    w.latest_date_exam,
+    pi.project_status
 FROM withload w
+LEFT JOIN project_info pi ON w.project_no = pi.project_no
 $where
 ORDER BY $orderSql
 ";
@@ -209,7 +211,7 @@ while ($row = $res->fetch_assoc()) {
             </a>
     ';
 
-    if ($role === 'document controller') {
+    if (($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $row['project_status'] !== 'Completed') {
         $actions .= '
             <a href="edit_loadtest.php?project_no='.$row['project_no'].'" class="edit-icon" title="Edit" style="color: #b45309; background: #fef3c7;">
                 <i class="fa fa-edit"></i>

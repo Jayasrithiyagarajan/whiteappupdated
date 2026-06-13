@@ -165,20 +165,20 @@ while ($r = $res->fetch_assoc()) {
     }
 
     $actions = "
-        <a href='view.php?project_no={$r['project_no']}' target='_blank'><i class='fa fa-eye text-primary'></i></a>
-        <a href='download.php?project_no={$r['project_no']}'><i class='fa fa-download text-success'></i></a>
+        <div class='action-icons'>
+            <a href='view.php?project_no={$r['project_no']}' class='view-icon' target='_blank' title='View'><i class='fa fa-eye text-primary'></i></a>
+            <a href='download.php?project_no={$r['project_no']}' class='download-icon' title='Download'><i class='fa fa-download text-success'></i></a>
     ";
 
-    if ($role === 'document controller' && $r['project_status'] !== 'Completed') {
+    if (($role === 'document controller' || $role === 'inspector') && $r['project_status'] !== 'Completed') {
         $actions .= "
-            <a href='edit_mobile.php?project_no={$r['project_no']}' target='_blank'>
-                <i class='fa fa-edit text-warning'></i>
-            </a>
+            <a href='edit_mobile.php?project_no={$r['project_no']}' class='edit-icon' target='_blank' title='Edit'><i class='fa fa-edit text-warning'></i></a>
         ";
     }
 
     $actions .= "
-        <i class='fa fa-trash text-danger' style='cursor:pointer' onclick=\"deleteRow('{$r['project_no']}')\"></i>
+            <a href='javascript:void(0)' onclick=\"deleteRow('{$r['project_no']}')\" class='delete-icon text-danger' title='Delete'><i class='fa fa-trash'></i></a>
+        </div>
     ";
 
     $data[] = [

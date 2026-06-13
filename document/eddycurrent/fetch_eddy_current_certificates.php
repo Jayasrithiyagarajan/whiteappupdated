@@ -185,7 +185,7 @@ while ($r = $res->fetch_assoc()) {
             </a>
     ';
 
-    if ($role === 'document controller' && $r['project_status'] !== 'Completed') {
+    if (($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $r['project_status'] !== 'Completed') {
         $actions .= '
             <a href="edit.php?project_no='.$r['project_no'].'" class="edit-icon" title="Edit" style="color: #b45309; background: #fef3c7;">
                 <i class="fa fa-edit"></i>

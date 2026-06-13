@@ -127,7 +127,7 @@ while($r=$res->fetch_assoc()){
         "<span class='actions'>
             <a href='view.php?project_no={$r['project_no']}' target='_blank'><i class='fa fa-eye'></i></a>
             <a href='download.php?project_no={$r['project_no']}'><i class='fa fa-download'></i></a>
-            ".($_SESSION['role']==='document controller' && $r['project_status']!=='Completed'
+            ".(in_array($_SESSION['role'], ['document controller', 'inspector', 'admin']) && $r['project_status']!=='Completed'
                 ?"<i class='fa fa-edit' onclick=\"redirectToEditLoadTest('{$r['project_no']}')\"></i>":"")."
             <i class='fa fa-trash text-danger' onclick=\"deleteRow('{$r['project_no']}')\"></i>
         </span>"

@@ -141,9 +141,11 @@ SELECT
     chc.customer_name,
     chc.asset_number,
     chc.created_at,
-    r.next_inspection_due_date
+    r.next_inspection_due_date,
+    pi.project_status
 FROM crane_health_check_certificate chc
 LEFT JOIN reports r ON r.project_no = chc.project_no AND r.report_no = chc.report_no
+LEFT JOIN project_info pi ON chc.project_no = pi.project_no
 $where
 ORDER BY $orderSql
 ";
@@ -241,6 +243,14 @@ while ($r = $res->fetch_assoc()) {
                 </a>
                 <a href="download.php?project_no=' . $r['project_no'] . '" class="download-icon" title="Download">
                     <i class="fa fa-download"></i>
+                </a>
+                ' . ((($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $r['project_status'] !== 'Completed') ? '
+                <a href="edit.php?project_no=' . $r['project_no'] . '" class="edit-icon" title="Edit" style="color: #b45309; background: #fef3c7;">
+                    <i class="fa fa-edit"></i>
+                </a>
+                ' : '') . '
+                <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow(\'' . $r['project_no'] . '\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
+                    <i class="fa fa-trash"></i>
                 </a>
             </div>
         '

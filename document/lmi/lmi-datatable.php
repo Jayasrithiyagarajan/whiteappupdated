@@ -131,7 +131,7 @@ while ($row = $dataQ->fetch_assoc()) {
     $actions .= "<a href='view.php?project_no={$row['project_no']}' target='_blank' class='view-icon' title='View'><i class='fa fa-eye'></i></a>";
     $actions .= "<a href='downloadnew.php?project_no={$row['project_no']}' class='download-icon' title='Download'><i class='fa fa-download'></i></a>";
     
-    if ($role === 'document controller' && $row['project_status'] !== 'Completed') {
+    if (($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $row['project_status'] !== 'Completed') {
         $actions .= "<a href='edit.php?project_no={$row['project_no']}' target='_blank' title='Edit'><i class='fa fa-edit'></i></a>";
     }
     

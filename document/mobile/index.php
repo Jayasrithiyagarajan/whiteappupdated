@@ -53,8 +53,11 @@ if (!isset($_SESSION['username'])) {
     border-radius: 6px;
     background: #f0f4f8;
     color: #475569;
-    margin-right: 4px;
+    margin-right: 8px;
     transition: all 0.2s;
+}
+.action-icons a:last-child {
+    margin-right: 0;
 }
 .action-icons a.view-icon:hover {
     background: #e0f2fe;
@@ -63,6 +66,14 @@ if (!isset($_SESSION['username'])) {
 .action-icons a.download-icon:hover {
     background: #dcfce7;
     color: #15803d;
+}
+.action-icons a.edit-icon:hover {
+    background: #fef3c7;
+    color: #d97706;
+}
+.action-icons a.delete-icon:hover {
+    background: #fee2e2;
+    color: #dc2626;
 }
 
 /* === Fixed Width Columns with Wrapping === */
@@ -366,6 +377,22 @@ function clearMobileCraneFilters() {
     $('.form-select, .form-control, #customSearch').val('');
     mobileCraneTable.search('');
     mobileCraneTable.ajax.reload();
+}
+
+function deleteRow(projectNo) {
+    if (confirm('Are you sure you want to delete this certificate?')) {
+        $.ajax({
+            url: 'delete.php',
+            type: 'POST',
+            data: { project_no: projectNo },
+            success: function(response) {
+                $('#mobile-table').DataTable().ajax.reload();
+            },
+            error: function() {
+                alert('An error occurred while trying to delete the record.');
+            }
+        });
+    }
 }
 </script>
 </body>

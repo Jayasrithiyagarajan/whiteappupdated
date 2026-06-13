@@ -125,8 +125,10 @@ SELECT
     MIN(lg.customer_name) as customer_name,
     MIN(lg.address_of_premises) as address_of_premises,
     MIN(lg.date_of_this_examination) as date_of_this_examination,
-    MIN(lg.next_examination_date) as next_examination_date
+    MIN(lg.next_examination_date) as next_examination_date,
+    MIN(pi.project_status) as project_status
 FROM lifting_gear_certificates lg
+LEFT JOIN project_info pi ON lg.project_no = pi.project_no
 $where
 GROUP BY lg.project_no
 ORDER BY $orderSql
@@ -201,6 +203,15 @@ $initialClass = "initial-" . $initial;
         <div class='action-icons'>
             <a href='view.php?project_no={$r['project_no']}' class='view-icon' target='_blank' title='View'><i class='fa fa-eye'></i></a>
             <a href='download.php?project_no={$r['project_no']}' class='download-icon' title='Download'><i class='fa fa-download'></i></a>
+    ";
+
+    if (($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $r['project_status'] !== 'Completed') {
+        $actions .= "
+            <a href='edit_lifting.php?project_no={$r['project_no']}' class='edit-icon' title='Edit' style='color: #b45309; background: #fef3c7;'><i class='fa fa-edit'></i></a>
+        ";
+    }
+
+    $actions .= "
             <a href='#' onclick='deleteRow(\"{$r['project_no']}\")' class='text-danger' style='margin-left:8px;' title='Delete'><i class='fa fa-trash'></i></a>
         </div>
     ";
