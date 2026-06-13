@@ -80,69 +80,88 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
-            padding: 20px 0;
+            padding: 40px 0;
+            color: #f8fafc;
         }
         
         .test-container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 0 15px;
         }
         
         .test-header {
-            background: white;
-            border-radius: 15px;
+            background: #1e293b;
+            border-radius: 16px;
             padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .test-header h1 {
-            color: #f5576c;
+            color: #38bdf8;
             font-weight: 700;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #38bdf8, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .test-header p {
-            color: #6c757d;
-            font-size: 1.1rem;
+            color: #94a3b8;
+            font-size: 1.05rem;
+            margin-bottom: 0;
         }
         
         .info-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 15px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
-            color: white;
+            color: #f8fafc;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .info-row {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 15px;
         }
         
         .info-item {
             margin: 5px 0;
+            font-size: 0.95rem;
+        }
+        
+        .info-item strong {
+            color: #38bdf8;
         }
         
         .instructions-card {
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
-            border-radius: 10px;
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 5px solid #f59e0b;
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 25px;
+            border-top: 1px solid rgba(245, 158, 11, 0.15);
+            border-right: 1px solid rgba(245, 158, 11, 0.15);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.15);
         }
         
         .instructions-card h5 {
-            color: #856404;
+            color: #f59e0b;
             font-weight: 600;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .instructions-card ul {
@@ -152,87 +171,94 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
         
         .instructions-card li {
             margin: 8px 0;
-            color: #856404;
+            color: #cbd5e1;
+            font-size: 0.95rem;
         }
         
         .progress-card {
-            background: white;
-            border-radius: 15px;
+            background: #1e293b;
+            border-radius: 16px;
             padding: 20px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             position: sticky;
             top: 20px;
             z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .progress {
             height: 30px;
             border-radius: 15px;
-            background-color: #e9ecef;
+            background-color: #334155;
         }
         
         .progress-bar {
-            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 100%);
             border-radius: 15px;
             font-weight: 600;
             font-size: 14px;
             line-height: 30px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
         }
         
         .signal-card {
-            background: white;
+            background: #1e293b;
             border-radius: 20px;
             padding: 40px;
             margin-bottom: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .signal-number {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
             color: white;
             padding: 10px 25px;
             border-radius: 50px;
             display: inline-block;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.25);
         }
         
         .signal-name {
             font-size: 2rem;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
+            color: #f8fafc;
+            margin-bottom: 12px;
         }
         
         .signal-description {
-            color: #6c757d;
+            color: #94a3b8;
             font-size: 1.1rem;
             margin-bottom: 30px;
         }
         
         .signal-image-container {
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: #0f172a;
+            border-radius: 16px;
             padding: 30px;
             margin: 30px 0;
             min-height: 400px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .signal-image {
             max-width: 100%;
             max-height: 500px;
             border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
         }
         
         .placeholder-image {
-            color: #6c757d;
+            color: #94a3b8;
             font-size: 1.2rem;
             text-align: center;
         }
@@ -245,60 +271,64 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
         }
         
         .btn-pass {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             color: white;
             border: none;
-            padding: 20px 60px;
-            font-size: 1.5rem;
+            padding: 18px 50px;
+            font-size: 1.4rem;
             font-weight: 600;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.25);
         }
         
         .btn-pass:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.45);
         }
         
         .btn-fail {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
             color: white;
             border: none;
-            padding: 20px 60px;
-            font-size: 1.5rem;
+            padding: 18px 50px;
+            font-size: 1.4rem;
             font-weight: 600;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.3);
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.25);
         }
         
         .btn-fail:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(220, 53, 69, 0.4);
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.45);
         }
         
         .btn-pass.selected {
-            box-shadow: 0 0 0 5px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.4);
+            transform: scale(1.03);
         }
         
         .btn-fail.selected {
-            box-shadow: 0 0 0 5px rgba(220, 53, 69, 0.3);
+            box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.4);
+            transform: scale(1.03);
         }
         
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 25px;
         }
         
         .btn-nav {
-            background: white;
-            color: #f5576c;
-            border: 2px solid #f5576c;
-            padding: 12px 30px;
+            background: transparent;
+            color: #38bdf8;
+            border: 2px solid #38bdf8;
+            padding: 12px 35px;
             font-size: 1.1rem;
             font-weight: 600;
             border-radius: 50px;
@@ -307,22 +337,25 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
         }
         
         .btn-nav:hover {
-            background: #f5576c;
-            color: white;
+            background: #38bdf8;
+            color: #0f172a;
         }
         
         .btn-nav:disabled {
-            opacity: 0.5;
+            opacity: 0.25;
             cursor: not-allowed;
+            border-color: #475569;
+            color: #475569;
         }
         
         .submit-card {
-            background: white;
-            border-radius: 15px;
+            background: #1e293b;
+            border-radius: 16px;
             padding: 40px;
             text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             display: none;
         }
         
@@ -331,7 +364,7 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
         }
         
         .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
             color: white;
             border: none;
             padding: 18px 50px;
@@ -340,12 +373,12 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
         }
         
         .submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
         }
         
         @media (max-width: 768px) {
@@ -513,8 +546,8 @@ if ($signals_settings['allow_retake'] && $assessment['signals_attempts'] >= $sig
 
             <!-- Submit Card -->
             <div class="submit-card" id="submitCard">
-                <h3 style="color: #667eea; margin-bottom: 20px;">All Signals Tested!</h3>
-                <p style="color: #6c757d; margin-bottom: 30px;">Review your evaluations and submit the test results</p>
+                <h3 style="color: #38bdf8; margin-bottom: 20px;">All Signals Tested!</h3>
+                <p style="color: #94a3b8; margin-bottom: 30px;">Review your evaluations and submit the test results</p>
                 <button type="submit" class="submit-btn" id="submitBtn">
                     <i class="fas fa-paper-plane"></i> Submit Test Results
                 </button>
