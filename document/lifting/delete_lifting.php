@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['project_no'])) {
 
     if ($stmt->execute()) {
         // Update the certificate status in the project_info table
-        $update_sql = "UPDATE project_info SET certificate_status = 'Pending' WHERE project_no = ?";
+        $update_sql = "UPDATE project_info SET certificatestatus = 'Pending' WHERE project_no = ?";
         $update_stmt = $conn->prepare($update_sql);
         $update_stmt->bind_param('s', $project_no);
 

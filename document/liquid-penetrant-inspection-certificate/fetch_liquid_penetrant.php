@@ -147,7 +147,7 @@ while ($r = $res->fetch_assoc()) {
     }
 
     $actions .= '
-            <a href="javascript:void(0)" class="delete-icon" onclick="alert(\'Delete functionality not implemented for LPI yet\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
+            <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow(\''.$r['project_no'].'\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
                 <i class="fa fa-trash"></i>
             </a>
         </div>

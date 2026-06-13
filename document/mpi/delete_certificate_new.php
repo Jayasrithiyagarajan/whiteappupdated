@@ -14,6 +14,10 @@ $stmt = $conn->prepare("DELETE FROM mpi_certificates WHERE project_no=?");
 $stmt->bind_param("s", $projectNo);
 
 if ($stmt->execute()) {
+    $update_stmt = $conn->prepare("UPDATE project_info SET certificatestatus = 'Pending' WHERE project_no = ?");
+    $update_stmt->bind_param("s", $projectNo);
+    $update_stmt->execute();
+    $update_stmt->close();
     echo json_encode(["success" => true, "message" => "Certificate deleted"]);
 }
 else {

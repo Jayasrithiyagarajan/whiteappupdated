@@ -10,6 +10,13 @@ if (isset($_POST['project_no'])) {
     $stmt->bind_param("s", $project_no);
 
     if ($stmt->execute()) {
+        // Update the project_info table
+        $update_query = "UPDATE project_info SET certificatestatus = 'Pending' WHERE project_no = ?";
+        $update_stmt = $conn->prepare($update_query);
+        $update_stmt->bind_param("s", $project_no);
+        $update_stmt->execute();
+        $update_stmt->close();
+        
         echo "Record deleted successfully";
     } else {
         echo "Error deleting record: " . $stmt->error;

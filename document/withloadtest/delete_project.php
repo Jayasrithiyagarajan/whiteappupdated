@@ -7,13 +7,13 @@ if (isset($_POST['project_no'])) {
     $project_no = $_POST['project_no'];
 
     // Prepare and execute the SQL delete query
-    $sql = "DELETE FROM loadtest_certificate WHERE project_no = ?";
+    $sql = "DELETE FROM withload WHERE project_no = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('s', $project_no);
 
     if ($stmt->execute()) {
-        // If deletion was successful, update the certificate_status in project_info table
-        $update_sql = "UPDATE project_info SET certificate_status = 'Pending' WHERE id = ?";
+        // If deletion was successful, update the certificatestatus in project_info table
+        $update_sql = "UPDATE project_info SET certificatestatus = 'Pending' WHERE project_no = ?";
         $update_stmt = $conn->prepare($update_sql);
         $update_stmt->bind_param('s', $project_no);
 

@@ -246,6 +246,30 @@ $today = date('Y-m-d');
             text-align: center;
         }
     }
+
+    /* Set column min-widths for better readability when sentences are long */
+    #certificateTable th:nth-child(2), #certificateTable td:nth-child(2) { min-width: 150px; } /* Certificate No */
+    #certificateTable th:nth-child(3), #certificateTable td:nth-child(3) { min-width: 220px; } /* Identification No */
+    #certificateTable th:nth-child(4), #certificateTable td:nth-child(4) { min-width: 280px; } /* Description */
+    #certificateTable th:nth-child(5), #certificateTable td:nth-child(5) { min-width: 120px; } /* WLL/SWL */
+    #certificateTable th:nth-child(6), #certificateTable td:nth-child(6) { min-width: 80px; }  /* Qty */
+    #certificateTable th:nth-child(7), #certificateTable td:nth-child(7) { min-width: 150px; } /* Type */
+    #certificateTable th:nth-child(8), #certificateTable td:nth-child(8) { min-width: 160px; } /* Date Last Exam */
+    #certificateTable th:nth-child(9), #certificateTable td:nth-child(9) { min-width: 280px; } /* Test Details */
+    #certificateTable th:nth-child(10), #certificateTable td:nth-child(10) { min-width: 100px; } /* Status */
+    #certificateTable th:nth-child(11), #certificateTable td:nth-child(11) { min-width: 100px; } /* Safe */
+    #certificateTable th:nth-child(12), #certificateTable td:nth-child(12) { min-width: 80px; }  /* Action */
+
+    /* Make textareas and inputs take full width of cell */
+    #certificateTable .theme-input-style, 
+    #certificateTable .custom-select {
+        width: 100% !important;
+    }
+    
+    #certificateTable textarea.theme-input-style {
+        height: 60px !important;
+        resize: vertical;
+    }
 </style>
 
 <div class="main-content">

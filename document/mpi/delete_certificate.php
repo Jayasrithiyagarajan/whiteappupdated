@@ -53,7 +53,15 @@ if (isset($data['project_no'])) {
         $deleteCertQuery = "DELETE FROM mpi_certificates WHERE project_no = ?";
         $deleteCertStmt = $conn->prepare($deleteCertQuery);
         $deleteCertStmt->bind_param('s', $project_no);
-        $deleteCertStmt->execute();
+        
+        if ($deleteCertStmt->execute()) {
+            // Update the project_info table status
+            $update_query = "UPDATE project_info SET certificatestatus = 'Pending' WHERE project_no = ?";
+            $update_stmt = $conn->prepare($update_query);
+            $update_stmt->bind_param("s", $project_no);
+            $update_stmt->execute();
+            $update_stmt->close();
+        }
 
         echo json_encode(['success' => true]);
     } else {

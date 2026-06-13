@@ -308,6 +308,23 @@ function clearLpiFilters() {
     $('#lpi-table').DataTable().search('');
     $('#lpi-table').DataTable().ajax.reload();
 }
+
+function deleteRow(project_no) {
+    if (confirm("Are you sure you want to delete this certificate?")) {
+        $.ajax({
+            url: 'delete.php',
+            type: 'POST',
+            data: { project_no: project_no },
+            success: function(response) {
+                alert("Certificate deleted successfully");
+                $('#lpi-table').DataTable().ajax.reload(null, false);
+            },
+            error: function() {
+                alert("Failed to delete certificate. Please try again.");
+            }
+        });
+    }
+}
 </script>
 </body>
 </html>
