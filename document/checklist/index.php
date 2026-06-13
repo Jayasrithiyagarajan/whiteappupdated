@@ -99,6 +99,12 @@ if (!isset($_SESSION['username'])) {
                 </select>
             </div>
             <div class="filter-item">
+                <label>Checklist Type</label>
+                <select id="filter-type">
+                    <option value="">All Types</option>
+                </select>
+            </div>
+            <div class="filter-item">
                 <label>Date</label>
                 <input type="date" id="filter-date">
             </div>
@@ -194,6 +200,7 @@ $(document).ready(function() {
             type: 'POST',
             data: function(d) {
                 d.filter_inspector = $('#filter-inspector').val();
+                d.filter_type = $('#filter-type').val();
                 d.filter_date = $('#filter-date').val();
                 d.filter_client = $('#filter-client').val();
                 d.filter_year = $('#filter-year').val();
@@ -225,7 +232,7 @@ $(document).ready(function() {
     loadFilterOptions();
     loadChecklistKPI();
 
-    $('#filter-inspector, #filter-date, #filter-client, #filter-year, #filter-expiry').on('change', function() {
+    $('#filter-inspector, #filter-type, #filter-date, #filter-client, #filter-year, #filter-expiry').on('change', function() {
         checklistTable.ajax.reload();
         loadChecklistKPI();
     });
@@ -244,6 +251,10 @@ function loadFilterOptions(){
             $('#filter-inspector').append(res.inspectors.map(i => `<option value="${i}">${i}</option>`).join(''));
             $('#filter-client').append(res.clients.map(c => `<option value="${c}">${c}</option>`).join(''));
             $('#filter-year').append(res.years.map(y => `<option value="${y}">${y}</option>`).join(''));
+            $('#filter-type').append(res.types.map(t => {
+                let formatted = t.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                return `<option value="${t}">${formatted}</option>`;
+            }).join(''));
         }
     });
 }
@@ -255,6 +266,7 @@ function loadChecklistKPI(){
         dataType: 'json',
         data: {
             filter_inspector: $('#filter-inspector').val(),
+            filter_type: $('#filter-type').val(),
             filter_date: $('#filter-date').val(),
             filter_client: $('#filter-client').val(),
             filter_year: $('#filter-year').val(),
@@ -271,7 +283,7 @@ function loadChecklistKPI(){
 }
 
 function clearFilters(){
-    $('#filter-inspector, #filter-date, #filter-client, #filter-year, #filter-expiry, #checklist-search').val('');
+    $('#filter-inspector, #filter-type, #filter-date, #filter-client, #filter-year, #filter-expiry, #checklist-search').val('');
     checklistTable.search('');
     checklistTable.ajax.reload();
     loadChecklistKPI();

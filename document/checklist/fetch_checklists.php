@@ -12,6 +12,7 @@ $search = $_POST['search']['value'] ?? '';
 
 /* 🔥 FILTER PARAMETERS */
 $filterInspector = $_POST['filter_inspector'] ?? '';
+$filterType = $_POST['filter_type'] ?? '';
 $filterDate = $_POST['filter_date'] ?? '';
 $filterClient = $_POST['filter_client'] ?? '';
 $filterYear = $_POST['filter_year'] ?? '';
@@ -45,6 +46,9 @@ if (!in_array($role, ['admin','document controller','quality controller','review
 /* 🔍 APPLY FILTERS */
 if (!empty($filterInspector)) {
     $where .= " AND ci.inspected_by='".mysqli_real_escape_string($conn,$filterInspector)."' ";
+}
+if (!empty($filterType)) {
+    $where .= " AND ci.checklist_type='".mysqli_real_escape_string($conn,$filterType)."' ";
 }
 if (!empty($filterDate)) {
     $where .= " AND DATE(ci.created_at)='".mysqli_real_escape_string($conn,$filterDate)."' ";

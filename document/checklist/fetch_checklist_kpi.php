@@ -12,6 +12,7 @@ $role = $_SESSION['role'];
 
 /* 🔥 FILTER PARAMETERS */
 $filterInspector = $_GET['filter_inspector'] ?? '';
+$filterType = $_GET['filter_type'] ?? '';
 $filterDate = $_GET['filter_date'] ?? '';
 $filterClient = $_GET['filter_client'] ?? '';
 $filterYear = $_GET['filter_year'] ?? '';
@@ -27,6 +28,9 @@ if (!in_array($role, ['admin','document controller','quality controller','review
 /* 🔍 APPLY FILTERS */
 if (!empty($filterInspector)) {
     $where .= " AND ci.inspected_by='".mysqli_real_escape_string($conn,$filterInspector)."' ";
+}
+if (!empty($filterType)) {
+    $where .= " AND ci.checklist_type='".mysqli_real_escape_string($conn,$filterType)."' ";
 }
 if (!empty($filterDate)) {
     $where .= " AND DATE(ci.created_at)='".mysqli_real_escape_string($conn,$filterDate)."' ";
