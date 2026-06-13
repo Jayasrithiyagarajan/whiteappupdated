@@ -132,6 +132,66 @@ $frmMap = [
 ];
 $frmValue = isset($frmMap[$checklist_type]) ? $frmMap[$checklist_type] : 'FRM.0601-1.10';
 
+$revisionMap = [
+    'arc-welding-machine' => 'Revision 01',
+    'articulating_boom' => 'Revision 03',
+    'base_mounted_drum' => 'Revision 01',
+    'bulldozer' => 'Revision 01',
+    'elevators' => 'Revision 02',
+    'excavator' => 'Revision 01',
+    'fixed-cranes-hoist' => 'Revision 02',
+    'forklift' => 'Revision 00',
+    'frames-and-mobile-gantries' => 'Revision 02',
+    'general-purpose' => 'Revision 02',
+    'jib-davit' => 'Revision 00',
+    'lifting-beam-spreader-bar' => 'Revision 02',
+    'manbaskets' => 'Revision 02',
+    'marine-offshore-cranes' => 'Revision 02',
+    'mobile_locomotive' => 'Revision 04',
+    'motor-grade' => 'Revision 01',
+    'ndt' => 'Revision 02',
+    'powered-platforms' => 'Revision 02',
+    'side-boom-tractors' => 'Revision 02',
+    'stbd-crane' => 'Revision 02',
+    'sticker' => 'Revision 02',
+    'storage-retrieval' => 'Revision 02',
+    'tower-cranes' => 'Revision 02',
+    'vehicle_mounted_elevating' => 'Revision 00',
+    'wheel-loader' => 'Revision 02',
+    'paywelder-checklist' => 'Revision 02'
+];
+$revisionValue = isset($revisionMap[$checklist_type]) ? $revisionMap[$checklist_type] : 'Revision 02';
+
+$issueDateMap = [
+    'arc-welding-machine' => 'Issue Date: 28/JAN/2021',
+    'articulating_boom' => 'Issue Date: 09/DEC/2020',
+    'base_mounted_drum' => 'Issue Date: 28/JAN/2021',
+    'bulldozer' => 'Issue Date: 24/Dec/2020',
+    'elevators' => 'Issue Date: 30/SEP/2020',
+    'excavator' => 'Issue Date: 24/Dec/2020',
+    'fixed-cranes-hoist' => 'Issue Date: 30/SEP/2020',
+    'forklift' => 'Issue Date: 01/JAN/2020',
+    'frames-and-mobile-gantries' => 'Issue Date: 30/SEP/2020',
+    'general-purpose' => 'Issue Date: 30/SEP/2020',
+    'jib-davit' => 'Issue Date: 30/SEP/2020',
+    'lifting-beam-spreader-bar' => 'Issue Date: 30/SEP/2020',
+    'manbaskets' => 'Issue Date: 30/SEP/2020',
+    'marine-offshore-cranes' => 'Issue Date: 30/SEP/2020',
+    'mobile_locomotive' => 'Issue Date: 22/AUG/2021',
+    'motor-grade' => 'Issue Date: 24/Dec/2020',
+    'ndt' => 'Issue Date: 30/SEP/2020',
+    'powered-platforms' => 'Issue Date: 30/SEP/2020',
+    'side-boom-tractors' => 'Issue Date: 30/SEP/2020',
+    'stbd-crane' => 'Issue Date: 08/OCT/2020',
+    'sticker' => 'Issue Date: 30/SEP/2020',
+    'storage-retrieval' => 'Issue Date: 30/SEP/2020',
+    'tower-cranes' => 'Issue Date: 30/SEP/2020',
+    'vehicle_mounted_elevating' => 'Issue Date: 24/SEP/2020',
+    'wheel-loader' => 'Issue Date: 30/SEP/2020',
+    'paywelder-checklist' => 'Issue Date: 30/SEP/2020'
+];
+$issueDateValue = isset($issueDateMap[$checklist_type]) ? $issueDateMap[$checklist_type] : 'Issue Date: 30/SEP/2020';
+
 
 $header = '
 <table width="100%" style="border-collapse:collapse;">
@@ -152,8 +212,8 @@ $header = '
 </tr>
 <tr>
     <td align="center">' . htmlspecialchars($frmValue, ENT_QUOTES) . '</td>
-    <td align="center">Revision 02</td>
-    <td align="center">Issue Date: 30/SEP/2020</td>
+    <td align="center">' . htmlspecialchars($revisionValue, ENT_QUOTES) . '</td>
+    <td align="center">' . htmlspecialchars($issueDateValue, ENT_QUOTES) . '</td>
 </tr>
 <tr>
     <td style="font-size:11px;">
