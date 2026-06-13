@@ -463,7 +463,7 @@ body {
                             <h2 class="regular mr-3 font-30">JOB ID</h2>
                             <h4 class="c4">#<?php echo htmlspecialchars($data['project_no']); ?></h4>
                         </div>
-                        <div class="invoice-header-right d-flex align-items-center justify-content-end">
+                        <!-- <div class="invoice-header-right d-flex align-items-center justify-content-end">
                             <div class="delete_mail mr-20">
                                 <a href="#"><img src="<?php echo $url; ?>assets/img/svg/delete.svg" alt="" class="svg"></a>
                             </div>
@@ -472,7 +472,7 @@ body {
                                     <img src="<?php echo $url; ?>assets/img/svg/writing.svg" alt="" class="svg">
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <!-- End Invoice Header -->
 
