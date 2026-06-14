@@ -32,6 +32,19 @@ if (isset($_GET['project_no'])) {
     exit;
 }
 
+// Fetch available stickers for the inspector (if project_no is not assigned)
+$stickers = [];
+if (!empty($inspected_by)) {
+    $sticker_stmt = $conn->prepare("SELECT sticker_start_no FROM stickers WHERE assign_inspector = ? AND (project_no IS NULL OR project_no = '' OR project_no = '0') ORDER BY sticker_start_no ASC");
+    $sticker_stmt->bind_param("s", $inspected_by);
+    $sticker_stmt->execute();
+    $sticker_result = $sticker_stmt->get_result();
+    while ($sticker_row = $sticker_result->fetch_assoc()) {
+        $stickers[] = $sticker_row['sticker_start_no'];
+    }
+    $sticker_stmt->close();
+}
+
 // Fetch the latest checklist_no from the database
 // Replace the checklist_no generation code with this:
 $checklistQuery = "SELECT MAX(CAST(checklist_no AS UNSIGNED)) AS last_checklist_no FROM checklist_information";
@@ -416,7 +429,16 @@ if ($checklistResult && $checklistResult->num_rows > 0) {
                                     
                                     <div class="form-group" id="stickerNoField">
     <label class="font-14 bold mb-2">STICKER NO</label>
-    <input type="text" name="sticker_no" class="theme-input-style">
+    <?php if ($equipment_type === "NDT Equipment") { ?>
+        <input type="text" name="sticker_no" class="theme-input-style" value="NA" readonly>
+    <?php } else { ?>
+        <select name="sticker_no" class="theme-input-style">
+            <option value="">Select Sticker No</option>
+            <?php foreach ($stickers as $st_no) { ?>
+                <option value="<?php echo htmlspecialchars($st_no); ?>"><?php echo htmlspecialchars($st_no); ?></option>
+            <?php } ?>
+        </select>
+    <?php } ?>
 </div>
 
                                     
@@ -458,12 +480,14 @@ if ($checklistResult && $checklistResult->num_rows > 0) {
     <script>
 document.addEventListener("DOMContentLoaded", function () {
     var equipmentType = <?php echo json_encode($equipment_type); ?>;
-    var stickerInput = document.querySelector("input[name='sticker_no']");
+    var stickerInput = document.querySelector("[name='sticker_no']");
 
     if (equipmentType === "NDT Equipment") {
         if (stickerInput) {
             stickerInput.value = "NA";
-            stickerInput.readOnly = true;
+            if (stickerInput.tagName === "INPUT") {
+                stickerInput.readOnly = true;
+            }
         }
     }
 });

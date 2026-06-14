@@ -410,12 +410,22 @@ if (isset($_GET['project_no'])) {
                 <div class="form-group">
                     <label class="font-14 bold mb-2">Date of Inspection</label>
                     <!-- <input type="date" class="theme-input-style" name="date_of_inspection" required> -->                    
-                    <input type="date" class="theme-input-style" value="<?php echo htmlspecialchars($inspection_date); ?>" name="date_of_inspection" required>
+                    <input type="date" class="theme-input-style" value="<?php echo htmlspecialchars($inspection_date); ?>" name="date_of_inspection" id="date_of_inspection" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="font-14 bold mb-2">Expiry Selection</label>
+                    <select class="theme-input-style" id="expiry_selection" name="expiry_selection">
+                        <option value="">Select Expiry Period</option>
+                        <option value="6_months">6 Months</option>
+                        <option value="1_year">1 Year</option>
+                        <option value="5_years">5 Years</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label class="font-14 bold mb-2">Next Inspection Due Date</label>
-                    <input type="date" class="theme-input-style" name="next_inspection_due_date" required>
+                    <input type="date" class="theme-input-style" name="next_inspection_due_date" id="next_inspection_due_date" required>
                 </div>
 
                 <!--<div class="form-group">-->
@@ -549,6 +559,48 @@ if (isset($_GET['project_no'])) {
         </script> -->
         
 </form>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const inspectionDateInput = document.getElementById('date_of_inspection');
+    const expirySelectionInput = document.getElementById('expiry_selection');
+    const nextDueDateInput = document.getElementById('next_inspection_due_date');
+
+    function calculateExpiry() {
+        const inspectionDateVal = inspectionDateInput.value;
+        const expirySelectionVal = expirySelectionInput.value;
+
+        if (inspectionDateVal && expirySelectionVal) {
+            const date = new Date(inspectionDateVal);
+            if (!isNaN(date.getTime())) {
+                if (expirySelectionVal === '6_months') {
+                    date.setMonth(date.getMonth() + 6);
+                } else if (expirySelectionVal === '1_year') {
+                    date.setFullYear(date.getFullYear() + 1);
+                } else if (expirySelectionVal === '5_years') {
+                    date.setFullYear(date.getFullYear() + 5);
+                }
+                
+                // Subtract 1 day
+                date.setDate(date.getDate() - 1);
+                
+                const yyyy = date.getFullYear();
+                let mm = date.getMonth() + 1;
+                let dd = date.getDate();
+
+                if (dd < 10) dd = '0' + dd;
+                if (mm < 10) mm = '0' + mm;
+
+                nextDueDateInput.value = yyyy + '-' + mm + '-' + dd;
+            }
+        }
+    }
+
+    if (inspectionDateInput && expirySelectionInput && nextDueDateInput) {
+        inspectionDateInput.addEventListener('change', calculateExpiry);
+        expirySelectionInput.addEventListener('change', calculateExpiry);
+    }
+});
+</script>
 </div></div></div></div></div></div>
 <!-- End Main Content -->
 

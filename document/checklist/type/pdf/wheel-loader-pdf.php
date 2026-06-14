@@ -165,76 +165,76 @@ REFERENCE: ASME B30 STANDARDS</h2>
 <tr>
     <th width="6%">S.N</th>
     <th width="38%">ACCEPTANCE CRITERIA</th>
-    <th width="10%">REFERENCE</th>
+    
     <th width="8%">PASS</th>
     <th width="8%">FAIL</th>
     <th width="8%">NA</th>
-    <th width="22%">REMARKS</th>
+    <th width="32%">REMARKS</th>
 </tr>
 </thead>
 <tbody>
 <?php
 $sections = [
     '1. GENERAL REQUIREMENTS' => [
-        ['Documentation is available.', '>'],
-        ['Equipment asset ID Number is prominently marked.', '>'],
-        ['Nameplate, caution, and instruction markings are available on the truck.', '>'],
-        ['SWL/WLL (Capacities) are clearly marked & on a prominent location.', '>'],
-        ['All controls are marked for identification of function.', '>'],
-        ['Bucket Identification, capacity, serial number, and model.', '>'],
-        ['The machine is operated by Certified Operator.', '>'],
-        ['Capacity chart is provided & legible.', '>'],
-        ['All safety & warning decals are posted.', '>'],
+        ['Documentation is available.'],
+        ['Equipment asset ID Number is prominently marked.'],
+        ['Nameplate, caution, and instruction markings are available on the truck.'],
+        ['SWL/WLL (Capacities) are clearly marked & on a prominent location.'],
+        ['All controls are marked for identification of function.'],
+        ['Bucket Identification, capacity, serial number, and model.'],
+        ['The machine is operated by Certified Operator.'],
+        ['Capacity chart is provided & legible.'],
+        ['All safety & warning decals are posted.'],
     ],
     '2. INSPECTION POINTS' => [
-        ['Carriage & Backrest are not deformed.', '>'],
-        ['Bucket structure.', '>'],
-        ['No excessive corrosion on frames, anchorages, structures are present.', '>'],
-        ['Lift & tilt cylinders are operating correctly & without hydraulic oil leaks.', '>'],
-        ['Steering cylinders are operating correctly & without hydraulic oil leaks.', '>'],
-        ['ROPS or overhead guard is provided and can withstand the drop test based on the applicable table or rated capacity.', '>'],
-        ['Safety belt is provided.', '>'],
-        ['All control levers are within reach of operator during the normal operating conditions.', '>'],
-        ['All hydraulic hoses are free of tears, and no signs of leaks on their hose fittings.', '>'],
-        ['Hydraulic oil tank level is correct and tank is securely fastened, and no signs of oil leakages.', '>'],
-        ['Fuel tank is secured & not leaking.', '>'],
-        ['Steering & transmission oil levels are correct & not leaking.', '>'],
-        ['Lubrication points are accessible.', '>'],
-        ['No deterioration of Air & Water Hose and or leakage of Air and Water.', '>'],
-        ['No indication of loose, damaged, or missing structural components including supports and anchorages.', '>'],
-        ['Limit Switches are properly working.', '>'],
-        ['Brake & Clutch system parts & linings have no excessive wear, severe distortion, and damage.', '>'],
-        ['Seat and back cushion are not torn.', '>'],
-        ['Tires have no tears, sidewall cuts & excessive wear.', '>'],
-        ['Wheel hubs and gear boxes have no leakages.', '>'],
-        ['Wheel bearings / bushing have no signs of excessive wear.', '>'],
-        ['No indication of loose, damaged, or missing components including supports and anchorages on under chassis.', '>'],
-        ['Control & drive mechanisms are properly adjusted and without excessive wear.', '>'],
-        ['Brake fluid level is correctly topped-up.', '>'],
-        ['Parking brake is correctly working.', '>'],
-        ['Steering cylinders, knuckles, kingpins, tie rods, equalizer bar, etc. have no excessive plays and not excessively worn-out.', '>'],
-        ['No damage tubing, piping, electrical cables, or hoses, and their fittings.', '>'],
-        ['Front & Rear Windshields are in good condition& Wiper Motor Assembly are working.', '>'],
+        ['Carriage & Backrest are not deformed.'],
+        ['Bucket structure.'],
+        ['No excessive corrosion on frames, anchorages, structures are present.'],
+        ['Lift & tilt cylinders are operating correctly & without hydraulic oil leaks.'],
+        ['Steering cylinders are operating correctly & without hydraulic oil leaks.'],
+        ['ROPS or overhead guard is provided and can withstand the drop test based on the applicable table or rated capacity.'],
+        ['Safety belt is provided.'],
+        ['All control levers are within reach of operator during the normal operating conditions.'],
+        ['All hydraulic hoses are free of tears, and no signs of leaks on their hose fittings.'],
+        ['Hydraulic oil tank level is correct and tank is securely fastened, and no signs of oil leakages.'],
+        ['Fuel tank is secured & not leaking.'],
+        ['Steering & transmission oil levels are correct & not leaking.'],
+        ['Lubrication points are accessible.'],
+        ['No deterioration of Air & Water Hose and or leakage of Air and Water.'],
+        ['No indication of loose, damaged, or missing structural components including supports and anchorages.'],
+        ['Limit Switches are properly working.'],
+        ['Brake & Clutch system parts & linings have no excessive wear, severe distortion, and damage.'],
+        ['Seat and back cushion are not torn.'],
+        ['Tires have no tears, sidewall cuts & excessive wear.'],
+        ['Wheel hubs and gear boxes have no leakages.'],
+        ['Wheel bearings / bushing have no signs of excessive wear.'],
+        ['No indication of loose, damaged, or missing components including supports and anchorages on under chassis.'],
+        ['Control & drive mechanisms are properly adjusted and without excessive wear.'],
+        ['Brake fluid level is correctly topped-up.'],
+        ['Parking brake is correctly working.'],
+        ['Steering cylinders, knuckles, kingpins, tie rods, equalizer bar, etc. have no excessive plays and not excessively worn-out.'],
+        ['No damage tubing, piping, electrical cables, or hoses, and their fittings.'],
+        ['Front & Rear Windshields are in good condition& Wiper Motor Assembly are working.'],
     ],
     '3. ADDITIONAL INSPECTION' => [
-        ['Engine has no excessive smoke, & engine oil leak.', '>'],
-        ['Fuel is not leaking.', '>'],
-        ['Engine has no loss of power.', '>'],
-        ['Fan, Alternator, & steering belts tension are not loose.', '>'],
-        ['Instrument Panel Indicator Lights are functioning correctly.', '>'],
-        ['Strobe light or rotating beacon light is working.', '>'],
-        ['Head light & working lights are not broken and are functioning correctly.', '>'],
-        ['Brake & tail lights are working.', '>'],
-        ['Back-Up (Reverse) Light and alarm are working.', '>'],
-        ['Horn is working.', '>'],
+        ['Engine has no excessive smoke, & engine oil leak.'],
+        ['Fuel is not leaking.'],
+        ['Engine has no loss of power.'],
+        ['Fan, Alternator, & steering belts tension are not loose.'],
+        ['Instrument Panel Indicator Lights are functioning correctly.'],
+        ['Strobe light or rotating beacon light is working.'],
+        ['Head light & working lights are not broken and are functioning correctly.'],
+        ['Brake & tail lights are working.'],
+        ['Back-Up (Reverse) Light and alarm are working.'],
+        ['Horn is working.'],
     ],
     '4. SECTION' => [
-        ['Bucket Leveling Proximity Switch.', '>'],
-        ['Bucket Arm Tilt-up Proximity Switch.', '>'],
-        ['Access and Step Ladders', '>'],
-        ['Guard Rails', '>'],
-        ['Fire Extinguisher', '>'],
-        ['Housekeeping', '>'],
+        ['Bucket Leveling Proximity Switch.'],
+        ['Bucket Arm Tilt-up Proximity Switch.'],
+        ['Access and Step Ladders'],
+        ['Guard Rails'],
+        ['Fire Extinguisher'],
+        ['Housekeeping'],
     ],
 ];
 
@@ -248,8 +248,7 @@ foreach ($sections as $sectionTitle => $items) {
         $sn = explode('. ', $sectionTitle, 2)[0] . '.' . $itemNo;
         echo '<tr>';
         echo '<td>' . htmlspecialchars($sn) . '</td>';
-        echo '<td>' . htmlspecialchars($item) . '</td>';
-        echo '<td style="text-align:center; font-size: 8px;">' . htmlspecialchars($ref) . '</td>';
+        echo '<td>' . htmlspecialchars($item) . '</td>';        
         echo '<td class="center">' . pdf_mark_result($index, 'PASS', $selected_results) . '</td>';
         echo '<td class="center">' . pdf_mark_result($index, 'FAIL', $selected_results) . '</td>';
         echo '<td class="center">' . pdf_mark_result($index, 'NA', $selected_results) . '</td>';
