@@ -171,6 +171,11 @@ th {
 </head>
 <body>
 
+<h2 style="text-align: center; margin-bottom: 2px;">MOTOR GRADER
+<br>(EARTH MOVING MACHINERY)
+<br>DS/EN 474-1:2006+A6:2019
+</h2>
+
 <table>
 <tr>
     <th width="25%">REPORT NO</th>
@@ -222,12 +227,11 @@ th {
 <thead>
 <tr>
     <th width="6%">S.N</th>
-    <th width="48%">ACCEPTANCE CRITERIA</th>
-    <th width="10%">REF</th>
+    <th width="48%">ACCEPTANCE CRITERIA</th>    
     <th width="8%">PASS</th>
     <th width="8%">FAIL</th>
     <th width="8%">NA</th>
-    <th width="12%">REMARKS</th>
+    <th width="22%">REMARKS</th>
 </tr>
 </thead>
 <tbody>
@@ -240,8 +244,7 @@ foreach ($sections as $sectionTitle => $items) {
         $sn = explode(' ', $sectionTitle, 2)[0] . '.' . $itemNo;
         echo '<tr>';
         echo '<td>' . htmlspecialchars($sn) . '</td>';
-        echo '<td>' . htmlspecialchars($item) . '</td>';
-        echo '<td></td>';
+        echo '<td>' . htmlspecialchars($item) . '</td>';        
         echo '<td class="center">' . pdf_mark_result($index, 'PASS', $selected_results) . '</td>';
         echo '<td class="center">' . pdf_mark_result($index, 'FAIL', $selected_results) . '</td>';
         echo '<td class="center">' . pdf_mark_result($index, 'NA', $selected_results) . '</td>';

@@ -117,6 +117,9 @@ th {
 </head>
 <body>
 
+<h2 style="text-align: center; margin-bottom: 2px;">NDT CHECKLIST
+<br>REFERENCE: ASME B30 STANDARDS</h2>
+
 <table>
 <tr>
     <th width="25%">REPORT NO</th>
@@ -156,12 +159,11 @@ th {
 <thead>
 <tr>
     <th width="8%">Item No.</th>
-    <th width="52%">ACCEPTANCE CRITERIA</th>
-    <th width="10%">REF</th>
+    <th width="52%">ACCEPTANCE CRITERIA</th>    
     <th width="8%">PASS</th>
     <th width="8%">FAIL</th>
     <th width="8%">NA</th>
-    <th width="6%">Comments</th>
+    <th width="16%">Comments</th>
 </tr>
 </thead>
 <tbody>
@@ -172,8 +174,7 @@ foreach ($sections as $sectionTitle => $items) {
     foreach ($items as $item) {
         echo '<tr>';
         echo '<td>1.01</td>';
-        echo '<td>' . htmlspecialchars($item) . '</td>';
-        echo '<td></td>';
+        echo '<td>' . htmlspecialchars($item) . '</td>';        
         echo '<td class="center">' . pdf_mark_result($index, 'PASS', $selected_results) . '</td>';
         echo '<td class="center">' . pdf_mark_result($index, 'FAIL', $selected_results) . '</td>';
         echo '<td class="center">' . pdf_mark_result($index, 'NA', $selected_results) . '</td>';

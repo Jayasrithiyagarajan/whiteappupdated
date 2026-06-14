@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include_once(__DIR__ . '/_bootstrap.php');
 
 $project_no = $row['project_no'] ?? '';
@@ -114,9 +114,9 @@ th {
 
 <br>
 
-<h2 style="text-align: center;">CRANE HEALTH CHECK INSPECTION CHECKLIST FOR OFFSHORE PEDESTAL CRANES & FLOATING CRANES</h2>
-
-<br>
+<h2 style="text-align: center; margin-bottom: 2px;">CRANE HEALTH CHECK INSPECTION CHECKLIST FOR OFFSHORE PEDESTAL CRANES & FLOATING CRANES</h2>
+<h4 style="text-align: center; margin-top: 2px; margin-bottom: 2px; font-weight: bold;">PEDESTAL CRANES, FLOATING CRANES & FLOATING DERRICKS, ARTICULATING BOOM CRANES</h4>
+<h4 style="text-align: center; margin-top: 2px; margin-bottom: 10px; font-weight: bold;">ASME B30.4-2015, ASME B30.8-2015, ASME B30.22-2016, API SPEC 2C-2012, API RP 2D-2014</h4>
 
 <table>
 <tr>
@@ -134,8 +134,8 @@ th {
 <tr>
     <th>EQUIPMENT NO</th>
     <td style="text-align:center;"><?= htmlspecialchars($row['equipment_no'] ?? '') ?></td>
-    <th>TYPE</th>
-    <td style="text-align:center;"><?= htmlspecialchars($row['type'] ?? '') ?></td>
+    <th>EQUIPMENT TYPE</th>
+    <td style="text-align:center;"><?= htmlspecialchars($row['equipmenttype'] ?? '') ?></td>
 </tr>
 <tr>
     <th>MANUFACTURER</th>
@@ -146,12 +146,12 @@ th {
 <tr>
     <th>MODEL NO</th>
     <td style="text-align:center;"><?= htmlspecialchars($row['model_no'] ?? '') ?></td>
-    <th>CAPACITY</th>
-    <td style="text-align:center;"><?= htmlspecialchars($row['capacity'] ?? '') ?></td>
+    <th>CAPACITY (SWL)</th>
+    <td style="text-align:center;"><?= htmlspecialchars($row['capacity_swl'] ?? '') ?></td>
 </tr>
 <tr>
-    <th>SERIAL NO</th>
-    <td style="text-align:center;"><?= htmlspecialchars($row['serial_no'] ?? '') ?></td>
+    <th>EQUIP.SERIAL NO.</th>
+    <td style="text-align:center;"><?= htmlspecialchars($row['crane_serial_no'] ?? '') ?></td>
     <th>CLIENT NAME</th>
     <td style="text-align:center;"><?= htmlspecialchars($row['client_name'] ?? '') ?></td>
 </tr>
@@ -164,181 +164,190 @@ th {
 <tr>
     <th width="6%">S.N</th>
     <th width="38%">ACCEPTANCE CRITERIA</th>
-    <th width="10%">REF</th>
+    
     <th width="8%">PASS</th>
     <th width="8%">FAIL</th>
     <th width="8%">NA</th>
-    <th width="22%">REMARKS</th>
+    <th width="32%">REMARKS</th>
 </tr>
 </thead>
 <tbody>
 <?php
 $sections = [
     '1. REQUIRED DOCUMENTS' => [
-        'Owner\'s Manual',
-        'Crane Log Book',
-        'Preventive Maintenance Records',
-        'Crane Maintenance and Repair Records',
-        'Slew/Swing Gear and Pinion Clearances Report',
-        'Operator\'s Daily Pre-Operational Inspection Checklists',
-        'Previous Inspection Reports are available & deficiencies were already rectified',
+        '1.1' => 'Owner’s Manual or Technical Manual.',
+        '1.2' => 'Crane Log Book Records.',
+        '1.3' => 'Preventive Maintenance Schedule or Planned Maintenance as per Manufacturer’s recommendation records.',
+        '1.4' => 'Crane Maintenance and Repair Records.',
+        '1.5' => 'Slew/Swing Gear and Pinion Clearances Report.',
+        '1.6' => 'Operator’s Daily Pre-Operational Inspection Checklists.',
+        '1.7' => 'Previous Inspection Reports are available & deficiencies were already rectified.'
     ],
     '2. CERTIFICATES' => [
-        'Crane Class Certificates',
-        'Main Load Hoist Rope',
-        'No. 1 Auxiliary Load Hoist Rope',
-        'No. 2 Auxiliary Hoist Rope',
-        'Boom Hoist Rope',
-        'Pendant Rope',
-        'Crane Load Test Certificates',
-        'Crane Structure Welds',
-        'Main Hook Blocks',
-        'Auxiliary Hook Blocks',
-        'Operator Certificate for the type/model of crane',
-        'LMI/RCL/SLI/AML Calibration Certificates',
-        'Boom Rocking Test Certificates',
+        '2.1' => 'Crane Class Certificates.',
+        '2.2' => ['subheader' => 'ROPE Manufacturer’s Test Certificates'],
+        '2.2.1' => 'Main Load Hoist Rope',
+        '2.2.2' => 'No. 1 Auxiliary Load Hoist Rope',
+        '2.2.3' => 'No. 2 Auxiliary Hoist Rope',
+        '2.2.4' => 'Boom Hoist Rope',
+        '2.2.5' => 'Pendant Rope',
+        '2.3' => 'Crane Load Test Certificates.',
+        '2.4' => ['subheader' => 'NDT/MPI Certificates:'],
+        '2.4.1' => 'Crane Structure Welds',
+        '2.4.2' => 'Main Hook Blocks',
+        '2.4.3' => 'Auxiliary Hook Blocks',
+        '2.5' => 'Operator Certificate for the type/model of crane.',
+        '2.6' => 'LMI/RCL/SLI/AML Calibration Certificates.',
+        '2.7' => 'Boom Rocking Test Certificates.'
     ],
     '3. MARKING AND SAFETY DECALS' => [
-        'Crane asset number/identification is stenciled prominently',
-        'Crane\'s SWL is prominently stenciled/marked',
-        'Hook Blocks\' SWL and weights are stenciled on the items',
-        'WARNING SIGN: Operator Should Not Rely Solely on Any Automatic Device as a Substitute for Safe Operating Practice, is posted inside the cabin\'s wall or control panel',
-        'CRANE\'S DATA PLATE (Crane Manufacturer Name, Model, Serial Number, and Year of Manufacture) is available and posted or stamped on the crane structure',
-        'Warning Decal stating: "Warning! Switch Limit must be tested before the start of Lifting Operation and NO Personnel is allowed to By-pass the Crane Limit at any time"',
-        'Hand signal decal is posted on the pedestal or mast and cabin',
-        'Load rating charts and range diagrams are posted on the wall inside the cabin',
-        'Labels of the directional control levers are marked legibly',
+        '3.1' => 'Crane asset number/identification is stenciled prominently.',
+        '3.2' => 'Crane’s SWL is prominently stenciled/marked.',
+        '3.3' => ['subheader' => 'Hook Blocks’ SWL and weights are stenciled on the items.'],
+        '3.3.1' => 'Main Hook Block',
+        '3.3.2' => 'Auxiliary Hook Block',
+        '3.4' => 'WARNING SIGN: Operator Should Not Rely Solely on Any Automatic Device as a Substitute for Safe Operating Practice, is posted inside the cabin’s wall or control panel.',
+        '3.5' => 'CRANE’S DATA PLATE (Crane Manufacturer Name, Model, Serial Number, and Year of Manufacture) is available and posted or stamped on the crane structure.',
+        '3.6' => 'Warning Decal stating: “Warning! Switch Limit must be tested before the start of Lifting Operation and NO Personnel is allowed to By-pass the Crane Limit at any time.',
+        '3.7' => 'Hand signal decal is posted on the pedestal or mast and cabin.',
+        '3.8' => 'Load rating charts and range diagrams are posted on the wall inside the cabin.',
+        '3.9' => 'Labels of the directional control levers are marked legibly.'
     ],
     '4. VISUAL INSPECTION & FUNCTIONAL TEST' => [
-        'BOOM STRUCTURE: There have no signs of excessive wear in the boom pivot shafts, boom cylinder anchor bushings & shafts, & boom telescopic wear surfaces & strips/pads',
-        'Main Boom',
-        'Lattice Boom: Chords, Lacings, Splices, and bridle have no bent, corroded, deformed, damaged, and dents',
-        'Knuckle Boom',
-        'The boom assembly has no signs of corrosion, distortion, deformation, cracks, & wear',
-        'HYDRAULIC CYLINDERS are properly working and no signs of leakages; There is no noticeable boom dropping',
-        'Boom Lift',
-        'Boom Telescopic',
-        'Boom Articulating',
-        'The HOLDING VALVES of boom lifting, telescoping, and articulating/ knuckling are in good working condition and have no signs of boom dropping',
-        'HOISTING OPERATION: Properly working including their brakes',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'No leakages are visible on the hydraulic hoses, fittings, valves, & manifolds',
-        'Nothing was deformed on the tubing, fittings, & other related components',
-        'Boom angle indicator is provided and working properly',
-        'BOOM BACK STOPS: Fixed bumper, Shock absorbing bumper, or Hydraulic bumper, is provided and in good condition',
-        'WINCH DRUM\'S LOCK (PAWLS) is in good condition & properly functioning (as applicable)',
-        'Boom Hoist Drum',
-        'Main Hoist Drum',
-        'Auxiliary Hoist Drum',
-        'Automatic Boom Back Stops: Maximum boom angle',
-        'Automatic stop limit for minimum boom angle',
-        'Minimum Boom Length & Maximum Boom Length',
-        'Boom cradle is provided and can secure the boom at rest',
-        'Sheaves are free from deformation, dent, bent, or damage and their bearings sufficiently lubricated',
-        'Aviation or pilot light is provided and is working',
+        '4.1' => ['subheader' => 'BOOM STRUCTURE: There have no signs of excessive wear in the boom pivot shafts, boom cylinder anchor bushings & shafts, & boom telescopic wear surfaces & strips/pads.'],
+        '4.1.1' => 'Main Boom',
+        '4.1.2' => 'Lattice Boom: Chords, Lacings, Splices, and bridle have no bent, corroded, deformed, damaged, and dents.',
+        '4.1.3' => 'Knuckle Boom',
+        '4.2' => 'The boom assembly has no signs of corrosion, distortion, deformation, cracks, & wear.',
+        '4.3' => ['subheader' => 'HYDRAULIC CYLINDERS are properly working and no signs of leakages; There is no noticeable boom dropping:'],
+        '4.3.1' => 'Boom Lift',
+        '4.3.2' => 'Boom Telescopic',
+        '4.3.3' => 'Boom Articulating',
+        '4.4' => 'The HOLDING VALVES of boom lifting, telescoping, and articulating/ knuckling are in good working condition and have no signs of boom dropping.',
+        '4.5' => ['subheader' => 'HOISTING OPERATION: Properly working including their brakes.'],
+        '4.5.1' => 'Boom Hoist',
+        '4.5.2' => 'Main Load Hoist',
+        '4.5.3' => 'Auxiliary Load Hoist',
+        '4.6' => 'No leakages are visible on the hydraulic hoses, fittings, valves, & manifolds.',
+        '4.7' => 'Nothing was deformed on the tubing, fittings, & other related components.',
+        '4.8' => 'Boom angle indicator is provided and working properly.',
+        '4.9' => 'BOOM BACK STOPS: Fixed bumper, Shock absorbing bumper, or Hydraulic bumper, is provided and in good condition.',
+        '4.10' => ['subheader' => 'WINCH DRUM’S LOCK (PAWLS) is in good condition & properly functioning (as applicable):'],
+        '4.10.1' => 'Boom Hoist Drum',
+        '4.10.2' => 'Main Hoist Drum',
+        '4.10.3' => 'Auxiliary Hoist Drum',
+        '4.11' => 'Automatic Boom Back Stops: Maximum boom angle',
+        '4.12' => 'Automatic stop limit for minimum boom angle',
+        '4.13' => 'Minimum Boom Length & Maximum Boom Length',
+        '4.14' => 'Boom cradle is provided and can secure the boom at rest.',
+        '4.15' => 'Sheaves are free from deformation, dent, bent, or damage and their bearings sufficiently lubricated.',
+        '4.16' => 'Aviation or pilot light is provided and is working.'
     ],
     '5. CRANE STRUCTURE AND SWING COMPONENTS' => [
-        'Base Structure/Pedestal/mast has no signs of loose bolts and fasteners',
-        'Base Structure/Pedestal/mast\'s welds and joints are free from corrosion and cracks',
-        'Pins, bearings, shafts, gears, and locking devices are free from distortion, cracks and corrosion',
-        'Swing brakes operate and can restrict further movement of the rotating structure',
-        'Swing positive locking device is provided and can lock the structure from further movement',
-        'Swing brake is adjustable to compensate its wear',
-        'All swing moving parts are sufficiently lubricated',
-        'Platforms and walkways are skid resistant',
-        'Access ladders, & guard rails are free from rust, damage, & corrosion',
+        '5.1' => 'Base Structure/Pedestal/mast has no signs of loose bolts and fasteners.',
+        '5.2' => 'Base Structure/Pedestal/mast’s welds and joints are free from corrosion and cracks.',
+        '5.3' => 'Pins, bearings, shafts, gears, and locking devices are free from distortion, cracks and corrosion.',
+        '5.4' => 'Swing brakes operate and can restrict further movement of the rotating structure.',
+        '5.5' => 'Swing positive locking device is provided and can lock the structure from further movement.',
+        '5.6' => 'Swing brake is adjustable to compensate its wear.',
+        '5.7' => 'All swing moving parts are sufficiently lubricated.',
+        '5.8' => 'Platforms and walkways are skid resistant.',
+        '5.9' => 'Access ladders, & guard rails are free from rust, damage, & corrosion'
     ],
     '6. MACHINERY POWER, ELECTRICAL COMPONENTS & HYDRAULIC COMPONENTS' => [
-        'Work areas, companion ways, access ladders, are equipped with anti-slip surface materials',
-        'Electrical wirings and related equipment are free of damages',
-        'Manholes and hatches\' covers are provided to protect personnel from accidental fall',
-        'Electrical and hydraulic motors & pumps are in good working condition',
-        'Hydraulic hoses, fittings, tubes, and manifold joints have no evidence of leakages and not damage',
-        'Hydraulic/pneumatic cylinders, pumps and motors have no leaks and working properly',
-        'Engine power driven motors and pumps are working properly and have no signs of leaks',
-        'Machinery compartment is free from spills and obstruction',
-        'Fire extinguisher is provided in the compartment with minimum rating of 10BC',
-        'An emergency lowering system, if provided, shall be checked for proper function',
+        '6.1' => 'Work areas, companion ways, access ladders, are equipped with anti-slip surface materials.',
+        '6.2' => 'Electrical wirings and related equipment are free of damages.',
+        '6.3' => 'Manholes and hatches’ covers are provided to protect personnel from accidental fall.',
+        '6.4' => 'Electrical and hydraulic motors & pumps are in good working condition.',
+        '6.5' => 'Hydraulic hoses, fittings, tubes, and manifold joints have no evidence of leakages and not damage.',
+        '6.6' => 'Hydraulic/pneumatic cylinders, pumps and motors have no leaks and working properly.',
+        '6.7' => 'Engine power driven motors and pumps are working properly and have no signs of leaks.',
+        '6.8' => 'Machinery compartment is free from spills and obstruction.',
+        '6.9' => 'Fire extinguisher is provided in the compartment with minimum rating of 10BC.',
+        '6.10' => 'An emergency lowering system, if provided, shall be checked for proper function.'
     ],
     '7. CABIN' => [
-        'Portable fire extinguisher is provided',
-        'Toolbox with basic tools are available',
-        'An Emergency stop button shall be available and working effectively',
-        'Wipers are installed and working properly',
-        'An audible warning device is provided for any errors in the system',
-        'Cabin has a good housekeeping',
-        'Cabin door is open outward or sliding backward',
-        'Windshield is of Safety glazing glass',
-        'Operator seat condition (torn seat or back cushions)',
-        'Cabin A/C is provided and is working',
-        'The Installed anemometer is working',
-        'The installed view camera is working',
-        'All applicable indicators like but not limited to; oil or water temperature gauge, hydraulic oil pressure gauge, etc. are working correctly',
+        '7.1' => 'Portable fire extinguisher is provided.',
+        '7.2' => 'Toolbox with basic tools are available.',
+        '7.3' => 'An Emergency stop button shall be available and working effectively.',
+        '7.4' => 'Wipers are installed and working properly.',
+        '7.5' => 'An audible warning device is provided for any errors in the system.',
+        '7.6' => 'Cabin has a good housekeeping.',
+        '7.7' => 'Cabin door is open outward or sliding backward.',
+        '7.8' => 'Windshield is of Safety glazing glass.',
+        '7.9' => 'Operator seat condition (torn seat or back cushions).',
+        '7.10' => 'Cabin A/C is provided and is working.',
+        '7.11' => 'The Installed anemometer is working.',
+        '7.12' => 'The installed view camera is working',
+        '7.13' => 'All applicable indicators like but not limited to; oil or water temperature gauge, hydraulic oil pressure gauge, etc. are working correctly.'
     ],
     '8. HOIST ROPES' => [
-        'Remaining rope on drum is at least two full wraps when the boom hoist or load hoist is at its lowest angle or maximum pay-out respectively',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'Wire rope shall be free from bird caging, corrosion, crushing, kinking, un-stranding, core protrusion, main strand displacement, evidence of heat damage, or any other damage',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'The rope does not have more than two broken wires in 1 lay in sections beyond end connections or more than 1 broken wire at an end connection (for standing ropes)',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'The rope does not have more than 6 randomly distributed broken wires in 1 lay or 3 in 1 strand is 1 lay (for running ropes)',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'The rope dead end is correctly terminated as per the applicable standard',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'The wire rope is correctly and securely anchored on the drum',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'The wire rope is correctly & adequately lubricated',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'Drum Hoist brakes: Boom & Load Hoist (Main & auxiliary) are operational',
-        'Boom Hoist',
-        'Main Load Hoist',
-        'Auxiliary Load Hoist',
-        'Anti-two-blocking system (A2B) is working correctly',
+        '8.1' => ['subheader' => 'Remaining rope on drum is at least two full wraps when the boom hoist or load hoist is at its lowest angle or maximum pay-out respectively.'],
+        '8.1.1' => 'Boom Hoist',
+        '8.1.2' => 'Main Load Hoist',
+        '8.1.3' => 'Auxiliary Load Hoist',
+        '8.2' => ['subheader' => 'Wire rope shall be free from bird caging, corrosion, crushing, kinking, un-stranding, core protrusion, main strand displacement, evidence of heat damage, or any other damage.'],
+        '8.2.1' => 'Boom Hoist',
+        '8.2.2' => 'Main Load Hoist',
+        '8.2.3' => 'Auxiliary Load Hoist',
+        '8.3' => ['subheader' => 'The rope does not have more than two broken wires in 1 lay in sections beyond end connections or more than 1 broken wire at an end connection (for standing ropes).'],
+        '8.3.1' => 'Boom Hoist',
+        '8.3.2' => 'Main Load Hoist',
+        '8.3.3' => 'Auxiliary Load Hoist',
+        '8.4' => ['subheader' => 'The rope does not have more than 6 randomly distributed broken wires in 1 lay or 3 in 1 strand is 1 lay (for running ropes).'],
+        '8.4.1' => 'Boom Hoist',
+        '8.4.2' => 'Main Load Hoist',
+        '8.4.3' => 'Auxiliary Load Hoist',
+        '8.5' => ['subheader' => 'The rope dead end is correctly terminated as per the applicable standard.'],
+        '8.5.1' => 'Boom Hoist',
+        '8.5.2' => 'Main Load Hoist',
+        '8.5.3' => 'Auxiliary Load Hoist',
+        '8.6' => ['subheader' => 'The rope (Boom & Load hoist) is correctly and securely anchored on the drum.'],
+        '8.6.1' => 'Boom Hoist',
+        '8.6.2' => 'Main Load Hoist',
+        '8.6.3' => 'Auxiliary Load Hoist',
+        '8.7' => ['subheader' => 'The wire rope is correctly & adequately lubricated.'],
+        '8.7.1' => 'Boom Hoist',
+        '8.7.2' => 'Main Load Hoist',
+        '8.7.3' => 'Auxiliary Load Hoist',
+        '8.8' => ['subheader' => 'Drum Hoist brakes: Boom & Load Hoist (Main & auxiliary) are operational.'],
+        '8.8.1' => 'Boom Hoist',
+        '8.8.2' => 'Main Load Hoist',
+        '8.8.3' => 'Auxiliary Load Hoist',
+        '8.9' => 'Anti-two-blocking system (A2B) is working correctly.'
     ],
     '9. HOOKS' => [
-        'Labeling and manufacturer data are available & legible',
-        'Hook is not bent or twisted. Maximum bending or twisting is not to exceed 10 degrees from plane of unbent hook',
-        'Hook has no crack, nick, gouge, or excessive wear',
-        'Hook is not distorted in the throat opening. Maximum allowable throat opening is 15% compared to new hook or as per manufacturer recommendation',
-        'Hook latch is operative',
-        'Hook is rotating freely',
-    ],
+        '9.1' => 'Labeling and manufacturer data are available & legible.',
+        '9.2' => 'Hook is not bent or twisted. Maximum bending or twisting is not to exceed 10 degrees from plane of unbent hook.',
+        '9.3' => 'Hook has no crack, nick, gouge, or excessive wear.',
+        '9.4' => 'Hook is not distorted in the throat opening. Maximum allowable throat opening is 15% compared to new hook or as per manufacturer recommendation.',
+        '9.5' => 'Hook latch is operative.',
+        '9.6' => 'Hook is rotating freely.'
+    ]
 ];
 
 $index = 0;
 foreach ($sections as $sectionTitle => $items) {
     echo "<tr><td colspan='7' class='section'>" . htmlspecialchars($sectionTitle) . "</td></tr>";
-    $itemNo = 1;
-    foreach ($items as $item) {
-        $sn = explode('. ', $sectionTitle, 2)[0] . '.' . $itemNo;
-        echo '<tr>';
-        echo '<td>' . htmlspecialchars($sn) . '</td>';
-        echo '<td>' . htmlspecialchars($item) . '</td>';
-        echo '<td></td>';
-        echo '<td class="center">' . pdf_mark_result($index, 'PASS', $selected_results) . '</td>';
-        echo '<td class="center">' . pdf_mark_result($index, 'FAIL', $selected_results) . '</td>';
-        echo '<td class="center">' . pdf_mark_result($index, 'NA', $selected_results) . '</td>';
-        echo '<td>' . htmlspecialchars($chek_remark[$index] ?? '') . '</td>';
-        echo '</tr>';
-        $index++;
-        $itemNo++;
+    foreach ($items as $itemSn => $itemData) {
+        if (is_array($itemData) && isset($itemData['subheader'])) {
+            // This is a subheader row, no checkboxes
+            echo "<tr>";
+            echo "<td style='font-weight:bold; text-align:center;'>" . htmlspecialchars($itemSn) . "</td>";
+            echo "<td colspan='6' style='font-weight:bold; text-align:left; background-color:#eef4fb;'>" . htmlspecialchars($itemData['subheader']) . "</td>";
+            echo "</tr>";
+        } else {
+            // This is a standard question row
+            echo '<tr>';
+            echo '<td>' . htmlspecialchars($itemSn) . '</td>';
+            echo '<td>' . htmlspecialchars($itemData) . '</td>';            
+            echo '<td class="center">' . pdf_mark_result($index, 'PASS', $selected_results) . '</td>';
+            echo '<td class="center">' . pdf_mark_result($index, 'FAIL', $selected_results) . '</td>';
+            echo '<td class="center">' . pdf_mark_result($index, 'NA', $selected_results) . '</td>';
+            echo '<td>' . htmlspecialchars($chek_remark[$index] ?? '') . '</td>';
+            echo '</tr>';
+            $index++;
+        }
     }
 }
 ?>
