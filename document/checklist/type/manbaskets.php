@@ -79,7 +79,7 @@ function getRemark($itemIndex, $saved_remarks) {
     </tr>
     <tr>
         <td colspan="3" class="">
-            <strong>INSPECTION CHECKLIST FOR PERSONNEL LIFTING SYSTEMS </strong>
+            <strong>INSPECTION CHECKLIST FOR MANBASKETS </strong>
         </td>
     </tr>
     <tr>

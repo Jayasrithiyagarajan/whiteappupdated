@@ -77,13 +77,13 @@ function getRemark($itemIndex, $saved_remarks) {
     </tr>
     <tr>
         <td colspan="3" class="">
-            <strong>INSPECTION CHECKLIST FOR NDT</strong>
+            <strong>INSPECTION CHECKLIST FOR WHEEL LOADER</strong>
         </td>
     </tr>
     <tr>
-        <td>FRM.0601-1.10</td>
-        <td>Revision 02</td>
-        <td><b>Issue Date: </b>30/SEP/2020</td>
+        <td>FRM.0601-2.4</td>
+        <td>Revision 00</td>
+        <td><b>Issue Date: </b>01/JAN/2020</td>
     </tr>
     <tr>
         <td class="left-align"><b>Prepared By</b><br>Operations Manager</td>
@@ -109,8 +109,9 @@ function getRemark($itemIndex, $saved_remarks) {
 			
 			</div>
 
-        <h4>NDT CHECKLIST</h4>
-        <h4>REFERENCE: ASME B30 STANDARDS     </h4>
+        <h4>WHEEL LOADER, COMPACT SKID LOADER, & PIPE LOGGER</h4>
+        <h4>(EARTH MOVING MACHINERY) </h4>
+        <h4>DS/EN 474-1:2006+A6:2019</h4>
 		
 		
 		 <!--<button class="btn btn-primary no-print" onclick="preparePrint()">Print View</button>-->
