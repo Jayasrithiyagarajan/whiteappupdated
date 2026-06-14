@@ -148,7 +148,12 @@ $client_signature_path = $project_no !== ''
 
 <body>
 
-    <br>
+    <h2 style="text-align: center; margin-bottom: 2px;">
+        ALL-PURPOSE EQUIPMENT CHECKLIST
+
+<br>REFERENCE: ASME B30 STANDARDS
+
+</h2>
 
     <table>
         <tr>

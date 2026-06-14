@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include_once(__DIR__ . '/_bootstrap.php');
 
 $project_no = $row['project_no'] ?? '';
@@ -318,6 +318,7 @@ foreach ($sections as $sectionTitle => $items) {
         </td>
     </tr>
 </table>
+</div>
 </div>
 
 </body>

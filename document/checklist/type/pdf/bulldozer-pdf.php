@@ -112,7 +112,14 @@ th {
 </head>
 <body>
 
+<h2 style="text-align: center; margin-bottom: 2px;">
+    BULLDOZER
+
 <br>
+(EARTH MOVING MACHINERY)<br>
+DS/EN 474-1:2006+A6:2019
+
+</h2>
 
 <table>
 <tr>

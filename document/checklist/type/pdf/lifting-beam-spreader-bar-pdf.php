@@ -112,7 +112,9 @@ th {
 </head>
 <body>
 
-<br>
+<h2 style="text-align: center; margin-bottom: 2px;">LIFTING BEAMS/SPREADER BARS
+<br>ASME B30.20 – 2018
+</h2>
 
 <table>
 <tr>
