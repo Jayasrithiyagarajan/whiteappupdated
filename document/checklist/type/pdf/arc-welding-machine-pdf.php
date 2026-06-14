@@ -114,8 +114,8 @@ th {
 
 
 
-<h4 style="text-align: center;">ARC WELDING EQUIPMENT </h4>
-        <h4 style="text-align: center;">BS  EN 60974-4:2007 </h4>
+<h4 style="text-align: center;">ARC WELDING EQUIPMENT <br>
+        BS  EN 60974-4:2007 </h4>
 
 <table>
 <tr>

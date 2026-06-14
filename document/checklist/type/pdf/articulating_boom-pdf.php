@@ -113,8 +113,8 @@ th {
 <body>
 
 
-<h4 style="text-align: center;">ARTICULATING BOOM CRANES </h4>
-        <h4 style="text-align: center;">ASME B30.22-2016</h4>
+<h4 style="text-align: center;">ARTICULATING BOOM CRANES <br/>
+        ASME B30.22-2016</h4>
 
         
 

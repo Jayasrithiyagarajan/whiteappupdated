@@ -112,7 +112,12 @@ th {
 </head>
 <body>
 
-<br>
+<h2 style="text-align: center; margin-bottom: 2px;">
+    BASE MOUNTED DRUM HOIST (WINCHES)
+
+<br>ASME B30.7 – 2016
+
+</h2>
 
 <table>
 <tr>
