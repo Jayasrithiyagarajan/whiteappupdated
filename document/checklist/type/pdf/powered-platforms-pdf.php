@@ -147,7 +147,11 @@ $client_signature_path = $project_no !== ''
 </head>
 <body>
 
+<h4 style="text-align: center;">
+    POWERED PLATFORM / SKY CLIMBERS
+
 <br>
+ASME A120.1-2014 </h4>
 
 <table>
 <tr>
