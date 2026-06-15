@@ -248,7 +248,7 @@ $today = date('Y-m-d');
     }
 
     /* Set column min-widths for better readability when sentences are long */
-    #certificateTable th:nth-child(2), #certificateTable td:nth-child(2) { min-width: 150px; } /* Certificate No */
+    #certificateTable th:nth-child(2), #certificateTable td:nth-child(2) { min-width: 260px; } /* Certificate No */
     #certificateTable th:nth-child(3), #certificateTable td:nth-child(3) { min-width: 220px; } /* Identification No */
     #certificateTable th:nth-child(4), #certificateTable td:nth-child(4) { min-width: 280px; } /* Description */
     #certificateTable th:nth-child(5), #certificateTable td:nth-child(5) { min-width: 120px; } /* WLL/SWL */
@@ -383,7 +383,25 @@ $today = date('Y-m-d');
                     <div class="form-element">
                         <h4>Customer & Approval Team</h4>
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Customer Name</label>
+                                <input type="text" name="customer_name" class="theme-input-style" value="<?= htmlspecialchars($data['customer_name'] ?? '') ?>" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Customer Email</label>
+                                <input type="email" name="customer_email" class="theme-input-style" value="<?= htmlspecialchars($data['customer_email'] ?? '') ?>" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Customer Mobile</label>
+                                <input type="text" name="mobile" class="theme-input-style" value="<?= htmlspecialchars($data['customer_mobile'] ?? '') ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Inspector</label>
+                                <input type="text" name="inspector" class="theme-input-style" value="<?= htmlspecialchars($data['inspector_name'] ?? '') ?>" readonly>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label">Technical Manager</label>
                                 <select name="technical_manager" class="custom-select" required>
                                     <option value="">Select manager</option>
@@ -392,7 +410,7 @@ $today = date('Y-m-d');
                                     <option value="Khaled A. Alghamdi">Khaled A. Alghamdi</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label class="form-label">Quality Controller</label>
                                 <select name="quality_controller" class="custom-select" required>
                                     <option value="">Select controller</option>
@@ -400,14 +418,6 @@ $today = date('Y-m-d');
                                     <option value="Veera">Veera</option>
                                     <option value="Sathish">Sathish</option>
                                 </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Inspector</label>
-                                <input type="text" name="inspector" class="theme-input-style" value="<?= htmlspecialchars($data['inspector_name']) ?>" readonly>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Customer Mobile</label>
-                                <input type="text" name="mobile" class="theme-input-style" value="<?= htmlspecialchars($data['customer_mobile']) ?>" readonly>
                             </div>
                         </div>
                     </div>

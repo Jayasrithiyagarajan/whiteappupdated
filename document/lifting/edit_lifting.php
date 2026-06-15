@@ -57,297 +57,295 @@ $currentYear = date('Y');
 ?>
 
 <style>
-.lifting-page {
-    --lifting-accent: #4285f4;
-    --lifting-accent-soft: rgba(66, 133, 244, 0.08);
-    --lifting-border: #e6ebf2;
-    --lifting-muted: #6b7280;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
-.lifting-hero {
-    background: linear-gradient(135deg, rgba(66, 133, 244, 0.08), rgba(40, 167, 69, 0.06));
-    border: 1px solid var(--lifting-border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 30px;
-}
-
-.lifting-hero-title {
-    font-size: 30px;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 8px;
-}
-
-.lifting-hero-copy {
-    color: var(--lifting-muted);
-    margin-bottom: 16px;
-}
-
-.lifting-chip-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.lifting-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid var(--lifting-border);
-    color: #495057;
-    font-weight: 600;
-}
-
-.lifting-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-}
-
-.lifting-summary-card {
-    border: 1px solid var(--lifting-border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    background: #fff;
-}
-
-.lifting-summary-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--lifting-muted);
-    margin-bottom: 6px;
-}
-
-.lifting-summary-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: #1f2937;
-    line-height: 1.1;
-}
-
-.lifting-section-note {
-    color: var(--lifting-muted);
-    font-size: 13px;
-    margin-top: 6px;
-}
-
-.lifting-table-shell {
-    border: 1px solid var(--lifting-border);
-    border-radius: 12px;
-    overflow: hidden;
-    background: #fff;
-}
-
-.lifting-toolbar {
-    padding: 20px;
-    border-bottom: 1px solid var(--lifting-border);
-    background: #f8fafc;
-}
-
-.lifting-toolbar .theme-input-style {
-    min-height: 44px;
-}
-
-.lifting-toolbar .btn {
-    min-height: 44px;
-}
-
-.lifting-inline-note {
-    color: var(--lifting-muted);
-    font-size: 13px;
-}
-
-.lifting-table {
-    margin-bottom: 0;
-}
-
-.lifting-table thead th {
-    background: #f1f5f9;
-    color: #374151;
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-    border-color: var(--lifting-border);
-}
-
-.lifting-table td {
-    border-color: var(--lifting-border);
-    vertical-align: top;
-}
-
-.lifting-table .theme-input-style {
-    min-width: 110px;
-}
-
-.lifting-table textarea.theme-input-style {
-    min-height: 74px;
-    resize: vertical;
-}
-
-.lifting-row-no {
-    font-weight: 700;
-    color: var(--lifting-accent);
-}
-
-.lifting-cert-preview {
-    font-size: 12px;
-    color: var(--lifting-muted);
-    margin-top: 6px;
-}
-
-.lifting-save-bar {
-    position: sticky;
-    bottom: 20px;
-    z-index: 5;
-    padding: 16px 20px;
-    border: 1px solid var(--lifting-border);
-    border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-}
-
-.lifting-save-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 14px;
-    border-radius: 999px;
-    background: var(--lifting-accent-soft);
-    color: #1d4ed8;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.lifting-save-note {
-    color: var(--lifting-muted);
-    margin-bottom: 0;
-}
-
-@media (max-width: 767px) {
-    .lifting-table thead {
-        display: none;
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     }
 
-    .lifting-table,
-    .lifting-table tbody,
-    .lifting-table tr,
-    .lifting-table td {
-        display: block;
-        width: 100%;
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        font-family: 'Outfit', sans-serif;
     }
 
-    .lifting-table tr {
-        margin-bottom: 16px;
-        border-bottom: 1px solid var(--lifting-border);
+    .main-content {
+        padding-top: 20px;
     }
 
-    .lifting-table td {
-        border: none;
-        padding: 10px 12px;
+    .glass-header {
+        background: var(--glass-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
     }
 
-    .lifting-table td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 11px;
+    .form-element {
+        background: var(--glass-bg) !important;
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 25px !important;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08) !important;
+        padding: 30px !important;
+        margin-bottom: 30px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-element:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12) !important;
+    }
+
+    .font-20 {
+        font-family: 'Outfit', sans-serif;
         font-weight: 700;
-        text-transform: uppercase;
-        color: var(--lifting-muted);
-        margin-bottom: 6px;
+        color: #1a202c;
+        letter-spacing: -0.5px;
+        margin: 0;
     }
 
-    .lifting-save-bar {
-        position: static;
+    .theme-input-style, .form-control, .custom-select {
+        background: rgba(255, 255, 255, 0.6) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 12px !important;
+        padding: 10px 15px !important;
+        font-family: 'Outfit', sans-serif;
+        height: auto !important;
+        line-height: 1.5 !important;
+        transition: all 0.3s ease !important;
+        color: #2d3748;
     }
-}
+
+    .theme-input-style:focus, .form-control:focus, .custom-select:focus {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-color: #4facfe !important;
+        box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1) !important;
+        outline: none;
+    }
+
+    .btn-primary, .btn-brand, .btn.long, .btn-success {
+        background: var(--primary-gradient) !important;
+        border: none !important;
+        border-radius: 15px !important;
+        padding: 12px 25px !important;
+        font-weight: 600 !important;
+        font-family: 'Outfit', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn-soft {
+        background: rgba(79, 172, 254, 0.1) !important;
+        color: #4facfe !important;
+        border: none !important;
+        border-radius: 15px !important;
+        padding: 12px 25px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn-soft:hover {
+        background: rgba(79, 172, 254, 0.2) !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-primary:hover, .btn-brand:hover, .btn.long:hover, .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 198, 255, 0.4) !important;
+        color: white !important;
+    }
+
+    label, .form-label {
+        color: #4a5568;
+        font-weight: 600;
+        margin-bottom: 8px !important;
+        margin-top: 15px !important;
+        display: block;
+        font-size: 13px;
+    }
+
+    .form-element h4 {
+        border-bottom: 2px solid rgba(79, 172, 254, 0.3);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Mini Stat Grid */
+    .mini-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .mini-stat {
+        padding: 15px;
+        border-radius: 15px;
+        background: rgba(79, 172, 254, 0.05);
+        border: 1px solid rgba(79, 172, 254, 0.1);
+    }
+
+    .mini-stat-label {
+        font-size: 12px;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .mini-stat-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-top: 5px;
+    }
+
+    /* Table Styling */
+    .table-container {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    #certificateTable {
+        margin-bottom: 0;
+    }
+
+    #certificateTable thead th {
+        background: rgba(79, 172, 254, 0.1);
+        border: none;
+        color: #4a5568;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        padding: 15px;
+    }
+
+    #certificateTable td {
+        padding: 12px;
+        vertical-align: middle;
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .cert-preview {
+        font-size: 11px;
+        color: #a0aec0;
+        margin-top: 5px;
+    }
+
+    /* Mobile Sticky Footer */
+    .sticky-actions {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid var(--glass-border);
+        padding: 20px;
+        position: sticky;
+        bottom: 0;
+        z-index: 1000;
+        margin: 30px -15px -30px -15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
+    }
+
+    @media (max-width: 768px) {
+        .sticky-actions {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+    }
+
+    /* Set column min-widths for better readability when sentences are long */
+    #certificateTable th:nth-child(2), #certificateTable td:nth-child(2) { min-width: 260px; } /* Certificate No */
+    #certificateTable th:nth-child(3), #certificateTable td:nth-child(3) { min-width: 220px; } /* Identification No */
+    #certificateTable th:nth-child(4), #certificateTable td:nth-child(4) { min-width: 280px; } /* Description */
+    #certificateTable th:nth-child(5), #certificateTable td:nth-child(5) { min-width: 120px; } /* WLL/SWL */
+    #certificateTable th:nth-child(6), #certificateTable td:nth-child(6) { min-width: 80px; }  /* Qty */
+    #certificateTable th:nth-child(7), #certificateTable td:nth-child(7) { min-width: 150px; } /* Type */
+    #certificateTable th:nth-child(8), #certificateTable td:nth-child(8) { min-width: 160px; } /* Date Last Exam */
+    #certificateTable th:nth-child(9), #certificateTable td:nth-child(9) { min-width: 280px; } /* Test Details */
+    #certificateTable th:nth-child(10), #certificateTable td:nth-child(10) { min-width: 100px; } /* Status */
+    #certificateTable th:nth-child(11), #certificateTable td:nth-child(11) { min-width: 100px; } /* Safe */
+    #certificateTable th:nth-child(12), #certificateTable td:nth-child(12) { min-width: 80px; }  /* Action */
+
+    /* Make textareas and inputs take full width of cell */
+    #certificateTable .theme-input-style, 
+    #certificateTable .custom-select {
+        width: 100% !important;
+    }
+    
+    #certificateTable textarea.theme-input-style {
+        height: 60px !important;
+        resize: vertical;
+    }
 </style>
 
-<div class="main-content lifting-page">
-    <div class="container-fluid">
-        <div class="card bg-transparent pb-3">
-            <div class="card-body bg-white">
-                <div class="row align-items-center">
-                    <div class="col-6">
-                        <h4 class="pl-2 pt-3 pb-2 font-20">EDIT LIFTING GEAR CERTIFICATE</h4>
-                    </div>
-                    <div class="col-6 text-right">
-                        <a href="index.php" class="btn btn-primary" target="_blank">View List</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<div class="main-content">
     <div class="container-fluid">
         <form method="POST" action="update_form.php" id="liftingCertificateEditForm">
             <input type="hidden" name="project_no" value="<?= htmlspecialchars($projectData['project_no']) ?>">
             <input type="hidden" name="certificate_rows_json" id="certificateRowsJson">
 
-            <div class="lifting-hero">
+            <div class="glass-header">
                 <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="lifting-hero-title">Edit Certificates Faster</div>
-                        <p class="lifting-hero-copy">
-                            Same theme and workflow as the create page, with all existing certificate data loaded for quick bulk editing.
-                        </p>
-                        <div class="lifting-chip-group">
-                            <div class="lifting-chip"><i class="fa fa-pen"></i> Edit existing rows</div>
-                            <div class="lifting-chip"><i class="fa fa-copy"></i> Clone last row</div>
-                            <div class="lifting-chip"><i class="fa fa-shield-alt"></i> Safe large-batch update</div>
-                        </div>
+                    <div class="col-md-8">
+                        <h1 class="font-20 mb-2">Edit Lifting Gear Certificate Builder</h1>
+                        <p class="text-muted mb-0">Edit batch certificates quickly using cloning and shared report parameters.</p>
                     </div>
-                    <div class="col-lg-4 mt-4 mt-lg-0">
-                        <div class="lifting-summary">
-                            <div class="lifting-summary-card">
-                                <div class="lifting-summary-label">Project No</div>
-                                <div class="lifting-summary-value"><?= htmlspecialchars($projectData['project_no']) ?></div>
-                            </div>
-                            <div class="lifting-summary-card">
-                                <div class="lifting-summary-label">Rows Loaded</div>
-                                <div class="lifting-summary-value" id="certificateCount"><?= count($certificates) ?></div>
+                    <div class="col-md-4 text-right">
+                        <div class="mini-stat-grid mt-0">
+                            <div class="mini-stat text-left">
+                                <div class="mini-stat-label">Rows Loaded</div>
+                                <div class="mini-stat-value" id="certificateCount"><?= count($certificates) ?></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row equal-height">
                 <div class="col-lg-6">
-                    <div class="form-element py-30 mb-30">
-                        <h4 class="font-20 mb-20">Header Data</h4>
-                        <div class="lifting-section-note mb-20">Shared information applied to all certificates in this project.</div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Date of Report</label>
+                    <div class="form-element">
+                        <h4>Report Setup</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Report</label>
                                 <input type="date" name="date_of_report" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['date_of_report'] ?? '') ?>" required>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Report No</label>
+                            <div class="col-md-6">
+                                <label class="form-label">Report No</label>
                                 <input type="text" name="report_no" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['report_no'] ?? $projectData['report_no']) ?>" readonly>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Project No</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Project No</label>
                                 <input type="text" class="theme-input-style" value="<?= htmlspecialchars($projectData['project_no']) ?>" readonly>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">JRN</label>
+                            <div class="col-md-6">
+                                <label class="form-label">JRN</label>
                                 <input type="text" name="jrn" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['jrn'] ?? '') ?>" required>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Color Code</label>
-                                <input type="text" name="color_code" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['color_code'] ?? '') ?>">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Color Code</label>
+                                <input type="text" name="color_code" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['color_code'] ?? '') ?>" placeholder="Optional">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Applicable Standards</label>
-                                <select name="applicable_standards" class="theme-input-style" required>
+                            <div class="col-md-6">
+                                <label class="form-label">Applicable Standards</label>
+                                <select name="applicable_standards" class="custom-select" required>
                                     <option value="">Select standard</option>
                                     <option value="ASME B30.9" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.9' ? 'selected' : '' ?>>ASME B30.9</option>
                                     <option value="ASME B30.26" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.26' ? 'selected' : '' ?>>ASME B30.26</option>
@@ -357,30 +355,36 @@ $currentYear = date('Y');
                                 </select>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Employer Name &amp; Address</label>
+                <div class="col-lg-6">
+                    <div class="form-element">
+                        <h4>Premises & Schedule</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Employer Name & Address</label>
                                 <input type="text" name="employer_name_address" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['employer_name_address'] ?? $projectData['customer_name']) ?>">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Address of Premises</label>
-                                <input type="text" name="address_of_premises" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['address_of_premises'] ?? '') ?>">
+                            <div class="col-md-6">
+                                <label class="form-label">Address of Premises</label>
+                                <input type="text" name="address_of_premises" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['address_of_premises'] ?? $projectData['city']) ?>">
                             </div>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Date of This Examination</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Date of This Examination</label>
                                 <input type="date" name="date_of_this_examination" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['date_of_this_examination'] ?? '') ?>">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Next Examination Date</label>
+                            <div class="col-md-6">
+                                <label class="form-label">Next Examination Date</label>
                                 <input type="date" name="next_examination_date" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['next_examination_date'] ?? '') ?>">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="font-14 bold mb-2">Reason for Examination</label>
-                                <select name="reason_for_examination" class="theme-input-style" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Reason for Examination</label>
+                                <select name="reason_for_examination" class="custom-select" required>
                                     <option value="">Select reason</option>
                                     <option value="A" <?= ($firstCertificate['reason_for_examination'] ?? '') === 'A' ? 'selected' : '' ?>>A</option>
                                     <option value="B" <?= ($firstCertificate['reason_for_examination'] ?? '') === 'B' ? 'selected' : '' ?>>B</option>
@@ -392,103 +396,82 @@ $currentYear = date('Y');
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-lg-6">
-                    <div class="form-element py-30 mb-30">
-                        <h4 class="font-20 mb-20">Customer Information / Inspector</h4>
-                        <div class="lifting-section-note mb-20">Project and approval details for the update batch.</div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Customer Name</label>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-element">
+                        <h4>Customer & Approval Team</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Customer Name</label>
                                 <input type="text" name="customer_name" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['customer_name'] ?? $projectData['customer_name']) ?>" required>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Email</label>
+                            <div class="col-md-4">
+                                <label class="form-label">Customer Email</label>
                                 <input type="email" name="customer_email" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['customer_email'] ?? $projectData['customer_email']) ?>" required>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Mobile</label>
+                            <div class="col-md-4">
+                                <label class="form-label">Customer Mobile</label>
                                 <input type="text" name="mobile" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['mobile'] ?? $projectData['customer_mobile']) ?>" required>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Inspector</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Inspector</label>
                                 <input type="text" name="inspector" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['inspector'] ?? $projectData['inspector_name']) ?>" required>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Technical Manager</label>
-                                <select name="technical_manager" class="theme-input-style" required>
-                                    <option value="">Select technical manager</option>
+                            <div class="col-md-4">
+                                <label class="form-label">Technical Manager</label>
+                                <select name="technical_manager" class="custom-select" required>
+                                    <option value="">Select manager</option>
                                     <option value="Venancio Z. Vera" <?= ($firstCertificate['technical_manager'] ?? '') === 'Venancio Z. Vera' ? 'selected' : '' ?>>Venancio Z. Vera</option>
                                     <option value="Mohammed Fathy" <?= ($firstCertificate['technical_manager'] ?? '') === 'Mohammed Fathy' ? 'selected' : '' ?>>Mohammed Fathy</option>
                                     <option value="Khaled A. Alghamdi" <?= ($firstCertificate['technical_manager'] ?? '') === 'Khaled A. Alghamdi' ? 'selected' : '' ?>>Khaled A. Alghamdi</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label class="font-14 bold mb-2">Quality Controller</label>
-                                <select name="quality_controller" class="theme-input-style" required>
-                                    <option value="">Select quality controller</option>
+                            <div class="col-md-4">
+                                <label class="form-label">Quality Controller</label>
+                                <select name="quality_controller" class="custom-select" required>
+                                    <option value="">Select controller</option>
                                     <option value="Samuel Bhatti" <?= ($firstCertificate['quality_controller'] ?? '') === 'Samuel Bhatti' ? 'selected' : '' ?>>Samuel Bhatti</option>
                                     <option value="Veera" <?= ($firstCertificate['quality_controller'] ?? '') === 'Veera' ? 'selected' : '' ?>>Veera</option>
                                     <option value="Sathish" <?= ($firstCertificate['quality_controller'] ?? '') === 'Sathish' ? 'selected' : '' ?>>Sathish</option>
                                 </select>
                             </div>
                         </div>
-
-                        <div class="lifting-summary mt-3">
-                            <div class="lifting-summary-card">
-                                <div class="lifting-summary-label">Report No</div>
-                                <div class="lifting-summary-value"><?= htmlspecialchars($firstCertificate['report_no'] ?? $projectData['report_no']) ?></div>
-                            </div>
-                            <div class="lifting-summary-card">
-                                <div class="lifting-summary-label">Current Rows</div>
-                                <div class="lifting-summary-value" id="summaryRowCount"><?= count($certificates) ?></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-element py-30 mb-30">
-                <h4 class="font-20 mb-20">Certificate Details</h4>
-                <div class="lifting-section-note mb-20">
-                    Edit the current certificates, add more rows, or clone the last edited row for fast updates.
-                </div>
-
-                <div class="lifting-table-shell">
-                    <div class="lifting-toolbar">
-                        <div class="row align-items-end">
-                            <div class="col-md-2 col-sm-6 mb-15">
-                                <label class="font-14 bold mb-2">Rows</label>
-                                <input type="number" class="theme-input-style" id="bulkCount" value="1" min="1" max="100">
+            <div class="form-element">
+                <div class="row align-items-end mb-4">
+                    <div class="col-md-6">
+                        <h4 class="mb-0 border-0">Certificate Details</h4>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="d-inline-flex align-items-end gap-3">
+                            <div class="text-left mr-3">
+                                <label class="form-label mt-0">Bulk Add</label>
+                                <div class="input-group" style="width: 250px;">
+                                    <input type="number" class="theme-input-style" id="bulkCount" value="1" min="1" max="100" style="width: 60px;">
+                                    <select class="custom-select" id="bulkMode">
+                                        <option value="clone">Clone Last</option>
+                                        <option value="blank">Blank</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" id="bulkAddRows" class="btn btn-brand">Add</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-3 col-sm-6 mb-15">
-                                <label class="font-14 bold mb-2">Mode</label>
-                                <select class="theme-input-style" id="bulkMode">
-                                    <option value="clone">Clone last row</option>
-                                    <option value="blank">Add blank rows</option>
-                                </select>
-                            </div>
-                            <div class="col-md-7 mb-15 d-flex flex-wrap align-items-center">
-                                <button type="button" id="bulkAddRows" class="btn btn-primary mr-2 mb-2">
-                                    <i class="fa fa-layer-group mr-1"></i>Add Rows
-                                </button>
-                                <button type="button" id="addSingleRow" class="btn mr-2 mb-2" style="background:#eef4ff;color:#2c5cc5;">
-                                    <i class="fa fa-plus mr-1"></i>Add One
-                                </button>
-                                <span class="lifting-inline-note mb-2">Fill one row, then clone it if the next certificates are similar.</span>
-                            </div>
+                            <button type="button" id="addSingleRow" class="btn btn-soft">Add One</button>
                         </div>
                     </div>
+                </div>
 
+                <div class="table-container">
                     <div class="table-responsive">
-                        <table class="table table-bordered lifting-table" id="certificateTable">
+                        <table class="table table-hover" id="certificateTable">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -507,54 +490,38 @@ $currentYear = date('Y');
                             </thead>
                             <tbody>
                                 <?php foreach ($certificates as $index => $gear): ?>
-                                    <tr>
-                                        <td data-label="#" class="lifting-row-no"><?= $index + 1 ?></td>
-                                        <td data-label="Certificate No">
-                                            <input type="text" class="theme-input-style certificate-number" data-field="certificate_no" value="<?= htmlspecialchars($gear['certificate_no'] ?? '') ?>" readonly>
-                                            <div class="lifting-cert-preview">Auto-generated from project and row number.</div>
-                                        </td>
-                                        <td data-label="Identification No">
-                                            <textarea class="theme-input-style" data-field="identification_no" placeholder="Serial number or identification"><?= htmlspecialchars($gear['identification_no'] ?? '') ?></textarea>
-                                        </td>
-                                        <td data-label="Description">
-                                            <textarea class="theme-input-style" data-field="description" placeholder="Equipment description"><?= htmlspecialchars($gear['description'] ?? '') ?></textarea>
-                                        </td>
-                                        <td data-label="WLL/SWL">
-                                            <input type="text" class="theme-input-style" data-field="wll_swl" value="<?= htmlspecialchars($gear['wll_swl'] ?? '') ?>" placeholder="Example: 2T">
-                                        </td>
-                                        <td data-label="Qty">
-                                            <input type="number" class="theme-input-style" data-field="qty" min="1" value="<?= htmlspecialchars($gear['qty'] ?? '') ?>" placeholder="1">
-                                        </td>
-                                        <td data-label="Type">
-                                            <input type="text" class="theme-input-style" data-field="type" value="<?= htmlspecialchars($gear['type'] ?? '') ?>" placeholder="Sling, hook, shackle">
-                                        </td>
-                                        <td data-label="Date Last Exam">
-                                            <input type="date" class="theme-input-style" data-field="date_last_examination" value="<?= htmlspecialchars($gear['date_last_examination'] ?? '') ?>">
-                                        </td>
-                                        <td data-label="Test Details">
-                                            <textarea class="theme-input-style" data-field="test_details" placeholder="Applied test details"><?= htmlspecialchars($gear['test_details'] ?? '') ?></textarea>
-                                        </td>
-                                        <td data-label="Status">
-                                            <select class="theme-input-style" data-field="status">
-                                                <option value="">--</option>
-                                                <option value="ND" <?= ($gear['status'] ?? '') === 'ND' ? 'selected' : '' ?>>ND</option>
-                                                <option value="SDR" <?= ($gear['status'] ?? '') === 'SDR' ? 'selected' : '' ?>>SDR</option>
-                                                <option value="NF" <?= ($gear['status'] ?? '') === 'NF' ? 'selected' : '' ?>>NF</option>
-                                            </select>
-                                        </td>
-                                        <td data-label="Safe">
-                                            <select class="theme-input-style" data-field="safe_to_use">
-                                                <option value="">--</option>
-                                                <option value="YES" <?= ($gear['safe_to_use'] ?? '') === 'YES' ? 'selected' : '' ?>>YES</option>
-                                                <option value="NO" <?= ($gear['safe_to_use'] ?? '') === 'NO' ? 'selected' : '' ?>>NO</option>
-                                            </select>
-                                        </td>
-                                        <td data-label="Action">
-                                            <button type="button" class="btn btn-danger btn-sm removeRow">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td class="row-number"><?= $index + 1 ?></td>
+                                    <td>
+                                        <input type="text" class="theme-input-style" data-field="certificate_no" value="<?= htmlspecialchars($gear['certificate_no'] ?? '') ?>" readonly>
+                                        <div class="cert-preview">Auto-generated</div>
+                                    </td>
+                                    <td><textarea class="theme-input-style" data-field="identification_no"><?= htmlspecialchars($gear['identification_no'] ?? '') ?></textarea></td>
+                                    <td><textarea class="theme-input-style" data-field="description"><?= htmlspecialchars($gear['description'] ?? '') ?></textarea></td>
+                                    <td><input type="text" class="theme-input-style" data-field="wll_swl" value="<?= htmlspecialchars($gear['wll_swl'] ?? '') ?>"></td>
+                                    <td><input type="number" class="theme-input-style" data-field="qty" min="1" value="<?= htmlspecialchars($gear['qty'] ?? '') ?>"></td>
+                                    <td><input type="text" class="theme-input-style" data-field="type" value="<?= htmlspecialchars($gear['type'] ?? '') ?>"></td>
+                                    <td><input type="date" class="theme-input-style" data-field="date_last_examination" value="<?= htmlspecialchars($gear['date_last_examination'] ?? '') ?>"></td>
+                                    <td><textarea class="theme-input-style" data-field="test_details"><?= htmlspecialchars($gear['test_details'] ?? '') ?></textarea></td>
+                                    <td>
+                                        <select class="custom-select" data-field="status">
+                                            <option value="">--</option>
+                                            <option value="ND" <?= ($gear['status'] ?? '') === 'ND' ? 'selected' : '' ?>>ND</option>
+                                            <option value="SDR" <?= ($gear['status'] ?? '') === 'SDR' ? 'selected' : '' ?>>SDR</option>
+                                            <option value="NF" <?= ($gear['status'] ?? '') === 'NF' ? 'selected' : '' ?>>NF</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="custom-select" data-field="safe_to_use">
+                                            <option value="">--</option>
+                                            <option value="YES" <?= ($gear['safe_to_use'] ?? '') === 'YES' ? 'selected' : '' ?>>YES</option>
+                                            <option value="NO" <?= ($gear['safe_to_use'] ?? '') === 'NO' ? 'selected' : '' ?>>NO</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm removeRow"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -562,17 +529,12 @@ $currentYear = date('Y');
                 </div>
             </div>
 
-            <div class="lifting-save-bar d-flex flex-wrap justify-content-between align-items-center mb-30">
-                <div class="mb-2 mb-md-0">
-                    <div class="lifting-save-pill">
-                        <i class="fa fa-check-circle"></i>
-                        <span><strong id="footerCount"><?= count($certificates) ?></strong> certificate row ready to update</span>
-                    </div>
-                    <p class="lifting-save-note">
-                        Tip: keep the shared fields at the top in sync, then update the row-level equipment details below.
-                    </p>
+            <div class="sticky-actions">
+                <div>
+                    <span class="badge badge-info p-2" id="footerCount"><?= count($certificates) ?></span> 
+                    <span class="ml-2 font-weight-bold">Certificates ready to update</span>
                 </div>
-                <button type="submit" class="btn long">
+                <button type="submit" name="save_data_lifting" class="btn btn-success btn-lg">
                     <i class="fa fa-save mr-2"></i>Update Certificates
                 </button>
             </div>
@@ -587,9 +549,8 @@ const maxCertificates = 100;
 const tableBody = document.querySelector("#certificateTable tbody");
 const form = document.getElementById("liftingCertificateEditForm");
 const certificateRowsJson = document.getElementById("certificateRowsJson");
-const certificateCount = document.getElementById("certificateCount");
-const summaryRowCount = document.getElementById("summaryRowCount");
-const footerCount = document.getElementById("footerCount");
+const certificateCountText = document.getElementById("certificateCount");
+const footerCountText = document.getElementById("footerCount");
 
 function getCertificateNumber(index) {
     return `CLC-${String(index + 1).padStart(3, "0")}-${currentYear}-${projectNo}`;
@@ -597,14 +558,13 @@ function getCertificateNumber(index) {
 
 function refreshRowMeta() {
     document.querySelectorAll("#certificateTable tbody tr").forEach((row, index) => {
-        row.querySelector(".lifting-row-no").textContent = index + 1;
+        row.querySelector(".row-number").textContent = index + 1;
         row.querySelector('[data-field="certificate_no"]').value = getCertificateNumber(index);
     });
 
     const total = tableBody.rows.length;
-    certificateCount.textContent = total;
-    summaryRowCount.textContent = total;
-    footerCount.textContent = total;
+    certificateCountText.textContent = total;
+    footerCountText.textContent = total;
 }
 
 function createRow(sourceRow = null, cloneValues = false) {
@@ -644,7 +604,8 @@ function addRows(count, mode) {
     const sourceRow = tableBody.rows[tableBody.rows.length - 1];
 
     for (let i = 0; i < safeCount; i++) {
-        tableBody.appendChild(createRow(sourceRow, mode === "clone"));
+        const shouldClone = mode === "clone";
+        tableBody.appendChild(createRow(sourceRow, shouldClone));
     }
 
     refreshRowMeta();
@@ -660,9 +621,7 @@ document.getElementById("bulkAddRows").addEventListener("click", () => {
 
 document.addEventListener("click", (event) => {
     const removeButton = event.target.closest(".removeRow");
-    if (!removeButton) {
-        return;
-    }
+    if (!removeButton) return;
 
     if (tableBody.rows.length === 1) {
         alert("At least one certificate row is required.");
@@ -676,17 +635,15 @@ document.addEventListener("click", (event) => {
 form.addEventListener("submit", (event) => {
     const rows = Array.from(tableBody.rows).map((row) => {
         const rowData = {};
-
         row.querySelectorAll("[data-field]").forEach((field) => {
             rowData[field.dataset.field] = field.value.trim();
         });
-
         return rowData;
     });
 
     if (!rows.length) {
         event.preventDefault();
-        alert("Add at least one certificate row before updating.");
+        alert("Add at least one certificate row before saving.");
         return;
     }
 
