@@ -76,21 +76,399 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
+    <title>Customer Dashboard - CIMS</title>
 
-    <!-- Internal Styles for Pagination -->
+    <!-- Internal Styles for Premium Look -->
     <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-.list-group-item {
-   border-left: 5px solid #007bff; /* Blue border for notifications */
-   transition: background 0.3s;
+/* Apply modern font to main-content3 container */
+.main-content3 {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    background: #f8fafc;
+    padding: 30px 0;
 }
 
-.list-group-item:hover {
-   background: #f8f9fa;
+/* Card Styling */
+.main-content3 .card {
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.03) !important;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 24px;
 }
 
-      
+.main-content3 .card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Cover Image Styling */
+.main-content3 .cover-img {
+    position: relative;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    height: 220px;
+}
+.main-content3 .cover-img img.w-100 {
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.95);
+}
+
+/* Upload Button Styling */
+.main-content3 .upload-button {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.main-content3 .upload-button:hover {
+    background: #ffffff;
+    transform: translateY(-1px);
+}
+.main-content3 .upload-button input.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* User Profile Nav Card */
+.main-content3 .user-profile-nav {
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 20px;
+}
+
+/* Profile Info */
+.main-content3 .profile-info {
+    position: relative;
+}
+.main-content3 .profile-pic {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-top: 0px !important;
+    background: #ffffff;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+.main-content3 .profile-pic:hover {
+    transform: scale(1.05);
+}
+.main-content3 .profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.main-content3 .profile-info h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 !important;
+}
+
+/* Navigation Tabs */
+.main-content3 .profile-nav-tabs {
+    border-bottom: none !important;
+    gap: 8px;
+    display: flex;
+    align-items: center;
+}
+.main-content3 .profile-nav-tabs li {
+    margin: 0;
+}
+.main-content3 .profile-nav-tabs li .chat {
+    background-color: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    display: inline-flex !important;
+}
+.main-content3 .profile-nav-tabs a {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 42px !important;
+    line-height: 1.2 !important;
+    padding: 0 20px !important;
+    border-radius: 12px !important;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b !important;
+    transition: all 0.2s ease;
+    border: none !important;
+    background: transparent;
+    text-decoration: none;
+}
+.main-content3 .profile-nav-tabs a:hover {
+    color: #4f46e5 !important;
+    background: rgba(79, 70, 229, 0.05) !important;
+}
+.main-content3 .profile-nav-tabs a.active, 
+.main-content3 .profile-nav-tabs a.p_nav-link.active {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+}
+
+.main-content3 .p_nav-link:after,
+.main-content3 .p_nav-link:before {
+    display: none !important;
+}
+
+/* Survey Form inside nav */
+.main-content3 .profile-nav-tabs form {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+}
+.main-content3 .profile-nav-tabs form input[type="text"] {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 140px;
+    background: #f8fafc;
+}
+.main-content3 .profile-nav-tabs form input[type="text"]:focus {
+    border-color: #4f46e5;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.main-content3 .profile-nav-tabs form button[type="submit"] {
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.main-content3 .profile-nav-tabs form button[type="submit"]:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+}
+
+/* Dropdown Menu style */
+.main-content3 .dropdown-button .menu-icon span {
+    background-color: #64748b !important;
+}
+.main-content3 .dropdown-menu {
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    padding: 6px;
+}
+.main-content3 .dropdown-item, .main-content3 .dropdown-menu a {
+    display: block;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #334155;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.main-content3 .dropdown-menu a:hover {
+    background-color: #f1f5f9;
+    color: #4f46e5;
+}
+
+/* Profile Completion Card */
+.main-content3 .profile-completion {
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    border: 1px solid rgba(79, 70, 229, 0.15);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.main-content3 .profile-completion h4 {
+    color: #1e1b4b;
+    font-weight: 700;
+    font-size: 18px;
+}
+.main-content3 .profile-completion p {
+    color: #4338ca;
+    font-weight: 500;
+}
+.main-content3 .ProgressBar-circle {
+    stroke: #4f46e5 !important;
+    stroke-width: 12px;
+}
+.main-content3 .ProgressBar-background {
+    stroke: rgba(79, 70, 229, 0.1) !important;
+    stroke-width: 12px;
+}
+.main-content3 .ProgressBar-percentage {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    color: #4f46e5 !important;
+    font-size: 24px !important;
+}
+
+/* Edit Profile Circle Button */
+.main-content3 .btn-circle {
+    width: 44px;
+    height: 44px;
+    background: #ffffff;
+    border: 1px solid rgba(79, 70, 229, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+.main-content3 .btn-circle:hover {
+    background: #4f46e5;
+    border-color: #4f46e5;
+    transform: scale(1.05);
+}
+.main-content3 .btn-circle:hover img.svg {
+    filter: brightness(0) invert(1);
+}
+
+/* Personal Info / About details section */
+.main-content3 .about-myself h4 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.main-content3 .about-myself p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Overview Info List */
+.main-content3 .overview h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+}
+.main-content3 .p_overview-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+@media (min-width: 768px) {
+    .main-content3 .p_overview-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+.main-content3 .p_overview-list li {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    border-radius: 14px;
+    transition: all 0.2s;
+}
+.main-content3 .p_overview-list li:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+.main-content3 .p_overview-list li .d-flex {
+    align-items: center;
+}
+.main-content3 .p_overview-list li .img {
+    background: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+.main-content3 .p_overview-list li .content {
+    font-size: 14px;
+    color: #334155;
+    margin-left: 12px;
+}
+.main-content3 .p_overview-list li .content strong {
+    color: #0f172a;
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+.main-content3 .p_overview-list li .content a.text_color {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Notifications Card styling */
+.main-content3 .card.mb-30 {
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 20px !important;
+    background: #ffffff;
+}
+.main-content3 .card.mb-30 h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.main-content3 .list-group-item {
+    border: 1px solid #e2e8f0 !important;
+    border-left: 4px solid #4f46e5 !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px;
+    padding: 16px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+}
+.main-content3 .list-group-item:hover {
+    background: #ffffff !important;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.main-content3 .list-group-item h6 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.main-content3 .list-group-item p {
+    font-size: 13px;
+    color: #475569;
+}
+.main-content3 .list-group-item small {
+    font-size: 11px;
+    color: #94a3b8;
+    display: block;
+    margin-top: 6px;
+}
     </style>
 </head>
 <body>
@@ -150,23 +528,11 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
                                     <li>
                                         <a href="../dashboard/customer_kpi_dashboard.php">KPI Analytics</a>
                                     </li>
-                                    
-                                    
-                                    
                                     <li>
-                                        
                                         <form method="get" action="../document/customer_survey_report.php" style="display:inline;">
-  <input type="text" name="project_id" placeholder="Enter Project ID" required>
-  <button type="submit">Open Survey</button>
-</form>
-
-                                       
-    <!--<a href="../document/customer_survey_report.php?project_id=<?php echo urlencode($manual_project_no); ?>">Survey</a>-->
-</li>
-
-                                        <!--<a href="../customer/project.php?cusid=<?php echo urlencode($customer['cus_id']); ?>">Survey</a>-->
-                                        <!--../document/customer_survey_report.php?project_id=CIMS217-->
-                                        
+                                            <input type="text" name="project_id" placeholder="Enter Project ID" required>
+                                            <button type="submit">Open Survey</button>
+                                        </form>
                                     </li>
                                 </ul>
 
@@ -181,7 +547,6 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
                                             </div>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <!-- <a href="../profile/edit-profile.php?cusid={$row['cus_id']}">Edit Profile</a> -->
                                             <a href="../profile/edit-profile.php?cusid=<?php echo urlencode($customer['cus_id']); ?>">Edit Profile</a>
                                             <a href="">User Dashboard</a>
                                         </div>
@@ -206,7 +571,6 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
                                                 <circle transform="rotate(-90, 100, 100)" class="ProgressBar-background" cx="100" cy="100" r="85" />
                                                 <circle transform="rotate(-90, 100, 100)" class="ProgressBar-circle" cx="100" cy="100" r="85" />
                                             </svg>
-                                            
                                             <span class="ProgressBar-percentage ProgressBar-percentage--count"></span>
                                         </div>
                                     </div>
@@ -215,7 +579,7 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
 
                                 <div class="">
                                     <h4 class="c2 mb-1">Profile Completion</h4>
-                                    <p class="font-14">Member since: <?php echo $created_at; ?></p>
+                                    <p class="font-14 mb-0">Member since: <?php echo $created_at; ?></p>
                                 </div>
                             </div>
 
@@ -231,135 +595,119 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
 
                         <!-- Card -->
                         <div class="card">
-
-                       
-
                             <div class="p-30">
                                 <div class="about-myself mt-2 pb-2">
                                     <h4 class="mb-3">About Myself</h4>
                                     <p>Here are my complete profile details:</p>
                                 </div>
 
-                                <div class="row mt-5">
-                                    <div class="col-md-3">
-                                        <nav>
-                                            <div class="nav flex-md-column about-nav-tab">
-                                                <a class="active" id="nav-overview-tab" data-toggle="tab" href="#nav-overview">Overview</a>
-                                            </div>
-                                        </nav>
-                                    </div>
+                                <div class="row mt-4">
+                                    <!-- Left Column: Personal Information -->
+                                    <div class="col-lg-7 col-xl-8">
+                                        <div class="overview">
+                                            <h4 class="mb-3">Personal Information</h4>
 
-                                    <div class="col-md-9">
-                                        <div class="tab-content about-tab-content pl-md-5 mt-4 mt-md-0">
-                                            <div class="tab-pane fade show active" id="nav-overview" role="tabpanel">
-                                                <!-- Overview -->
-                                                <div class="overview">
-                                                    <h4 class="mb-3">Personal Information</h4>
-
-                                                    <ul class="p_overview-list list-unstyled">
-                                                        <li>
-                                                            <div class="d-flex">
-                                                                <div class="img mr-3">
-                                                                    <i class="icofont-id-card"></i>
-                                                                </div>
-                                                                <div class="content">
-                                                                    <strong>Customer ID:</strong> <?php echo htmlspecialchars($customer['cus_id']); ?>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="d-flex">
-                                                                <div class="img mr-3">
-                                                                    <i class="icofont-mobile-phone"></i>
-                                                                </div>
-                                                                <div class="content">
-                                                                    <strong>Mobile:</strong> 
-                                                                    <a href="tel:<?php echo htmlspecialchars($mobile); ?>" class="text_color">
-                                                                        <?php echo htmlspecialchars($mobile); ?>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="d-flex">
-                                                                <div class="img mr-3">
-                                                                    <i class="icofont-globe"></i>
-                                                                </div>
-                                                                <div class="content">
-                                                                    <strong>Email:</strong> 
-                                                                    <a href="mailto:<?php echo htmlspecialchars($email); ?>" class="text_color">
-                                                                        <?php echo htmlspecialchars($email); ?>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="d-flex">
-                                                                <div class="img mr-3">
-                                                                    <i class="icofont-location-pin"></i>
-                                                                </div>
-                                                                <div class="content">
-                                                                    <strong>Address:</strong> 
-                                                                    <?php echo htmlspecialchars($address); ?>, <?php echo htmlspecialchars($city); ?>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="d-flex">
-                                                                <div class="img mr-3">
-                                                                    <i class="icofont-calendar"></i>
-                                                                </div>
-                                                                <div class="content">
-                                                                    <strong>Registration Date:</strong> 
-                                                                    <?php echo $created_at; ?>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <?php if (!empty($signaturePhoto)): ?>
-                                                        <li>
-                                                            <div class="d-flex">
-                                                                <div class="img mr-3">
-                                                                    <i class="icofont-signature"></i>
-                                                                </div>
-                                                                <div class="content">
-                                                                    <strong>Signature:</strong> 
-                                                                    <img src="<?php echo $signaturePhoto; ?>" alt="Signature" style="max-height: 50px;">
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <?php endif; ?>
-                                                    </ul>
-                                                </div>
-                                                <!-- End Overview -->
-                                            </div>
+                                            <ul class="p_overview-list list-unstyled">
+                                                <li>
+                                                    <div class="d-flex">
+                                                        <div class="img">
+                                                            <i class="icofont-id-card"></i>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong>Customer ID</strong> <?php echo htmlspecialchars($customer['cus_id']); ?>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="d-flex">
+                                                        <div class="img">
+                                                            <i class="icofont-mobile-phone"></i>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong>Mobile</strong> 
+                                                            <a href="tel:<?php echo htmlspecialchars($mobile); ?>" class="text_color">
+                                                                <?php echo htmlspecialchars($mobile); ?>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="d-flex">
+                                                        <div class="img">
+                                                            <i class="icofont-globe"></i>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong>Email</strong> 
+                                                            <a href="mailto:<?php echo htmlspecialchars($email); ?>" class="text_color">
+                                                                <?php echo htmlspecialchars($email); ?>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="d-flex">
+                                                        <div class="img">
+                                                            <i class="icofont-location-pin"></i>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong>Address</strong> 
+                                                            <?php echo htmlspecialchars($address); ?>, <?php echo htmlspecialchars($city); ?>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="d-flex">
+                                                        <div class="img">
+                                                            <i class="icofont-calendar"></i>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong>Registration Date</strong> 
+                                                            <?php echo $created_at; ?>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <?php if (!empty($signaturePhoto)): ?>
+                                                <li>
+                                                    <div class="d-flex">
+                                                        <div class="img">
+                                                            <i class="icofont-signature"></i>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong>Signature</strong> 
+                                                            <img src="<?php echo $signaturePhoto; ?>" alt="Signature" style="max-height: 50px;">
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <?php endif; ?>
+                                            </ul>
                                         </div>
                                     </div>
 
-
-                                    <div class="col-xl-6 col-lg-6">
-   <div class="card mb-30">
-      <div class="card-body">
-         <h4 class="mb-3">Notifications</h4>
-         <p class="font-14">Project updates and important alerts.</p>
-         
-         <ul class="list-group">
-            <?php while ($row = $result_notifications->fetch_assoc()): ?>
-               <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div>
-                     <h6 class="mb-1"><?php echo htmlspecialchars($row['project_no']); ?></h6>
-                     <p class="mb-0"><?php echo htmlspecialchars($row['Notification_message']); ?></p>
-                     <small class="text-muted"><?php echo date("d M Y, H:i A", strtotime($row['created_at'])); ?></small>
-                  </div>
-               </li>
-            <?php endwhile; ?>
-            
-            <?php if ($result_notifications->num_rows == 0): ?>
-               <li class="list-group-item text-center">No new notifications.</li>
-            <?php endif; ?>
-         </ul>
-      </div>
-   </div>
-</div>
+                                    <!-- Right Column: Notifications -->
+                                    <div class="col-lg-5 col-xl-4 mt-4 mt-lg-0">
+                                        <div class="card mb-30" style="border: none !important; box-shadow: none !important; background: transparent !important; margin-bottom: 0 !important;">
+                                            <div class="card-body p-0">
+                                                <h4 class="mb-3">Notifications</h4>
+                                                <p class="font-14 text-muted mb-3">Project updates and important alerts.</p>
+                                                
+                                                <ul class="list-group">
+                                                    <?php while ($row = $result_notifications->fetch_assoc()): ?>
+                                                       <li class="list-group-item d-flex justify-content-between align-items-start">
+                                                          <div>
+                                                             <h6 class="mb-1"><?php echo htmlspecialchars($row['project_no']); ?></h6>
+                                                             <p class="mb-0"><?php echo htmlspecialchars($row['Notification_message']); ?></p>
+                                                             <small class="text-muted"><?php echo date("d M Y, H:i A", strtotime($row['created_at'])); ?></small>
+                                                          </div>
+                                                       </li>
+                                                    <?php endwhile; ?>
+                                                    
+                                                    <?php if ($result_notifications->num_rows == 0): ?>
+                                                       <li class="list-group-item text-center">No new notifications.</li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -372,8 +720,8 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
     </div>
 </div>
 <!-- End Main Content -->
-            </body>
-            </html>
+</body>
+</html>
 <?php 
 include_once('../inc/footer.php');
 ?>

@@ -125,8 +125,8 @@ if (isset($_POST['project_no'])) {
     ";
     
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssssssss", $project_no, $project_no, $project_no, $project_no, 
-                     $project_no, $project_no, $project_no, $project_no, $project_no);
+    $stmt->bind_param("ssssssssss", $project_no, $project_no, $project_no, $project_no, 
+                     $project_no, $project_no, $project_no, $project_no, $project_no, $project_no);
     $stmt->execute();
     $result = $stmt->get_result();
     
