@@ -357,46 +357,40 @@ if (isset($_GET['project_no'])) {
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>IMAGE 1</label>
-                                    <input type="file" class="theme-input-style" name="image_1" accept="image/*">
-                                    <?php if (!empty($data['image_1'])): ?>
-                                        <div class="mt-2">
-                                            <small>Current Image:</small>
-                                            <a href="uploads/<?php echo htmlspecialchars($data['image_1']); ?>" target="_blank" class="d-block">
-                                                <img src="uploads/<?php echo htmlspecialchars($data['image_1']); ?>" style="max-width: 200px; max-height: 150px;" class="img-thumbnail">
-                                            </a>
-                                            <small class="text-muted">Leave blank to keep current image</small>
+                                    <input type="file" class="theme-input-style" name="image_1" accept="image/*" onchange="previewImage(this, 'preview_img_1', 'preview_container_1')">
+                                    <div class="mt-2" id="preview_container_1" style="<?php echo empty($data['image_1']) ? 'display:none;' : ''; ?>">
+                                        <small class="preview-label">Current Image:</small>
+                                        <div class="d-block">
+                                            <img src="<?php echo !empty($data['image_1']) ? 'uploads/' . htmlspecialchars($data['image_1']) : ''; ?>" id="preview_img_1" style="max-width: 200px; max-height: 150px;" class="img-thumbnail">
                                         </div>
-                                    <?php endif; ?>
+                                        <small class="text-muted helper-text">Leave blank to keep current image</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>IMAGE 2</label>
-                                    <input type="file" class="theme-input-style" name="image_2" accept="image/*">
-                                    <?php if (!empty($data['image_2'])): ?>
-                                        <div class="mt-2">
-                                            <small>Current Image:</small>
-                                            <a href="uploads/<?php echo htmlspecialchars($data['image_2']); ?>" target="_blank" class="d-block">
-                                                <img src="uploads/<?php echo htmlspecialchars($data['image_2']); ?>" style="max-width: 200px; max-height: 150px;" class="img-thumbnail">
-                                            </a>
-                                            <small class="text-muted">Leave blank to keep current image</small>
+                                    <input type="file" class="theme-input-style" name="image_2" accept="image/*" onchange="previewImage(this, 'preview_img_2', 'preview_container_2')">
+                                    <div class="mt-2" id="preview_container_2" style="<?php echo empty($data['image_2']) ? 'display:none;' : ''; ?>">
+                                        <small class="preview-label">Current Image:</small>
+                                        <div class="d-block">
+                                            <img src="<?php echo !empty($data['image_2']) ? 'uploads/' . htmlspecialchars($data['image_2']) : ''; ?>" id="preview_img_2" style="max-width: 200px; max-height: 150px;" class="img-thumbnail">
                                         </div>
-                                    <?php endif; ?>
+                                        <small class="text-muted helper-text">Leave blank to keep current image</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>IMAGE 3</label>
-                                    <input type="file" class="theme-input-style" name="image_3" accept="image/*">
-                                    <?php if (!empty($data['image_3'])): ?>
-                                        <div class="mt-2">
-                                            <small>Current Image:</small>
-                                            <a href="uploads/<?php echo htmlspecialchars($data['image_3']); ?>" target="_blank" class="d-block">
-                                                <img src="uploads/<?php echo htmlspecialchars($data['image_3']); ?>" style="max-width: 200px; max-height: 150px;" class="img-thumbnail">
-                                            </a>
-                                            <small class="text-muted">Leave blank to keep current image</small>
+                                    <input type="file" class="theme-input-style" name="image_3" accept="image/*" onchange="previewImage(this, 'preview_img_3', 'preview_container_3')">
+                                    <div class="mt-2" id="preview_container_3" style="<?php echo empty($data['image_3']) ? 'display:none;' : ''; ?>">
+                                        <small class="preview-label">Current Image:</small>
+                                        <div class="d-block">
+                                            <img src="<?php echo !empty($data['image_3']) ? 'uploads/' . htmlspecialchars($data['image_3']) : ''; ?>" id="preview_img_3" style="max-width: 200px; max-height: 150px;" class="img-thumbnail">
                                         </div>
-                                    <?php endif; ?>
+                                        <small class="text-muted helper-text">Leave blank to keep current image</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -411,5 +405,27 @@ if (isset($_GET['project_no'])) {
         </form>
     </div>
 </div>
+
+<script>
+function previewImage(input, imgId, containerId) {
+    const container = document.getElementById(containerId);
+    const img = document.getElementById(imgId);
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            container.style.display = 'block';
+            const label = container.querySelector('.preview-label');
+            if (label) label.innerText = 'New Image Preview:';
+            const helper = container.querySelector('.helper-text');
+            if (helper) helper.style.display = 'none';
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 
 <?php include_once('../../inc/footer.php'); ?>

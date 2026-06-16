@@ -75,9 +75,9 @@ $results = $row['results'];
 $condition_new = $row['condition_new'];
 
 
-$image1 = $project_no . '_image1.jpg';
-$image2 = $project_no . '_image2.jpg';
-$image3 = $project_no . '_image3.jpg';
+$image1 = !empty($row['image_1']) ? $row['image_1'] : ($project_no . '_image1.jpg');
+$image2 = !empty($row['image_2']) ? $row['image_2'] : ($project_no . '_image2.jpg');
+$image3 = !empty($row['image_3']) ? $row['image_3'] : ($project_no . '_image3.jpg');
 
 
 // Convert inspector and technical manager names to lowercase
