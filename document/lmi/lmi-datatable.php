@@ -132,7 +132,7 @@ while ($row = $dataQ->fetch_assoc()) {
     $actions .= "<a href='downloadnew.php?project_no={$row['project_no']}' class='download-icon' title='Download'><i class='fa fa-download'></i></a>";
     
     if (($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $row['project_status'] !== 'Completed') {
-        $actions .= "<a href='edit.php?project_no={$row['project_no']}' target='_blank' title='Edit'><i class='fa fa-edit'></i></a>";
+        $actions .= "<a href='edit-lmi.php?project_no={$row['project_no']}' target='_blank' title='Edit'><i class='fa fa-edit'></i></a>";
     }
     
     $actions .= "<a href='javascript:void(0)' onclick=\"deleteRow('{$row['project_no']}',this)\" class='text-danger' style='margin-left:8px;' title='Delete'><i class='fa fa-trash'></i></a>";

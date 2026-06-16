@@ -5,6 +5,22 @@ if (!isset($row) || empty($row)) {
     echo "No checklist data available.";
     exit;
 }
+
+$saved_results = isset($row['result']) ? explode(',', $row['result']) : [];
+$saved_remarks = isset($row['checklist_remark']) ? explode(',', $row['checklist_remark']) : [];
+
+function isChecked($itemIndex, $value, $saved_results) {
+    $idx = $itemIndex - 1;
+    if (isset($saved_results[$idx]) && trim($saved_results[$idx]) === $value) {
+        return 'checked';
+    }
+    return '';
+}
+
+function getRemark($itemIndex, $saved_remarks) {
+    $idx = $itemIndex - 1;
+    return isset($saved_remarks[$idx]) ? htmlspecialchars($saved_remarks[$idx]) : '';
+}
 ?>
 
 

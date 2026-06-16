@@ -74,17 +74,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_lmi'])) {
  $radius_aux_length      = $_POST['aux_length'] ?? null;
 
         
-        $radius_main_chart  = $_POST['radius_main_chart'];
-        $radius_main_lmi    = $_POST['radius_main_lmi'];
-        $radius_main_remark = $_POST['radius_main_remark'];
+        $radius_main_chart  = $_POST['main_3m_chart'] ?? '';
+        $radius_main_lmi    = $_POST['main_3m_lmi'] ?? '';
+        $radius_main_remark = $_POST['main_3m_remark'] ?? '';
 
-        $radius_24_chart  = $_POST['radius_24_chart'];
-        $radius_24_lmi    = $_POST['radius_24_lmi'];
-        $radius_24_remark = $_POST['radius_24_remark'];
+        $radius_24_chart  = $_POST['main_24m_chart'] ?? '';
+        $radius_24_lmi    = $_POST['main_24m_lmi'] ?? '';
+        $radius_24_remark = $_POST['main_24m_remark'] ?? '';
 
-        $radius_aux_chart  = $_POST['radius_aux_chart'];
-        $radius_aux_lmi    = $_POST['radius_aux_lmi'];
-        $radius_aux_remark = $_POST['radius_aux_remark'];
+        $radius_aux_chart  = $_POST['aux_chart'] ?? '';
+        $radius_aux_lmi    = $_POST['aux_lmi'] ?? '';
+        $radius_aux_remark = $_POST['aux_remark'] ?? '';
 
         /* ================= LOAD CELL CALIBRATION ================= */
         $load_actual   = $_POST['load_actual'];
