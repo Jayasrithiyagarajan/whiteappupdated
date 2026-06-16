@@ -189,9 +189,10 @@ $newCertificateNo = sprintf("CMC-%03d-%s-%s", $nextNumber, $currentYear, $projec
     }
 
     /* Mobile Responsiveness */
-    @media (max-width: 768px) {
+    @media (max-width: 991px) {
         .form-element {
             padding: 25px 20px !important;
+            height: auto !important; /* Allow dynamic height on mobile */
         }
         
         .font-20 {
@@ -204,6 +205,18 @@ $newCertificateNo = sprintf("CMC-%03d-%s-%s", $nextNumber, $currentYear, $projec
 
         .glass-header {
             padding: 15px !important;
+        }
+
+        .glass-header .row {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .glass-header .col-6 {
+            max-width: 100%;
+            flex: 0 0 100%;
+            text-align: center !important;
         }
     }
 </style>

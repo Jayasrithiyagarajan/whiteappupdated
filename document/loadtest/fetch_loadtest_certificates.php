@@ -124,9 +124,9 @@ while($r=$res->fetch_assoc()){
         $r['employer_address'],
         $r['premises_address'],
         date('d-m-Y',strtotime($r['examination_date'])),
-        "<span class='actions'>
-            <a href='view.php?project_no={$r['project_no']}' target='_blank'><i class='fa fa-eye'></i></a>
-            <a href='download.php?project_no={$r['project_no']}'><i class='fa fa-download'></i></a>
+        "<span class='actions' style='display: flex; gap: 15px; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;'>
+            <a href='view.php?project_no={$r['project_no']}' target='_blank' style='text-decoration:none; color:inherit;'><i class='fa fa-eye'></i></a>
+            <a href='download.php?project_no={$r['project_no']}' style='text-decoration:none; color:inherit;'><i class='fa fa-download'></i></a>
             ".(in_array($_SESSION['role'], ['document controller', 'inspector', 'admin']) && $r['project_status']!=='Completed'
                 ?"<i class='fa fa-edit' onclick=\"redirectToEditLoadTest('{$r['project_no']}')\"></i>":"")."
             <i class='fa fa-trash text-danger' onclick=\"deleteRow('{$r['project_no']}')\"></i>
