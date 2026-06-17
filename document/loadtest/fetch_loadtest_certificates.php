@@ -129,7 +129,7 @@ while($r=$res->fetch_assoc()){
             <a href='download.php?project_no={$r['project_no']}' style='text-decoration:none; color:inherit;'><i class='fa fa-download'></i></a>
             ".(in_array($_SESSION['role'], ['document controller', 'inspector', 'admin']) && $r['project_status']!=='Completed'
                 ?"<i class='fa fa-edit' onclick=\"redirectToEditLoadTest('{$r['project_no']}')\"></i>":"")."
-            <i class='fa fa-trash text-danger' onclick=\"deleteRow('{$r['project_no']}')\"></i>
+            ".($r['project_status'] !== 'Completed' ? "<i class='fa fa-trash text-danger' onclick=\"deleteRow('{$r['project_no']}')\"></i>" : "")."
         </span>"
     ];
 }

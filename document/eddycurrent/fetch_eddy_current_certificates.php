@@ -193,10 +193,13 @@ while ($r = $res->fetch_assoc()) {
         ';
     }
     
+    if ($r['project_status'] !== 'Completed') {
+        $actions .= '
+                <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow(\''.$r['project_no'].'\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
+                    <i class="fa fa-trash"></i>
+                </a>';
+    }
     $actions .= '
-            <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow(\''.$r['project_no'].'\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
-                <i class="fa fa-trash"></i>
-            </a>
         </div>
     ';
 

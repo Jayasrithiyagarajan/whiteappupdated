@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inspection_status = mysqli_real_escape_string($conn, $_POST['inspection_status']);
     $deficiency = mysqli_real_escape_string($conn, $_POST['deficiency']);
     $corrective_action = mysqli_real_escape_string($conn, $_POST['corrective_action']);
+    $no_of_equipments_inspected = mysqli_real_escape_string($conn, $_POST['no_of_equipments_inspected']);
 
     $update_query = "
         UPDATE reports SET 
@@ -28,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             next_inspection_due_date = '$next_inspection_due_date',
             inspection_status = '$inspection_status',
             deficiency = '$deficiency',
-            corrective_action = '$corrective_action'
+            corrective_action = '$corrective_action',
+            no_of_equipments_inspected = '$no_of_equipments_inspected'
         WHERE report_no = '$report_no'
     ";
 

@@ -171,7 +171,7 @@ echo "</div></td>";
             //     <button type='button' class='status-btn'>{$row['status']}</button>
             // </td>";
             echo "<td class='actions'>";
-if ($row['project_status'] !== 'Completed') {
+if (strcasecmp($row['project_status'] ?? '', 'Completed') !== 0) {
     if (in_array($user_role, ['inspector', 'admin', 'document controller', 'quality controller'])) {
         // Allow only inspectors to edit
         echo "<a href='./type/{$checklist_type_raw}.php?checklist_type={$checklist_type_raw}&&checklist_no={$checklist_no}'>

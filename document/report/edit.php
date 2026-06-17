@@ -13,7 +13,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
            p.project_no, p.creation_date, p.sticker_status, p.customer_name, p.equipment_location,
            p.inspector_name, p.checklist_type, p.equipment_id,
            r.report_no, r.model, r.type, r.prev_sticker_no, r.issued_company, 
-           r.next_inspection_due_date, r.deficiency, r.corrective_action, r.inspection_status
+           r.next_inspection_due_date, r.deficiency, r.corrective_action, r.inspection_status, r.no_of_equipments_inspected
     FROM checklist_information c
     JOIN project_info p ON c.project_no = p.project_no
     JOIN reports r ON r.project_no = p.project_no AND r.report_no = '$report_no'
@@ -49,6 +49,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
         $issued_company = $row['issued_company'];
         $next_inspection_due_date = $row['next_inspection_due_date'];
         $inspection_status = $row['inspection_status'];
+        $no_of_equipments_inspected = $row['no_of_equipments_inspected'];
         $deficiency = $row['deficiency'];
         $corrective_action = $row['corrective_action'];
         $report_no = $row['report_no'];
@@ -455,6 +456,19 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                 <div class="form-group">
                                     <label class="font-14 bold mb-2">Checklist No</label>
                                     <input type="text" class="theme-input-style" value="<?php echo htmlspecialchars($checklist_no); ?>" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="font-14 bold mb-2">No. of Equipments Inspected</label>
+                                    <input 
+                                        type="number" 
+                                        class="theme-input-style" 
+                                        name="no_of_equipments_inspected" 
+                                        value="<?php echo htmlspecialchars($no_of_equipments_inspected ?? ''); ?>"
+                                        placeholder="Enter number of equipments inspected"
+                                        min="1"
+                                        required
+                                    >
                                 </div>
                                                                 </div>
                                 </div>

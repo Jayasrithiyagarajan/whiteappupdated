@@ -343,6 +343,23 @@ function clearHealthFilters() {
     healthTable.ajax.reload();
 }
 
+function deleteRow(projectNo) {
+    if (confirm('Are you sure you want to delete this certificate?')) {
+        $.ajax({
+            url: 'delete.php',
+            type: 'POST',
+            data: { project_no: projectNo },
+            success: function(response) {
+                alert(response);
+                healthTable.ajax.reload(null, false);
+            },
+            error: function() {
+                alert('An error occurred while deleting.');
+            }
+        });
+    }
+}
+
 </script>
 </body>
 </html>

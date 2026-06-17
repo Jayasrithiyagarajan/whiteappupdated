@@ -167,7 +167,7 @@ while ($r = $res->fetch_assoc()) {
             <a href='./type/view/{$r['checklist_type']}.php?checklist_type={$r['checklist_type']}&checklist_no={$r['checklist_id']}' target='_blank' title='View'><i class='fa-solid fa-eye'></i></a>
             <a href='./type/download_pdf.php?checklist_type={$r['checklist_type']}&checklist_no={$r['checklist_id']}' target='_blank' class='action-download' title='Download PDF'><i class='fa-solid fa-download'></i></a>
             ".(
-                $r['project_status'] !== 'Completed' && $role === 'inspector'
+                strcasecmp($r['project_status'] ?? '', 'Completed') !== 0 && $role === 'inspector'
                 ? "<a href='./type/{$r['checklist_type']}.php?checklist_type={$r['checklist_type']}&checklist_no={$r['checklist_id']}' title='Edit'><i class='fa-solid fa-pen-to-square'></i></a>"
                 : ""
             )."

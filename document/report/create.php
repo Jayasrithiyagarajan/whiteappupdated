@@ -486,6 +486,18 @@ if (isset($_GET['project_no'])) {
                     <input type="text" class="theme-input-style" value="<?php echo htmlspecialchars($checklist_no); ?>" name="checklist_no" readonly required>
                 </div>
 
+                <div class="form-group">
+                    <label class="font-14 bold mb-2">No. of Equipments Inspected</label>
+                    <input 
+                        type="number" 
+                        class="theme-input-style" 
+                        name="no_of_equipments_inspected" 
+                        placeholder="Enter number of equipments inspected"
+                        min="1"
+                        required
+                    >
+                </div>
+
               
 
 

@@ -118,7 +118,7 @@ if (isset($_SERVER['SCRIPT_FILENAME']) && realpath(__FILE__) === realpath($_SERV
                         <div class='icon text-primary'><i class='et-document'></i></div>
                      </a>";
 
-        if ($row['project_status'] !== 'Completed') {
+        if (strcasecmp($row['project_status'] ?? '', 'Completed') !== 0) {
             if ($user_role === 'inspector') {
                 $editIcon = "<a href='./type/{$checklist_type_raw}.php?checklist_type={$checklist_type_raw}&&checklist_no={$checklist_no}'>
                                 <span class='contact-edit'><img src='../../assets/img/svg/c-edit.svg' class='svg'></span>

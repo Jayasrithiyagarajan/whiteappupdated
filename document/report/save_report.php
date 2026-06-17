@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $next_inspection_due_date = $_POST['next_inspection_due_date'];
     $inspection_status = $_POST['inspection_status'];
     $sticker_number_issued = $_POST['sticker_number_issued'];
+    $no_of_equipments_inspected = $_POST['no_of_equipments_inspected'];
     $created_at = date('Y-m-d H:i:s');
     
     // Combine deficiencies and corrective actions into an array
@@ -54,16 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $insertQuery = "INSERT INTO reports (
         project_no, checklist_no, report_no, issued_company, client_company_name, manufacturer, model, type, prev_sticker_no, issued_by, capacity, 
         equipment_id_no, equipment_serial_no, location, date_of_inspection, next_inspection_due_date, 
-        inspection_status, sticker_number_issued, created_at, deficiency, corrective_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        inspection_status, sticker_number_issued, no_of_equipments_inspected, created_at, deficiency, corrective_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Prepare statement
     $stmt = $conn->prepare($insertQuery);
 
     // Bind parameters
-    $stmt->bind_param("sssssssssssssssssssss", 
+    $stmt->bind_param("ssssssssssssssssssssss", 
         $project_no, $checklist_no, $report_no, $issued_company, $client_company_name, $manufacturer, $model, $type, $prev_sticker_no, $issued_by, $capacity,
         $equipment_id_no, $equipment_serial_no, $location, $date_of_inspection, $next_inspection_due_date, 
-        $inspection_status, $sticker_number_issued, $created_at, $deficiency, $corrective_action);
+        $inspection_status, $sticker_number_issued, $no_of_equipments_inspected, $created_at, $deficiency, $corrective_action);
 
     // Execute statement and check for errors
     if ($stmt->execute()) {

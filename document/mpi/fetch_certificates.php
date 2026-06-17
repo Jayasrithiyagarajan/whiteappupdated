@@ -168,10 +168,13 @@ while ($row = $result->fetch_assoc()) {
         ';
     }
 
-    $actions .= '
+    if ($row['project_status'] !== 'Completed') {
+        $actions .= '
             <a href="javascript:void(0)" class="delete-icon" onclick="deleteCertificate(\''.$row['project_no'].'\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
                 <i class="fa fa-trash"></i>
-            </a>
+            </a>';
+    }
+    $actions .= '
         </div>
     ';
 

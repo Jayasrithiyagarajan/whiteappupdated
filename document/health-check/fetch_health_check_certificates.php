@@ -249,9 +249,11 @@ while ($r = $res->fetch_assoc()) {
                     <i class="fa fa-edit"></i>
                 </a>
                 ' : '') . '
+                ' . ($r['project_status'] !== 'Completed' ? '
                 <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow(\'' . $r['project_no'] . '\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
                     <i class="fa fa-trash"></i>
                 </a>
+                ' : '') . '
             </div>
         '
     ];

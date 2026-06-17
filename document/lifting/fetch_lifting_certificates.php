@@ -211,8 +211,11 @@ $initialClass = "initial-" . $initial;
         ";
     }
 
+    if ($r['project_status'] !== 'Completed') {
+        $actions .= "
+            <a href='#' onclick='deleteRow(\"{$r['project_no']}\")' class='text-danger' style='margin-left:8px;' title='Delete'><i class='fa fa-trash'></i></a>";
+    }
     $actions .= "
-            <a href='#' onclick='deleteRow(\"{$r['project_no']}\")' class='text-danger' style='margin-left:8px;' title='Delete'><i class='fa fa-trash'></i></a>
         </div>
     ";
 
