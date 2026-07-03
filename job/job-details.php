@@ -584,8 +584,11 @@ echo ucwords(str_replace(['-', '_'], ' ', htmlspecialchars($data['checklist_type
     </span>
 </li>
                                             <li><span class="key">Review Status:</span> <span class="text-success"><?php echo htmlspecialchars($reviewStatus); ?></span></li>
-                                            <a href="../document/checklist/preview.php?project_no=<?php echo htmlspecialchars($data['project_no']); ?>" target="_blank">
+                                            <a href="../document/checklist/type/view/<?php echo htmlspecialchars($data['checklist_type']); ?>.php?checklist_type=<?php echo htmlspecialchars($data['checklist_type']); ?>&checklist_no=<?php echo htmlspecialchars($data['checklist_id']); ?>" target="_blank">
                                                 <span class="bg-primary text-white status-btn completed"> View Checklist</span>
+                                            </a>
+                                            <a href="../document/checklist/type/download_pdf.php?checklist_type=<?php echo htmlspecialchars($data['checklist_type']); ?>&checklist_no=<?php echo htmlspecialchars($data['checklist_id']); ?>" target="_blank">
+                                                <span class="bg-success text-white status-btn completed" style="margin-left: 8px;"> Download Checklist</span>
                                             </a>
                                         </ul>
                                     <?php

@@ -57,4 +57,22 @@ if (!empty($checklist_type) && !empty($checklist_no)) {
 
 // Use global to make $row available to the including script
 global $row;
+
+if (!empty($checklist_no)) {
+    ?>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selector = 'input[name="report_no"], input[name="header_client_name"], input[name="client_name"], input[name="inspected_by"], input[id="clientName"]';
+        document.querySelectorAll(selector).forEach(function(el) {
+            el.setAttribute("readonly", "readonly");
+            el.style.backgroundColor = "#e9ecef";
+            el.style.cursor = "not-allowed";
+            el.addEventListener("keydown", function(e) {
+                e.preventDefault();
+            });
+        });
+    });
+    </script>
+    <?php
+}
 ?>

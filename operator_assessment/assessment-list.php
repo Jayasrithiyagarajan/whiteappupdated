@@ -10,7 +10,7 @@ $logged_in_user = $_SESSION['username'] ?? null;
 $userRole       = $_SESSION['role'] ?? null;
 
 // Allow only admin or inspector
-if (!$logged_in_user || !in_array($userRole, ['admin', 'inspector'])) {
+if (!$logged_in_user || !in_array($userRole, ['admin', 'inspector', 'document controller'])) {
     header("Location: ../index.php");
     exit;
 }

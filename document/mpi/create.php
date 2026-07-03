@@ -18,7 +18,8 @@ $stmt = $conn->prepare("
         r.report_no,
         r.location,
         r.date_of_inspection,
-        r.next_inspection_due_date
+        r.next_inspection_due_date,
+        r.created_at
     FROM project_info p
     LEFT JOIN reports r ON r.project_no = p.project_no
     WHERE p.project_no = ?
@@ -254,7 +255,7 @@ $year = date('Y');
                 <div class="row">
                     <div class="col-md-3">
                         <label>Date of Report</label>
-                        <input type="date" name="date_of_report" class="theme-input-style" required>
+                        <input type="date" name="date_of_report" class="theme-input-style" value="<?= htmlspecialchars(!empty($data['created_at']) ? date('Y-m-d', strtotime($data['created_at'])) : '') ?>" required>
                     </div>
                     <div class="col-md-3">
                         <label>Report No</label>

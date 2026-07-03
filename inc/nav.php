@@ -257,7 +257,7 @@ if ($role == '' || $role == 'guest') {
 
 
             <!-- General Setup (Visible to Admin Only) -->
-            <?php if (in_array($_SESSION['role'], ['admin', 'inspector'])): ?>
+            <?php if (in_array($_SESSION['role'], ['admin', 'inspector', 'document controller'])): ?>
                <li>
                   <a href="#">
                      <!--<i class="icofont-binary"></i>-->

@@ -60,7 +60,7 @@ if (!isset($viewMap[$checklist_type])) {
 $mpdf = new Mpdf([
     'mode' => 'utf-8',
     'format' => 'A4',
-    'margin_top' => 70,
+    'margin_top' => 120,
     'margin_bottom' => 20,
     'margin_left' => 10,
     'margin_right' => 10,
@@ -228,8 +228,6 @@ $header = '
 </tr>
 </table>';
 
-$mpdf->SetHTMLHeader($header);
-
 $_GET['checklist_type'] = $checklist_type;
 $_GET['checklist_no'] = $checklist_no;
 
@@ -239,6 +237,53 @@ $html = ob_get_clean();
 
 // Remove UTF-8 BOM if present
 $html = preg_replace('/^\x{EF}\x{BB}\x{BF}/', '', $html);
+
+// Extract stylesheet
+preg_match('/<style[^>]*>(.*?)<\/style>/is', $html, $styleMatches);
+$styleHtml = !empty($styleMatches[0]) ? $styleMatches[0] : '';
+
+// Write the stylesheet globally to mPDF in HEADER_CSS mode (value 1) so it styles headers correctly
+if ($styleHtml !== '') {
+    $mpdf->WriteHTML($styleHtml, 1);
+}
+
+// Extract title and details table from body
+preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $bodyMatches);
+if (!empty($bodyMatches[1])) {
+    $bodyContent = $bodyMatches[1];
+    
+    $headingHtml = '';
+    // Support h1-h4 headings and title-section divs
+    if (preg_match('/(?:<div class="title-section"[^>]*>.*?<\/div>|<h[1-4][^>]*>.*?<\/h[1-4]>)/is', $bodyContent, $headingMatches)) {
+        $headingHtml = $headingMatches[0];
+    }
+    
+    $tableHtml = '';
+    if (preg_match('/<table[^>]*>.*?<\/table>/is', $bodyContent, $tableMatches)) {
+        $tableHtml = $tableMatches[0];
+    }
+    
+    if ($tableHtml !== '') {
+        // Remove heading and table from bodyContent
+        $newBodyContent = $bodyContent;
+        if ($headingHtml !== '') {
+            $newBodyContent = preg_replace('/' . preg_quote($headingHtml, '/') . '/s', '', $newBodyContent, 1);
+        }
+        $newBodyContent = preg_replace('/' . preg_quote($tableHtml, '/') . '/s', '', $newBodyContent, 1);
+        
+        // Clean up leading breaks and whitespace
+        $newBodyContent = preg_replace('/^(?:\s*|<br\s*\/?>)+/is', '', $newBodyContent);
+        
+        // Put the body back into $html
+        $html = str_replace($bodyContent, $newBodyContent, $html);
+        
+        // Append heading and table to header
+        $header .= '<div style="margin-top: 10px; margin-bottom: 10px;">' . $headingHtml . '</div>' . $tableHtml;
+    }
+}
+
+$mpdf->SetHTMLHeader($header, 'O');
+$mpdf->SetHTMLHeader($header, 'E');
 
 $mpdf->WriteHTML($html);
 
