@@ -116,16 +116,31 @@ $html = '
         color: #1D2939;
     }
     .certificate-wrapper {
-        width: 186mm;
-        margin: 12mm auto 12mm auto;
-        border: 1.5pt solid #0F2A4A;
-        padding: 14mm 15mm;
+        position: absolute;
+        top: 8mm;
+        left: 8mm;
+        width: 194mm;
+        height: 280mm;
+        border: 1px solid #003366;
+        padding: 4px;
+        box-sizing: border-box;
+    }
+    .certificate-middle {
+        height: 269mm;
+        border: 4px solid #003366;
+        padding: 4px;
+        box-sizing: border-box;
+    }
+    .certificate-inner {
+        height: 258mm;
+        border: 1px solid #003366;
+        padding: 30px 25px;
         box-sizing: border-box;
         background-image: url(\'../document/logo.png\');
         background-repeat: no-repeat;
         background-position: center center;
-        background-image-opacity: 0.05;
-        background-size: 70mm 80mm;
+        background-image-opacity: 0.06;
+        background-image-resize: 4;
     }
     .rule {
         border-bottom: 0.75pt solid #D0D5DD;
@@ -149,7 +164,7 @@ $html = '
         </tr>
     </table>
 
-    <div class="rule" style="margin: 8mm 0 10mm 0;"></div>
+    <div class="rule" style="margin: 5mm 0 6mm 0;"></div>
 
     <table style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse;">
         <tr>
@@ -157,9 +172,9 @@ $html = '
                 <img src="../document/code.png" style="width: 78px; height: 78px;">
             </td>
             <td style="width: 56%; text-align: center; vertical-align: middle; border: none; padding: 0 4mm; box-sizing: border-box; overflow: hidden; word-wrap: break-word;">
-                <div style="font-size: 10pt; font-weight: bold; color: #667085; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;">This certifies that</div>
-                <div style="font-size: 18pt; font-weight: bold; color: #0F2A4A; margin-bottom: 10px; word-wrap: break-word;">' . htmlspecialchars($name) . '</div>
-                <div style="font-size: 9.5pt; font-weight: bold; color: #667085; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">of</div>
+                <div style="font-size: 10pt; font-weight: bold; color: #667085; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">This certifies that</div>
+                <div style="font-size: 18pt; font-weight: bold; color: #0F2A4A; margin-bottom: 8px; word-wrap: break-word;">' . htmlspecialchars($name) . '</div>
+                <div style="font-size: 9.5pt; font-weight: bold; color: #667085; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;">of</div>
                 <div style="font-size: 13pt; font-weight: bold; color: #1D2939; word-wrap: break-word;">' . htmlspecialchars($company) . '</div>
             </td>
             <td style="width: 22%; vertical-align: middle; text-align: right; border: none; padding: 0; overflow: hidden;">
@@ -168,23 +183,23 @@ $html = '
         </tr>
     </table>
 
-    <div style="text-align: center; font-size: 11pt; line-height: 1.7; color: #344054; margin: 10mm 6mm 8mm 6mm; font-weight: normal;">
+    <div style="text-align: center; font-size: 11pt; line-height: 1.7; color: #344054; margin: 6mm 6mm 6mm 6mm; font-weight: normal;">
         Has successfully achieved the high standards required for assessment in <span style="color: #0F2A4A; font-weight: bold;">' . htmlspecialchars($equipment_text) . '</span> and is awarded this certificate of achievement as evidence of successful completion of the course and associated practical and theoretical assessments.
     </div>
 
-    <div style="text-align: center; color: #667085; font-weight: bold; font-size: 9pt; letter-spacing: 1px; margin: 0 0 8mm 0;">
+    <div style="text-align: center; color: #667085; font-weight: bold; font-size: 9pt; letter-spacing: 1px; margin: 0 0 6mm 0;">
         CERTIFICATE NO. <span style="color: #0F2A4A;">' . htmlspecialchars($cert_no) . '</span>
     </div>
 
-    <div class="rule" style="margin: 0 0 8mm 0;"></div>
+    <div class="rule" style="margin: 0 0 6mm 0;"></div>
 
     <table style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse;">
         <tr>
-            <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: left; padding-bottom: 12mm; overflow: hidden;">
+            <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: left; padding-bottom: 8mm; overflow: hidden;">
                 <div style="color: #667085; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Passport Number</div>
                 <div style="color: #1D2939; font-weight: bold; font-size: 11pt; word-wrap: break-word;">' . htmlspecialchars($iqama) . '</div>
             </td>
-            <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: right; padding-bottom: 12mm; overflow: hidden;">
+            <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: right; padding-bottom: 8mm; overflow: hidden;">
                 <div style="color: #667085; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Issued Date</div>
                 <div style="color: #1D2939; font-weight: bold; font-size: 11pt; word-wrap: break-word;">' . htmlspecialchars($completion_date) . '</div>
             </td>
@@ -235,6 +250,7 @@ $mpdf = new \Mpdf\Mpdf([
 ]);
 
 $mpdf->SetDisplayMode('fullpage');
+$mpdf->setAutoPageBreak(false);
 $mpdf->WriteHTML($html);
 
 if (ob_get_length()) ob_end_clean();
