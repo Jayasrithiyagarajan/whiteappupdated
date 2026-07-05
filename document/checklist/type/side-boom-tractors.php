@@ -2895,44 +2895,7 @@ if (!empty($row['inspected_by'])) {
     // Query inspectors table
     $sql = "SELECT signature_photo FROM inspectors WHERE inspector_name = ?";
     $stmt = $conn->prepare($sql);
-    
-    if ($stmt) {
-        $stmt->bind_param("s", $inspector_name);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $inspector = $result->fetch_assoc();
-            $image_path = 'https://appcims.com/whiteapp/inspector/uploads/' . str_replace(' ', '_', strtolower($inspector_name)) . '/images/signature_image.jpg';
-            echo "<img src='$image_path' alt='Inspector Signature' style='max-width: 100px; max-height: 50px;'>";
-        } else {
-            echo "Inspector not found.";
-        }
-        $stmt->close();
-    } else {
-        echo "Error preparing statement: " . $conn->error;
-    }
-} else {
-    echo "Inspector's name is not available.";
-}
-?>
-</td>
-            <th style="width: 25%;">CLIENT’S REP. NAME:</th>
-            <td style="width: 25%;" onclick="openModal()">
-        <span id="clientNameDisplay"><?php echo !empty($row['client_rep_name']) ? htmlspecialchars($row['client_rep_name']) : 'Click to enter'; ?></span>
-    </td>
-        </tr>
-        <tr>
-            <th>SIGNATURE & DATE:</th>
-            <td>
-<?php
-if (!empty($row['inspected_by'])) {
-    $inspector_name = $row['inspected_by'];
-
-    // Query inspectors table
-    $sql = "SELECT signature_photo FROM inspectors WHERE inspector_name = ?";
-    $stmt = $conn->prepare($sql);
-    
     if ($stmt) {
         $stmt->bind_param("s", $inspector_name);
         $stmt->execute();
@@ -2941,8 +2904,8 @@ if (!empty($row['inspected_by'])) {
         if ($result->num_rows > 0) {
             $inspector = $result->fetch_assoc();
             // $image_path = 'https://appcims.com/whiteapp/inspector/uploads/' . str_replace(' ', '_', strtolower($inspector_name)) . '/images/signature_image.jpg';
-            $image_path = 'http://localhost/whiteappupdated/inspector/uploads/' . str_replace(' ', '_', strtolower($inspector_name)) . '/images/signature_image.jpg';
-            
+            $image_path = 'https://appcims.com/newwhiteapp/inspector/uploads/' . str_replace(' ', '_', strtolower($inspector_name)) . '/images/signature_image.jpg';
+
             echo "<img src='$image_path' alt='Inspector Signature' style='max-width: 100px; max-height: 50px;'>";
         } else {
             echo "Inspector not found.";
