@@ -4,7 +4,7 @@ ini_set('display_errors', 0);
 ob_start();
 
 require_once('../vendor/autoload.php');
-include_once('../inc/function.php');
+include_once('../file/config.php');
 
 $assessment_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -121,20 +121,20 @@ $html = '
         left: 10mm;
         width: 190mm;
         height: 277mm;
-        border: 1px solid #C5A059;
+        border: 1.5px solid #B87333;
         padding: 4px;
         box-sizing: border-box;
     }
     .certificate-middle {
         height: 265mm;
-        border: 3px solid #0B2240;
+        border: 3.5px solid #163A70;
         padding: 4px;
         box-sizing: border-box;
     }
     .certificate-inner {
         position: relative;
         height: 253mm;
-        border: 1px solid #C5A059;
+        border: 1px solid #D9DCE1;
         padding: 12mm 15mm;
         box-sizing: border-box;
         background-image: url(\'../document/logo.png\');
@@ -142,12 +142,13 @@ $html = '
         background-position: center center;
         background-image-opacity: 0.03;
         background-image-resize: 4;
+        background-color: #FFFFFF;
     }
     .bullet-list {
         margin: 0;
         padding-left: 20px;
-        font-size: 9pt;
-        color: #64748B;
+        font-size: 9.5pt;
+        color: #2D3748;
         line-height: 1.8;
     }
 </style>
@@ -160,25 +161,25 @@ $html = '
             <!-- Header Section (Logo, Centered Title, Web) -->
             <div style="text-align: center; margin-bottom: 2mm;">
                 <img src="../document/logo.png" style="width: 75px; height: auto; display: block; margin: 0 auto;">
-                <div style="font-size: 8pt; font-weight: 700; color: #C5A059; letter-spacing: 3px; text-transform: uppercase; margin-top: 2mm;">Crane Inspection & Marine Services</div>
-                <div style="font-size: 6.5pt; color: #94A3B8; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 0.5mm;">WWW.CIMS.COM.SA</div>
+                <div style="font-size: 8.5pt; font-weight: 700; color: #B87333; letter-spacing: 3px; text-transform: uppercase; margin-top: 2mm;">Crane Inspection & Maintenance Services</div>
+                <div style="font-size: 7pt; color: #163A70; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 0.5mm;">WWW.CIMS.COM.SA</div>
             </div>
 
             <!-- Certificate Title Block -->
             <div style="text-align: center; margin-bottom: 5mm; margin-top: 3mm;">
-                <div style="font-size: 20pt; font-weight: 700; color: #0B2240; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.1;">Certificate of Training</div>
-                <div style="font-size: 8pt; font-weight: 600; color: #64748B; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1mm;">& Competency Assessment</div>
-                <div style="width: 70px; height: 1.5px; background-color: #C5A059; margin: 3.5mm auto 0 auto;"></div>
+                <div style="font-size: 21pt; font-weight: 700; color: #163A70; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.1;">Certificate of Training</div>
+                <div style="font-size: 8.5pt; font-weight: 600; color: #2D3748; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1mm;">& Competency Assessment</div>
+                <div style="width: 70px; height: 1.5px; background-color: #B87333; margin: 3.5mm auto 0 auto;"></div>
             </div>
 
-            <div style="border-bottom: 1px solid #E2E8F0; margin-bottom: 5mm;"></div>
+            <div style="border-bottom: 1px solid #D9DCE1; margin-bottom: 5mm;"></div>
 
             <!-- Candidate Information Section -->
-            <div style="background-color: #FAF9F6; border: 1px solid #EAE6DF; border-left: 4px solid #C5A059; padding: 6mm 10mm; text-align: center; border-radius: 4px; margin-bottom: 6mm;">
-                <div style="font-size: 8pt; font-weight: 600; color: #64748B; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">This is to certify that</div>
-                <div style="font-size: 20pt; font-weight: 700; color: #0B2240; margin-bottom: 4px; letter-spacing: 0.5px;">' . htmlspecialchars($name) . '</div>
-                <div style="font-size: 8pt; font-weight: 600; color: #64748B; letter-spacing: 1.5px; text-transform: uppercase; margin: 4px 0;">employed by</div>
-                <div style="font-size: 13pt; font-weight: 700; color: #C5A059; letter-spacing: 0.5px;">' . htmlspecialchars($company) . '</div>
+            <div style="background-color: #FFFFFF; border: 1px solid #D9DCE1; border-left: 4px solid #163A70; padding: 6mm 10mm; text-align: center; border-radius: 4px; margin-bottom: 6mm;">
+                <div style="font-size: 8pt; font-weight: 600; color: #2D3748; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">This is to certify that</div>
+                <div style="font-size: 20pt; font-weight: 700; color: #163A70; margin-bottom: 4px; letter-spacing: 0.5px;">' . htmlspecialchars($name) . '</div>
+                <div style="font-size: 8pt; font-weight: 600; color: #2D3748; letter-spacing: 1.5px; text-transform: uppercase; margin: 4px 0;">employed by</div>
+                <div style="font-size: 13pt; font-weight: 700; color: #B87333; letter-spacing: 0.5px;">' . htmlspecialchars($company) . '</div>
             </div>
 
             <!-- Side-by-Side Cards (QR Code Left, Photo Right) -->
@@ -187,43 +188,43 @@ $html = '
                     <!-- QR Code Card -->
                     <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: left;">
                         <img src="../document/code.png" style="width: 76px; height: 76px; display: block; margin-bottom: 2px;">
-                        <div style="font-size: 6.5pt; color: #94A3B8; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; padding-left: 2px;">Scan to Verify</div>
+                        <div style="font-size: 6.5pt; color: #2D3748; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding-left: 2px;">Scan to Verify</div>
                     </td>
                     
                     <!-- Candidate Photo Card -->
                     <td style="width: 50%; vertical-align: top; border: none; padding: 0; text-align: right;">
-                        <img src="' . $operator_photo . '" style="width: 80px; height: 90px; object-fit: cover; border-radius: 3px; display: inline-block; border: 1px solid #EAE6DF;">
+                        <img src="' . $operator_photo . '" style="height: 95px; border-radius: 3px; display: inline-block; border: 1px solid #D9DCE1;">
                     </td>
                 </tr>
             </table>
 
             <!-- Certificate Description Block -->
-            <div style="margin-bottom: 6mm; padding: 0 2mm;">
-                <div style="font-size: 9pt; font-weight: 500; color: #64748B; margin-bottom: 6px; letter-spacing: 0.3px; line-height: 1.6;">
+            <div style="margin-bottom: 10mm; padding: 0 2mm;">
+                <div style="font-size: 9.5pt; font-weight: 600; color: #163A70; margin-bottom: 6px; letter-spacing: 0.3px; line-height: 1.6; text-transform: uppercase;">
                     Successfully completed the Training and Competency Assessment for:
                 </div>
                 <ul class="bullet-list" style="list-style-type: square; margin-bottom: 8px;">
                     ' . $eq_bullets_html . '
                 </ul>
-                <div style="font-size: 9pt; color: #64748B; margin-top: 8px; font-weight: 400; line-height: 1.6; text-align: justify;">
+                <div style="font-size: 9.5pt; color: #2D3748; margin-top: 8px; font-weight: 400; line-height: 1.6; text-align: justify;">
                     This certificate is awarded in recognition of having demonstrated the required theoretical knowledge and practical proficiency in accordance with the applicable safety standards and company assessment criteria.
                 </div>
             </div>
 
             <!-- Three-Column Information Bar -->
-            <table style="width: 100%; border-collapse: collapse; border-radius: 4px; border: 1px solid #EAE6DF; background-color: #FAF9F6; margin-bottom: 8mm;">
+            <table style="width: 100%; border-collapse: collapse; border-radius: 4px; border: 1px solid #D9DCE1; background-color: #FFFFFF; margin-bottom: 8mm;">
                 <tr>
-                    <td style="width: 33.3%; padding: 4mm 3mm; text-align: center; border-right: 1px solid #EAE6DF; vertical-align: middle;">
-                        <div style="font-size: 7.5pt; color: #64748B; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px;">Passport / ID Number</div>
-                        <div style="font-size: 10.5pt; font-weight: 700; color: #0B2240;">' . htmlspecialchars($iqama) . '</div>
+                    <td style="width: 33.3%; padding: 4mm 3mm; text-align: center; border-right: 1px solid #D9DCE1; vertical-align: middle;">
+                        <div style="font-size: 7.5pt; color: #2D3748; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px;">Passport / ID Number</div>
+                        <div style="font-size: 10.5pt; font-weight: 700; color: #163A70;">' . htmlspecialchars($iqama) . '</div>
                     </td>
-                    <td style="width: 33.4%; padding: 4mm 3mm; text-align: center; border-right: 1px solid #EAE6DF; vertical-align: middle;">
-                        <div style="font-size: 7.5pt; color: #64748B; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px;">Certificate Number</div>
-                        <div style="font-size: 10.5pt; font-weight: 700; color: #0B2240;">' . htmlspecialchars($cert_no) . '</div>
+                    <td style="width: 33.4%; padding: 4mm 3mm; text-align: center; border-right: 1px solid #D9DCE1; vertical-align: middle;">
+                        <div style="font-size: 7.5pt; color: #2D3748; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px;">Certificate Number</div>
+                        <div style="font-size: 10.5pt; font-weight: 700; color: #163A70;">' . htmlspecialchars($cert_no) . '</div>
                     </td>
                     <td style="width: 33.3%; padding: 4mm 3mm; text-align: center; vertical-align: middle;">
-                        <div style="font-size: 7.5pt; color: #64748B; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px;">Issued / Expiry Date</div>
-                        <div style="font-size: 9.5pt; font-weight: 700; color: #0B2240;">' . htmlspecialchars($completion_date) . ' <span style="font-weight: 400; color: #64748B;">/</span> ' . htmlspecialchars($renewal_date) . '</div>
+                        <div style="font-size: 7.5pt; color: #2D3748; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px;">Issued / Expiry Date</div>
+                        <div style="font-size: 9.5pt; font-weight: 700; color: #163A70;">' . htmlspecialchars($completion_date) . ' <span style="font-weight: 400; color: #2D3748;">/</span> ' . htmlspecialchars($renewal_date) . '</div>
                     </td>
                 </tr>
             </table>
@@ -240,9 +241,9 @@ if ($assessment['inspector_signature']) {
     $html .= '<div style="height: 40px;"></div>';
 }
 $html .= '              </div>
-                        <div style="border-top: 1.5px solid #0B2240; width: 180px; margin-bottom: 4px;"></div>
-                        <div style="color: #0B2240; font-weight: 700; font-size: 9.5pt; line-height: 1.2;">' . htmlspecialchars($instructor) . '</div>
-                        <div style="color: #C5A059; font-weight: 600; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px;">Assessor / Inspector</div>
+                        <div style="border-top: 1.5px solid #163A70; width: 180px; margin-bottom: 4px;"></div>
+                        <div style="color: #163A70; font-weight: 700; font-size: 9.5pt; line-height: 1.2;">' . htmlspecialchars($instructor) . '</div>
+                        <div style="color: #B87333; font-weight: 600; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px;">Assessor / Inspector</div>
                     </td>
                     
                     <!-- Space -->
@@ -259,19 +260,19 @@ if (file_exists($manager_sig_path)) {
     $html .= '<div style="height: 40px;"></div>';
 }
 $html .= '              </div>
-                        <div style="border-top: 1.5px solid #0B2240; width: 180px; display: inline-block; margin-bottom: 4px;"></div>
-                        <div style="color: #0B2240; font-weight: 700; font-size: 9.5pt; line-height: 1.2;">Eng. Khalid A. Alghamdi</div>
-                        <div style="color: #C5A059; font-weight: 600; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px;">Operations Manager</div>
+                        <div style="border-top: 1.5px solid #163A70; width: 180px; display: inline-block; margin-bottom: 4px;"></div>
+                        <div style="color: #163A70; font-weight: 700; font-size: 9.5pt; line-height: 1.2;">Eng. Khalid A. Alghamdi</div>
+                        <div style="color: #B87333; font-weight: 600; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px;">Operations Manager</div>
                     </td>
                 </tr>
             </table>
 
-            <!-- Footer Image -->
-            <div style="position: absolute; bottom: -12mm; left: -15mm; width: 189mm; text-align: center; line-height: 0;">
-                <img src="../document/foot.jpg" style="width: 100%; height: auto; display: block;">
-            </div>
-
         </div>
+    </div>
+
+    <!-- Footer Image (flush with the true bottom of the certificate frame) -->
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; line-height: 0;">
+        <img src="../document/foot.jpg" style="width: 100%; height: auto; display: block;">
     </div>
 </div>
 </body>
