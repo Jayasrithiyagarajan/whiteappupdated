@@ -55,6 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assessment_id'])) {
             }
             
             $selected_answer = $_POST[$answer_key];
+            if (is_array($selected_answer)) {
+                sort($selected_answer);
+                $selected_answer = implode(',', $selected_answer);
+            }
             $correct_answer = $correct_answers[$q_num];
             $is_correct = ($selected_answer === $correct_answer) ? 1 : 0;
             $marks = $is_correct ? $exam_settings['marks_per_question'] : 0;

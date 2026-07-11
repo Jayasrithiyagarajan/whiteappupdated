@@ -474,14 +474,21 @@ if ($exam_settings['allow_retake'] && $assessment['exam_attempts'] >= $exam_sett
                     <?php endif; ?>
                     
                     <div class="options-container">
-                        <?php foreach ($question['options'] as $opt_key => $opt_value): ?>
-                        <div class="option-item" onclick="selectOption(<?php echo $q_num; ?>, '<?php echo $opt_key; ?>')">
-                            <input type="radio" 
+                        <?php 
+                        $is_multiselect = ($q_num == 7 || $q_num == 8);
+                        $input_type = $is_multiselect ? 'checkbox' : 'radio';
+                        $input_name = $is_multiselect ? "answer_{$q_num}[]" : "answer_{$q_num}";
+                        $req_attr = $is_multiselect ? '' : 'required';
+                        
+                        foreach ($question['options'] as $opt_key => $opt_value): 
+                        ?>
+                        <div class="option-item" onclick="selectOption(event, <?php echo $q_num; ?>, '<?php echo $opt_key; ?>')">
+                            <input type="<?= $input_type; ?>" 
                                    id="q<?php echo $q_num; ?>_<?php echo $opt_key; ?>" 
-                                   name="answer_<?php echo $q_num; ?>" 
+                                   name="<?= $input_name; ?>" 
                                    value="<?php echo $opt_key; ?>" 
                                    data-question="<?php echo $q_num; ?>"
-                                   required>
+                                   <?= $req_attr; ?>>
                             <label for="q<?php echo $q_num; ?>_<?php echo $opt_key; ?>">
                                 <strong><?php echo strtoupper($opt_key); ?>)</strong> <?php echo htmlspecialchars($opt_value); ?>
                             </label>
@@ -547,30 +554,48 @@ if ($exam_settings['allow_retake'] && $assessment['exam_attempts'] >= $exam_sett
         <?php endif; ?>
 
         // Select option function
-        function selectOption(questionNum, optKey) {
-            const radio = document.getElementById(`q${questionNum}_${optKey}`);
-            radio.checked = true;
+        function selectOption(e, questionNum, optKey) {
+            const input = document.getElementById(`q${questionNum}_${optKey}`);
             
-            // Remove selected class from all options in this question
-            document.querySelectorAll(`input[name="answer_${questionNum}"]`).forEach(r => {
-                r.closest('.option-item').classList.remove('selected');
-            });
-            
-            // Add selected class to chosen option
-            radio.closest('.option-item').classList.add('selected');
-            
-            // Track answered question
-            answeredQuestions.add(questionNum);
-            document.getElementById('nav-btn-' + questionNum).classList.add('answered');
-            updateProgress();
+            // If the user clicked directly on the input or label, the browser already handles the toggle/select.
+            // We only need to manually toggle/select if they clicked the container div itself.
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                input.checked = !input.checked;
+                // Trigger change event to run the event listener logic
+                const event = new Event('change', { bubbles: true });
+                input.dispatchEvent(event);
+            }
         }
 
-        // Track radio changes
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', function() {
+        // Track input changes (radio and checkbox)
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', function(e) {
                 const questionNum = parseInt(this.dataset.question);
-                answeredQuestions.add(questionNum);
-                document.getElementById('nav-btn-' + questionNum).classList.add('answered');
+                
+                if (this.type === 'checkbox') {
+                    if (this.checked) {
+                        this.closest('.option-item').classList.add('selected');
+                    } else {
+                        this.closest('.option-item').classList.remove('selected');
+                    }
+                    const anyChecked = document.querySelectorAll(`input[name="answer_${questionNum}[]"]:checked`).length > 0;
+                    if (anyChecked) {
+                        answeredQuestions.add(questionNum);
+                        document.getElementById('nav-btn-' + questionNum).classList.add('answered');
+                    } else {
+                        answeredQuestions.delete(questionNum);
+                        document.getElementById('nav-btn-' + questionNum).classList.remove('answered');
+                    }
+                } else {
+                    // Radio button
+                    document.querySelectorAll(`input[name="answer_${questionNum}"]`).forEach(r => {
+                        r.closest('.option-item').classList.remove('selected');
+                    });
+                    this.closest('.option-item').classList.add('selected');
+                    
+                    answeredQuestions.add(questionNum);
+                    document.getElementById('nav-btn-' + questionNum).classList.add('answered');
+                }
                 updateProgress();
             });
         });

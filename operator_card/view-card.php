@@ -621,7 +621,7 @@ $equipment = $equipment_list;
     
 </div>
                 <!-- Adjust QR to link to this card -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= $url . 'operator_card/view-card.php?id=' . $id; ?>" alt="QR Code" class="footer-img">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= $url . 'operator_card/scan-details.php?id=' . $id; ?>" alt="QR Code" class="footer-img">
             </div>
         </div>
     </div>

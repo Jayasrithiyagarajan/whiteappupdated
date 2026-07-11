@@ -204,14 +204,36 @@ $percentage = ($score / $exam_settings['total_marks']) * 100;
                             <?php if ($selected): ?>
                                 <div class="answer-item selected-answer <?php echo $is_correct_answer ? 'correct-style' : 'wrong-style'; ?>">
                                     <span class="ans-label">Your Answer:</span>
-                                    <span class="ans-text"><strong><?php echo strtoupper($selected); ?>)</strong> <?php echo htmlspecialchars($question['options'][$selected]); ?></span>
+                                    <span class="ans-text">
+                                        <?php 
+                                        $selected_keys = explode(',', $selected);
+                                        $selected_text_parts = [];
+                                        foreach ($selected_keys as $key) {
+                                            if (isset($question['options'][$key])) {
+                                                $selected_text_parts[] = '<strong>' . strtoupper($key) . ')</strong> ' . htmlspecialchars($question['options'][$key]);
+                                            }
+                                        }
+                                        echo implode(' + ', $selected_text_parts);
+                                        ?>
+                                    </span>
                                 </div>
                             <?php endif; ?>
                             
                             <?php if (!$is_correct_answer): ?>
                                 <div class="answer-item correct-answer">
                                     <span class="ans-label">Correct Answer:</span>
-                                    <span class="ans-text"><strong><?php echo strtoupper($correct); ?>)</strong> <?php echo htmlspecialchars($question['options'][$correct]); ?></span>
+                                    <span class="ans-text">
+                                        <?php 
+                                        $correct_keys = explode(',', $correct);
+                                        $correct_text_parts = [];
+                                        foreach ($correct_keys as $key) {
+                                            if (isset($question['options'][$key])) {
+                                                $correct_text_parts[] = '<strong>' . strtoupper($key) . ')</strong> ' . htmlspecialchars($question['options'][$key]);
+                                            }
+                                        }
+                                        echo implode(' + ', $correct_text_parts);
+                                        ?>
+                                    </span>
                                 </div>
                             <?php endif; ?>
                         </div>
