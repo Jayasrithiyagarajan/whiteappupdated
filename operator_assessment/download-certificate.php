@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ob_start();
@@ -67,7 +67,7 @@ if (!empty($assessment['inspector_signature'])) {
 }
 $mgr_sig = abs_path(__DIR__.'/../document/uploads/Khaled A. Alghamdi.jpg');
 
-/* â”€â”€ Equipment â”€â”€ */
+
 $designation = 'Crane Operator';
 $eq_html     = '';
 foreach ($equipments as $eq) {
