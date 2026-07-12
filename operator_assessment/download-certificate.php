@@ -4,6 +4,12 @@ ini_set('display_errors', 1);
 ini_set('pcre.backtrack_limit', '5000000');
 ob_start();
 
+// Prevent browser caching of PDF
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+
 require_once('../vendor/autoload.php');
 include_once('../file/config.php');
 
@@ -133,6 +139,7 @@ $verify_url = 'verify.cims-global.org';
 
 $insp_img = $insp_sig ? "<img src='$insp_sig' style='height:28px;object-fit:contain;'>" : "<div style='height:28px;'></div>";
 $mgr_img  = $mgr_sig  ? "<img src='$mgr_sig' style='height:28px;object-fit:contain;'>"  : "<div style='height:28px;'></div>";
+$e_generated = date('Y-m-d H:i:s');
 
 /* ====================================================================
    OPERATOR CERTIFICATE OF COMPETENCY - A4 Landscape (297 x 210 mm)
@@ -148,69 +155,67 @@ $html = <<<HTML
 @page { size:A4-L; margin:0; }
 body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:#23314D; }
 
-/* ---- TITLE (top center) ---- */
-.ttl-wrap { position:absolute; left:60mm; top:16mm; width:177mm; text-align:center; }
+/* ---- HEADER ---- */
+.hdr-left { position:absolute; left:17mm; top:12mm; width:92mm; }
+.hdr-co   { font-family:'dejavuserif',serif; font-size:9pt; font-weight:700; color:#0F3D73; line-height:1.2; }
+.hdr-sub  { font-size:6pt; color:#A87F2E; letter-spacing:.5px; margin-top:0.5mm; }
+.hdr-iso  { font-size:5pt; color:#7A8296; margin-top:0.5mm; }
+.acc-badge{ display:inline-block; font-size:5pt; font-weight:700; color:#fff; background:#2E7D32; 
+            padding:0.6mm 1.5mm; border-radius:1mm; margin-right:1mm; }
+
+.ttl-wrap { position:absolute; left:110mm; top:12mm; width:110mm; text-align:center; }
 .ttl-h1   { font-family:'dejavuserif',serif; font-size:22pt; font-weight:700; color:#0F3D73;
             text-transform:uppercase; letter-spacing:6px; margin:0; line-height:1.05; }
 .ttl-sub  { font-size:6.6pt; font-weight:700; color:#A87F2E; letter-spacing:4px;
             text-transform:uppercase; margin:2.4mm 0 0; }
 .ttl-orn  { color:#C89B3C; font-size:8pt; letter-spacing:3px; margin:1.8mm 0 0; }
 
-/* ---- CERT NO (top right) ---- */
-.cno-box { position:absolute; left:236mm; top:15mm; width:46mm; background:#0F3D73;
+.cno-box { position:absolute; left:232mm; top:12mm; width:48mm; background:#0F3D73;
            border:1.2pt solid #C89B3C; border-radius:2mm; text-align:center; padding:2.4mm 2mm 3mm; }
 .cno-lbl { font-size:4.8pt; font-weight:700; color:#C89B3C; text-transform:uppercase; letter-spacing:1.4px; }
 .cno-sep { border-top:0.4pt solid #3A5C86; margin:2mm 9mm; }
 .cno-val { font-family:'dejavuserif',serif; font-size:12.5pt; font-weight:700; color:#EBD08A;
            letter-spacing:1.2px; margin-top:0.6mm; }
 
-/* ---- LEFT: PHOTO + BADGE + SIGNATORY ---- */
-.ph-card { position:absolute; left:17mm; top:47mm; width:46mm; background:#fff;
+.hdr-rule-a { position:absolute; left:17mm; top:36mm; width:263mm; border-top:0.8pt solid #C89B3C; }
+.hdr-rule-b { position:absolute; left:17mm; top:37mm; width:263mm; border-top:0.3pt solid #EBD08A; }
+
+/* ---- LEFT COLUMN ---- */
+.ph-card { position:absolute; left:17mm; top:45mm; width:48mm; background:#fff;
            border:1pt solid #C89B3C; border-radius:2.5mm; padding:1.8mm; }
-.ph-img  { width:42.4mm; height:50mm; object-fit:cover; display:block; border-radius:1.5mm; }
-.ph-badge{ position:absolute; left:17mm; top:101mm; width:46mm; background:#0F3D73;
+.ph-img  { width:44.4mm; height:52mm; object-fit:cover; display:block; border-radius:1.5mm; }
+.ph-badge{ position:absolute; left:17mm; top:101mm; width:48mm; background:#0F3D73;
            border:0.8pt solid #C89B3C; border-radius:2mm; color:#fff; text-align:center;
            font-size:6.4pt; font-weight:700; letter-spacing:.6px; padding:1.8mm 0; }
 .ph-badge .vtick { color:#EBD08A; }
-.isig-box { position:absolute; left:75mm; top:164mm; width:70mm; text-align:left; }
-.isig-line{ border-top:0.7pt solid #C89B3C; width:52mm; margin:1mm 0; }
-.isig-role{ font-size:5.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:1px; }
-.isig-name{ font-family:'dejavuserif',serif; font-size:8.5pt; font-weight:700; color:#0F3D73; }
-.isig-desg{ font-size:5.4pt; color:#7A8296; }
+.seal-box { position:absolute; left:17mm; top:135mm; width:48mm; text-align:center; }
+.seal-img { width:40mm; height:40mm; object-fit:contain; }
 
-/* ---- LEFT: SEAL (bottom left) ---- */
-.seal-box { position:absolute; left:17mm; top:150mm; width:46mm; text-align:center; }
-.seal-img { width:42mm; height:42mm; object-fit:contain; }
-
-/* ---- CENTER ---- */
-.certifies { position:absolute; left:80mm; top:50mm; width:137mm; text-align:center;
+/* ---- CENTER COLUMN ---- */
+.certifies { position:absolute; left:72mm; top:45mm; width:153mm; text-align:center;
              font-size:6.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:3px; }
-.name-row  { position:absolute; left:80mm; top:55mm; width:137mm; text-align:center; }
+.name-row  { position:absolute; left:72mm; top:50mm; width:153mm; text-align:center; }
 .name-txt  { font-family:'dejavuserif',serif; font-size:31pt; font-weight:700; color:#0F3D73;
              letter-spacing:4px; text-transform:uppercase; margin:0; line-height:1.05; }
 .name-ul   { width:58mm; margin:2.4mm auto 0; border-top:1.2pt solid #C89B3C; }
-.desig-txt { position:absolute; left:80mm; top:75mm; width:137mm; text-align:center;
+.desig-txt { position:absolute; left:72mm; top:70mm; width:153mm; text-align:center;
              font-family:'dejavuserif',serif; font-size:11pt; font-style:italic; color:#A87F2E; letter-spacing:1px; }
-.div-top   { position:absolute; left:104mm; top:84mm; width:89mm; border-top:0.5pt solid #C89B3C; }
-.desc-row  { position:absolute; left:92mm; top:86mm; width:113mm; text-align:center; }
+.div-top   { position:absolute; left:104mm; top:79mm; width:89mm; border-top:0.5pt solid #C89B3C; }
+.desc-row  { position:absolute; left:72mm; top:81mm; width:153mm; text-align:center; }
 .desc-txt  { font-size:7.4pt; color:#4A5568; line-height:1.7; margin:0; }
-.div-bot   { position:absolute; left:104mm; top:103mm; width:89mm; border-top:0.5pt solid #C89B3C; }
-.info-strip{ position:absolute; left:72mm; top:106mm; width:153mm; text-align:center;
+.div-bot   { position:absolute; left:104mm; top:98mm; width:89mm; border-top:0.5pt solid #C89B3C; }
+.info-strip{ position:absolute; left:72mm; top:101mm; width:153mm; text-align:center;
              font-size:6pt; color:#A87F2E; letter-spacing:.6px; text-transform:uppercase; }
 .info-strip b { color:#0F3D73; font-size:6.4pt; }
 .info-strip .dot { color:#C89B3C; }
 
 /* ---- EQUIPMENT ---- */
-.equip-wrap { position:absolute; left:72mm; top:116mm; width:153mm; text-align:center; }
+.equip-wrap { position:absolute; left:72mm; top:111mm; width:153mm; text-align:center; }
 .equip-hd { font-size:5.6pt; color:#0F3D73; font-weight:700; text-transform:uppercase;
             letter-spacing:1.6px; margin-bottom:2mm; }
-.eqtbl { width:100%; border-collapse:collapse; }
-.eqtbl td.eqcell { border:0.6pt solid #E4D3A3; background:#FBF8F0; padding:1.8mm 2.6mm;
-                   font-size:7pt; color:#23314D; font-weight:600; vertical-align:middle; width:50%; text-align:left; }
-.eqtbl .chk { color:#2E7D32; font-weight:700; }
 
-/* ---- RIGHT: VERIFICATION ---- */
-.qr-card { position:absolute; left:232mm; top:47mm; width:50mm; background:#fff;
+/* ---- RIGHT COLUMN ---- */
+.qr-card { position:absolute; left:232mm; top:45mm; width:48mm; background:#fff;
            border:1pt solid #C89B3C; border-radius:2.5mm; text-align:center; padding:2.6mm 2mm 3mm; }
 .qr-ttl  { font-family:'dejavuserif',serif; font-size:6pt; font-weight:700; color:#0F3D73;
            text-transform:uppercase; letter-spacing:1px; margin:0.4mm 0 1.4mm; }
@@ -218,44 +223,33 @@ body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:
 .qr-scan { font-size:5.4pt; color:#0F3D73; font-weight:700; letter-spacing:.6px; margin-top:1.4mm; }
 .qr-ftr  { font-size:4.6pt; color:#6B7280; margin-top:0.6mm; line-height:1.5; }
 .qr-no   { font-size:7pt; font-weight:700; color:#A87F2E; letter-spacing:.6px; margin-top:1.2mm; }
-.dvb-card{ position:absolute; left:232mm; top:120mm; width:50mm; background:#0F3D73;
+.dvb-card{ position:absolute; left:232mm; top:118mm; width:48mm; background:#0F3D73;
            border:0.8pt solid #C89B3C; border-radius:2.5mm; text-align:center; padding:2.2mm 2mm; }
 .dvb-t1  { color:#EBD08A; font-size:5pt; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; }
 .dvb-t2  { color:#fff; font-size:5.2pt; margin-top:1mm; line-height:1.5; }
 
-/* ---- BOTTOM RIGHT: OPERATIONS MANAGER SIGNATURE ---- */
-.osig-box { position:absolute; left:150mm; top:164mm; width:72mm; text-align:right; }
-.osig-line{ border-top:0.7pt solid #C89B3C; width:52mm; margin:1mm 0 1mm auto; }
-.osig-role{ font-size:5.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:1px; }
-.osig-name{ font-family:'dejavuserif',serif; font-size:8.5pt; font-weight:700; color:#0F3D73; }
-.osig-desg{ font-size:5.4pt; color:#7A8296; }
-
 /* ---- FOOTER ---- */
-.sec-line { position:absolute; left:70mm; top:191mm; width:157mm; border-top:0.6pt solid #C89B3C; }
-.sec-txt  { position:absolute; left:60mm; top:192.6mm; width:177mm; text-align:center;
+.sec-line { position:absolute; left:17mm; top:194mm; width:263mm; border-top:0.8pt solid #C89B3C; }
+.sec-txt  { position:absolute; left:17mm; top:195.4mm; width:263mm; text-align:center;
             font-size:4.8pt; color:#A87F2E; letter-spacing:1.4px; text-transform:uppercase; }
-
-/* ---- HEADER LEFT ---- */
-.hdr-left { position:absolute; left:17mm; top:15mm; width:92mm; }
-.hdr-co   { font-family:'dejavuserif',serif; font-size:9pt; font-weight:700; color:#0F3D73; line-height:1.2; }
-.hdr-sub  { font-size:6pt; color:#A87F2E; letter-spacing:.5px; margin-top:0.5mm; }
-.hdr-iso  { font-size:5pt; color:#7A8296; margin-top:0.5mm; }
-.acc-badge{ display:inline-block; font-size:5pt; font-weight:700; color:#fff; background:#2E7D32; 
-            padding:0.6mm 1.5mm; border-radius:1mm; margin-right:1mm; }
 </style>
 </head><body>
 
 <!-- HEADER : LEFT -->
 <div class="hdr-left">
-  <div style="position:absolute; left:0; top:0; width:15mm;">
-    <img style="width:15mm;height:15mm;object-fit:contain;" src="$client_logo">
-  </div>
-  <div style="position:absolute; left:18mm; top:0; width:74mm;">
-    <div class="hdr-co">Crane Inspection &amp;<br>Maintenance Services</div>
-    <div class="hdr-sub">Intl. Operator Training &amp; Assessment Authority</div>
-    <div class="hdr-iso">ISO 9001:2015 &nbsp;&middot;&nbsp; ISO 45001:2018 &nbsp;&middot;&nbsp; Reg. CIMS/2026/006</div>
-  </div>
-  <div style="position:absolute; left:0; top:18mm; width:92mm;">
+  <table style="border:none; border-collapse:collapse; width:100%;">
+    <tr>
+      <td style="border:none; padding:0; width:16mm; vertical-align:top;">
+        <img style="width:15mm; height:15mm; object-fit:contain;" src="$client_logo">
+      </td>
+      <td style="border:none; padding:0 0 0 3mm; vertical-align:top;">
+        <div class="hdr-co">Crane Inspection &amp;<br>Maintenance Services</div>
+        <div class="hdr-sub">Intl. Operator Training &amp; Assessment Authority</div>
+        <div class="hdr-iso">ISO 9001:2015 &nbsp;&middot;&nbsp; ISO 45001:2018 &nbsp;&middot;&nbsp; Reg. CIMS/2026/006</div>
+      </td>
+    </tr>
+  </table>
+  <div style="margin-top:1.5mm;">
     <span class="acc-badge">ISO Certified</span>
     <span class="acc-badge">Govt. Approved</span>
     <span class="acc-badge">Accredited</span>
@@ -281,6 +275,11 @@ body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:
   <div class="cno-val">$e_cert</div>
 </div>
 
+<!-- HEADER RULES -->
+<div class="hdr-rule-a"></div>
+<div class="hdr-rule-b"></div>
+
+<!-- LEFT COLUMN -->
 <!-- PHOTO -->
 <div class="ph-card"><img class="ph-img" src="$photo_path"></div>
 <div class="ph-badge"><span class="vtick">&#10003;</span>&nbsp; Certified Operator &nbsp;<span class="vtick">&#9733;</span></div>
@@ -288,6 +287,7 @@ body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:
 <!-- SEAL -->
 <div class="seal-box"><img class="seal-img" src="$seal_path"></div>
 
+<!-- CENTER COLUMN -->
 <!-- CENTER : CERTIFIES / NAME / DESIGNATION -->
 <div class="certifies">This Certifies That</div>
 <div class="name-row">
@@ -318,6 +318,7 @@ body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:
   $eq_table
 </div>
 
+<!-- RIGHT COLUMN -->
 <!-- RIGHT : VERIFICATION -->
 <div class="qr-card">
   <div style="color:#C89B3C;font-size:9pt;">&#10003;</div>
@@ -333,26 +334,26 @@ body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:
 </div>
 
 <!-- BOTTOM LEFT : INSPECTOR SIGNATORY -->
-<div class="isig-box">
-  $insp_img
-  <div class="isig-line"></div>
-  <div class="isig-role">Authorized Signatory</div>
-  <div class="isig-name">$e_instr</div>
-  <div class="isig-desg">Assessor / Inspector</div>
+<div style="position:absolute; left:72mm; top:156mm; width:72mm; text-align:left;">
+  <div style="text-align:left;">$insp_img</div>
+  <div style="border-top:0.7pt solid #C89B3C; width:52mm; margin:1mm 0;"></div>
+  <div style="font-size:5.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:1px;">Authorized Signatory</div>
+  <div style="font-family:'dejavuserif',serif; font-size:8.5pt; font-weight:700; color:#0F3D73;">$e_instr</div>
+  <div style="font-size:5.4pt; color:#7A8296;">Assessor / Inspector</div>
 </div>
 
 <!-- BOTTOM RIGHT : OPERATIONS MANAGER -->
-<div class="osig-box">
+<div style="position:absolute; left:153mm; top:156mm; width:72mm; text-align:right;">
   <div style="text-align:right;">$mgr_img</div>
-  <div class="osig-line"></div>
-  <div class="osig-role">Operations Manager</div>
-  <div class="osig-name">Eng. Khalid A. Alghamdi</div>
-  <div class="osig-desg">Operations Department</div>
+  <div style="border-top:0.7pt solid #C89B3C; width:52mm; margin:1mm 0 1mm auto;"></div>
+  <div style="font-size:5.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:1px;">Operations Manager</div>
+  <div style="font-family:'dejavuserif',serif; font-size:8.5pt; font-weight:700; color:#0F3D73;">Eng. Khalid A. Alghamdi</div>
+  <div style="font-size:5.4pt; color:#7A8296;">Operations Department</div>
 </div>
 
 <!-- FOOTER -->
 <div class="sec-line"></div>
-<div class="sec-txt">Secure Serial: $e_cert &nbsp;&middot;&nbsp; Verification Portal &nbsp;&middot;&nbsp; Anti-Fraud Security Features</div>
+<div class="sec-txt">Secure Serial: $e_cert &nbsp;&middot;&nbsp; Verification Portal &nbsp;&middot;&nbsp; Anti-Fraud Security Features (Generated: $e_generated)</div>
 
 </body></html>
 HTML;
