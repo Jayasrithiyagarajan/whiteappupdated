@@ -1,6 +1,7 @@
-﻿<?php
+<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+ini_set('pcre.backtrack_limit', '5000000');
 ob_start();
 
 require_once('../vendor/autoload.php');
@@ -32,19 +33,19 @@ $eq_stmt->bind_param("i", $assessment_id);
 $eq_stmt->execute();
 $equipments = $eq_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-/* â”€â”€ Mapped Variables â”€â”€ */
+/* ---- Mapped Variables ---- */
 $cert_no         = $assessment['assessment_no'];
 $name            = ucwords(strtolower($assessment['operator_name']));
 $iqama           = $assessment['operator_id_passport'];
 $company         = strtoupper($assessment['client_name']);
 $program         = ucwords(strtolower($assessment['training_program']));
-$completion_date = date('d M Y', strtotime($assessment['date_of_assessment'] ?? $assessment['date']));
-$renewal_date    = $assessment['date_of_expiry'] ? date('d M Y', strtotime($assessment['date_of_expiry'])) : 'N/A';
+$completion_date = date('d F Y', strtotime($assessment['date_of_assessment'] ?? $assessment['date']));
+$renewal_date    = $assessment['date_of_expiry'] ? date('d F Y', strtotime($assessment['date_of_expiry'])) : 'N/A';
 $instructor      = ucwords(strtolower($assessment['inspector_name']));
 
-/* â”€â”€ Absolute Paths â”€â”€ */
+/* ---- Absolute Paths ---- */
 function abs_path($rel) { $p = realpath($rel); return $p ? str_replace('\\','/',$p) : ''; }
-$bg_path            = abs_path(__DIR__.'/../document/certificate_bg.png');
+$bg_path            = abs_path(__DIR__.'/../document/bg.png');
 $logo_path          = abs_path(__DIR__.'/../document/logo.png');
 $qr_path            = abs_path(__DIR__.'/../document/code.png');
 $partner_badge_path = abs_path(__DIR__.'/../document/trusted_partner_badge.png');
@@ -67,28 +68,40 @@ if (!empty($assessment['inspector_signature'])) {
 }
 $mgr_sig = abs_path(__DIR__.'/../document/uploads/Khaled A. Alghamdi.jpg');
 
+$seal_path = $gold_seal_path ?: $partner_badge_path;
 
 $designation = 'Crane Operator';
-$eq_html     = '';
 foreach ($equipments as $eq) {
-    $parts = [];
     if (!empty($eq['equipment_type'])) {
         $t = trim($eq['equipment_type']);
-        $parts[] = $t;
         if ($designation === 'Crane Operator') {
             if (stripos($t,'mobile')   !== false) $designation = 'Mobile Crane Operator';
             if (stripos($t,'forklift') !== false) $designation = 'Forklift Operator';
         }
     }
-    if (!empty($eq['manufacturer'])) $parts[] = trim($eq['manufacturer']);
-    if (!empty($eq['model']))        $parts[] = trim($eq['model']);
-    $s = implode(', ', $parts);
-    if (!empty($eq['capacity']))     $s .= ' (SWL: '.trim($eq['capacity']).')';
-    if ($s) $eq_html .= '<div style="padding:1.5px 0;line-height:1.55;"><span style="color:#15803D;font-weight:800;font-size:8pt;">&#10003;</span><span style="font-size:7.5pt;color:#1E3A5F;font-weight:600;"> '.htmlspecialchars($s).'</span></div>';
 }
-if (!$eq_html) $eq_html = '<div style="padding:1.5px 0;line-height:1.55;"><span style="color:#15803D;font-weight:800;font-size:8pt;">&#10003;</span><span style="font-size:7.5pt;color:#1E3A5F;font-weight:600;"> '.htmlspecialchars($program).'</span></div>';
 
-/* â”€â”€ Validity â”€â”€ */
+/* ---- Equipment details (div-based to avoid mPDF table bugs) ---- */
+$eq_items = [];
+foreach ($equipments as $eq) {
+    $parts = [];
+    if (!empty($eq['equipment_type'])) $parts[] = trim($eq['equipment_type']);
+    if (!empty($eq['manufacturer']))   $parts[] = trim($eq['manufacturer']);
+    if (!empty($eq['model']))          $parts[] = trim($eq['model']);
+    $s = implode(' &middot; ', array_map('htmlspecialchars', $parts));
+    if (!empty($eq['capacity'])) $s .= ' <span style="color:#A87F2E;">(SWL '.htmlspecialchars(trim($eq['capacity'])).')</span>';
+    if ($s !== '') $eq_items[] = $s;
+}
+if (empty($eq_items)) $eq_items[] = htmlspecialchars($program);
+
+$eq_table = '<div style="text-align:center; margin-top:2mm; line-height:2;">';
+foreach ($eq_items as $k => $it) {
+    $eq_table .= '<span style="display:inline-block; background:#FBF8F0; border:0.6pt solid #E4D3A3; padding:1.2mm 2.5mm; margin:1mm; font-size:7pt; color:#23314D; font-weight:600; border-radius:1.5mm;">';
+    $eq_table .= '<span style="color:#2E7D32; font-weight:700;">&#10003;</span> '.$it.'</span> ';
+}
+$eq_table .= '</div>';
+
+/* ---- Validity ---- */
 $validity = '2 Years';
 if ($assessment['date_of_assessment'] && $assessment['date_of_expiry']) {
     $days = abs(strtotime($assessment['date_of_expiry']) - strtotime($assessment['date_of_assessment'])) / 86400;
@@ -100,305 +113,266 @@ if ($assessment['date_of_assessment'] && $assessment['date_of_expiry']) {
     }
 }
 
-/* â”€â”€ Assessment Standard â”€â”€ */
+/* ---- Assessment Standard ---- */
 $std = 'CIMS-SOP-GEN-2026';
 if (stripos($designation,'crane')   !== false) $std = 'CIMS-SOP-CRN-2026';
 if (stripos($designation,'forklift')!== false) $std = 'CIMS-SOP-FLT-2026';
 
+/* ---- Pre-escaped values ---- */
+$e_cert   = htmlspecialchars($cert_no);
+$e_name   = htmlspecialchars(strtoupper($name));
+$e_id     = htmlspecialchars($iqama);
+$e_desig  = htmlspecialchars($designation);
+$e_std    = htmlspecialchars($std);
+$e_prog   = htmlspecialchars($program);
+$e_issue  = htmlspecialchars($completion_date);
+$e_expiry = htmlspecialchars($renewal_date);
+$e_valid  = htmlspecialchars($validity);
+$e_instr  = $instructor ? htmlspecialchars($instructor) : '&mdash;';
+$verify_url = 'verify.cims-global.org';
+
+$insp_img = $insp_sig ? "<img src='$insp_sig' style='height:28px;object-fit:contain;'>" : "<div style='height:28px;'></div>";
+$mgr_img  = $mgr_sig  ? "<img src='$mgr_sig' style='height:28px;object-fit:contain;'>"  : "<div style='height:28px;'></div>";
+
 /* ====================================================================
-   HTML  â€”  A4-L  297 Ã— 210 mm
-   Zone A (Photo panel):    left 0   â€“ 72mm
-   Zone B (Main content):   left 72  â€“ 234mm   width=162mm
-   Zone B (Right panel):    left 234 â€“ 297mm   width=63mm
+   OPERATOR CERTIFICATE OF COMPETENCY - A4 Landscape (297 x 210 mm)
+   Background: wave-corner frame (blue top-left / bottom-right).
+   Safe zones: top-right & bottom-left corners are clean.
+   Palette: Navy #0F3D73 | Gold #C89B3C | Green #2E7D32
+   mPDF render rules: collapse tables, no border-spacing, no radius on TD,
+   no spacer cells, no nested position:absolute.
    ==================================================================== */
-$html = '<!DOCTYPE html><html><head><meta charset="UTF-8">
+$html = <<<HTML
+<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
-@import url(\'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap\');
 @page { size:A4-L; margin:0; }
-body { margin:0; padding:0; font-family:\'Inter\',Arial,sans-serif; background:#fff; color:#1A2B4A; }
+body { margin:0; padding:0; font-family:'dejavusanscondensed',sans-serif; color:#23314D; }
 
-/* â”€â”€ HEADER â”€â”€ */
-.hdr       { position:absolute; left:70mm; top:8mm; width:160mm; }
-.hdr-co    { font-family:\'Cinzel\',serif; font-size:13.5pt; font-weight:700; color:#123B78;
-             text-transform:uppercase; letter-spacing:1px; margin:0; line-height:1.25; }
-.hdr-sub   { font-size:7pt; font-weight:500; color:#123B78; text-transform:uppercase;
-             letter-spacing:.7px; margin:4px 0 0; }
-.hdr-slg   { font-size:6.5pt; font-weight:700; color:#C89A2B; text-transform:uppercase;
-             letter-spacing:2.5px; margin:4px 0 0; }
-.hdr-iso   { font-size:5.8pt; color:#6B7280; margin:4px 0 0; }
+/* ---- TITLE (top center) ---- */
+.ttl-wrap { position:absolute; left:60mm; top:16mm; width:177mm; text-align:center; }
+.ttl-h1   { font-family:'dejavuserif',serif; font-size:22pt; font-weight:700; color:#0F3D73;
+            text-transform:uppercase; letter-spacing:6px; margin:0; line-height:1.05; }
+.ttl-sub  { font-size:6.6pt; font-weight:700; color:#A87F2E; letter-spacing:4px;
+            text-transform:uppercase; margin:2.4mm 0 0; }
+.ttl-orn  { color:#C89B3C; font-size:8pt; letter-spacing:3px; margin:1.8mm 0 0; }
 
-/* â”€â”€ CERT NO BOX â”€â”€ */
-.cno-box   { position:absolute; left:247mm; top:7mm; width:43mm; background:#123B78;
-             border:2px solid #C89A2B; border-radius:3px; text-align:center; padding:3mm 2mm 4mm; }
-.cno-lbl   { font-size:4.8pt; font-weight:700; color:#C89A2B; text-transform:uppercase; letter-spacing:1.2px; }
-.cno-sep   { height:1px; border-top:1px solid #3D5A8A; margin:2.5px 10px; }
-.cno-val   { font-family:\'Cinzel\',serif; font-size:11pt; font-weight:700; color:#FBBF24;
-             letter-spacing:1px; margin-top:2px; }
+/* ---- CERT NO (top right) ---- */
+.cno-box { position:absolute; left:236mm; top:15mm; width:46mm; background:#0F3D73;
+           border:1.2pt solid #C89B3C; border-radius:2mm; text-align:center; padding:2.4mm 2mm 3mm; }
+.cno-lbl { font-size:4.8pt; font-weight:700; color:#C89B3C; text-transform:uppercase; letter-spacing:1.4px; }
+.cno-sep { border-top:0.4pt solid #3A5C86; margin:2mm 9mm; }
+.cno-val { font-family:'dejavuserif',serif; font-size:12.5pt; font-weight:700; color:#EBD08A;
+           letter-spacing:1.2px; margin-top:0.6mm; }
 
-/* â”€â”€ EMBLEM â”€â”€ */
-.emblem-box { position:absolute; left:239mm; top:38mm; width:49mm; text-align:center; }
-.emblem-img { width:42mm; height:42mm; object-fit:contain; }
+/* ---- LEFT: PHOTO + BADGE + SIGNATORY ---- */
+.ph-card { position:absolute; left:17mm; top:47mm; width:46mm; background:#fff;
+           border:1pt solid #C89B3C; border-radius:2.5mm; padding:1.8mm; }
+.ph-img  { width:42.4mm; height:50mm; object-fit:cover; display:block; border-radius:1.5mm; }
+.ph-badge{ position:absolute; left:17mm; top:101mm; width:46mm; background:#0F3D73;
+           border:0.8pt solid #C89B3C; border-radius:2mm; color:#fff; text-align:center;
+           font-size:6.4pt; font-weight:700; letter-spacing:.6px; padding:1.8mm 0; }
+.ph-badge .vtick { color:#EBD08A; }
+.isig-box { position:absolute; left:75mm; top:164mm; width:70mm; text-align:left; }
+.isig-line{ border-top:0.7pt solid #C89B3C; width:52mm; margin:1mm 0; }
+.isig-role{ font-size:5.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:1px; }
+.isig-name{ font-family:'dejavuserif',serif; font-size:8.5pt; font-weight:700; color:#0F3D73; }
+.isig-desg{ font-size:5.4pt; color:#7A8296; }
 
-/* â”€â”€ PHOTO â”€â”€ */
-.ph-outer  { position:absolute; left:9mm; top:37mm; width:55mm; }
-.ph-frame  { border:2.5px solid #C89A2B; border-radius:6px; overflow:hidden;
-             width:53mm; height:65mm; background:#fff; }
-.ph-img    { width:53mm; height:65mm; object-fit:cover; display:block; }
-.ph-badge  { margin-top:2.5mm; width:53mm; background:#123B78; border:1.5px solid #C89A2B;
-             border-radius:4px; color:#fff; font-size:6.5pt; font-weight:700;
-             text-align:center; padding:2.5mm 0; letter-spacing:.8px; }
+/* ---- LEFT: SEAL (bottom left) ---- */
+.seal-box { position:absolute; left:17mm; top:150mm; width:46mm; text-align:center; }
+.seal-img { width:42mm; height:42mm; object-fit:contain; }
 
-/* â”€â”€ SEAL â”€â”€ */
-.seal-box  { position:absolute; left:7mm; top:148mm; width:57mm; text-align:center; }
-.seal-img  { width:52mm; height:52mm; object-fit:contain; }
+/* ---- CENTER ---- */
+.certifies { position:absolute; left:80mm; top:50mm; width:137mm; text-align:center;
+             font-size:6.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:3px; }
+.name-row  { position:absolute; left:80mm; top:55mm; width:137mm; text-align:center; }
+.name-txt  { font-family:'dejavuserif',serif; font-size:31pt; font-weight:700; color:#0F3D73;
+             letter-spacing:4px; text-transform:uppercase; margin:0; line-height:1.05; }
+.name-ul   { width:58mm; margin:2.4mm auto 0; border-top:1.2pt solid #C89B3C; }
+.desig-txt { position:absolute; left:80mm; top:75mm; width:137mm; text-align:center;
+             font-family:'dejavuserif',serif; font-size:11pt; font-style:italic; color:#A87F2E; letter-spacing:1px; }
+.div-top   { position:absolute; left:104mm; top:84mm; width:89mm; border-top:0.5pt solid #C89B3C; }
+.desc-row  { position:absolute; left:92mm; top:86mm; width:113mm; text-align:center; }
+.desc-txt  { font-size:7.4pt; color:#4A5568; line-height:1.7; margin:0; }
+.div-bot   { position:absolute; left:104mm; top:103mm; width:89mm; border-top:0.5pt solid #C89B3C; }
+.info-strip{ position:absolute; left:72mm; top:106mm; width:153mm; text-align:center;
+             font-size:6pt; color:#A87F2E; letter-spacing:.6px; text-transform:uppercase; }
+.info-strip b { color:#0F3D73; font-size:6.4pt; }
+.info-strip .dot { color:#C89B3C; }
 
-/* â”€â”€ TITLE â”€â”€ */
-.ttl-blk   { position:absolute; left:68mm; top:38mm; width:168mm; text-align:center; }
-.ttl-h1    { font-family:\'Cinzel\',serif; font-size:25pt; font-weight:900; color:#123B78;
-             text-transform:uppercase; letter-spacing:5px; margin:0; line-height:1.2; }
-.ttl-orn   { color:#C89A2B; font-size:8pt; letter-spacing:5px; margin:2.5mm 0 0; }
+/* ---- EQUIPMENT ---- */
+.equip-wrap { position:absolute; left:72mm; top:116mm; width:153mm; text-align:center; }
+.equip-hd { font-size:5.6pt; color:#0F3D73; font-weight:700; text-transform:uppercase;
+            letter-spacing:1.6px; margin-bottom:2mm; }
+.eqtbl { width:100%; border-collapse:collapse; }
+.eqtbl td.eqcell { border:0.6pt solid #E4D3A3; background:#FBF8F0; padding:1.8mm 2.6mm;
+                   font-size:7pt; color:#23314D; font-weight:600; vertical-align:middle; width:50%; text-align:left; }
+.eqtbl .chk { color:#2E7D32; font-weight:700; }
 
-/* â”€â”€ CERTIFY ROW â”€â”€ */
-.cert-row  { position:absolute; left:68mm; top:63mm; width:168mm; }
-.cert-tbl  { width:88%; margin:0 auto; border-collapse:collapse; }
-.cert-tbl td { border:none; padding:0; vertical-align:middle; }
-.cert-line { border-top:1px solid #C89A2B; height:1px; display:block; }
-.cert-txt  { white-space:nowrap; font-size:7pt; font-weight:600; color:#C89A2B;
-             text-transform:uppercase; letter-spacing:3px; padding:0 5mm; }
+/* ---- RIGHT: VERIFICATION ---- */
+.qr-card { position:absolute; left:232mm; top:47mm; width:50mm; background:#fff;
+           border:1pt solid #C89B3C; border-radius:2.5mm; text-align:center; padding:2.6mm 2mm 3mm; }
+.qr-ttl  { font-family:'dejavuserif',serif; font-size:6pt; font-weight:700; color:#0F3D73;
+           text-transform:uppercase; letter-spacing:1px; margin:0.4mm 0 1.4mm; }
+.qr-img  { width:32mm; height:32mm; object-fit:contain; }
+.qr-scan { font-size:5.4pt; color:#0F3D73; font-weight:700; letter-spacing:.6px; margin-top:1.4mm; }
+.qr-ftr  { font-size:4.6pt; color:#6B7280; margin-top:0.6mm; line-height:1.5; }
+.qr-no   { font-size:7pt; font-weight:700; color:#A87F2E; letter-spacing:.6px; margin-top:1.2mm; }
+.dvb-card{ position:absolute; left:232mm; top:120mm; width:50mm; background:#0F3D73;
+           border:0.8pt solid #C89B3C; border-radius:2.5mm; text-align:center; padding:2.2mm 2mm; }
+.dvb-t1  { color:#EBD08A; font-size:5pt; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; }
+.dvb-t2  { color:#fff; font-size:5.2pt; margin-top:1mm; line-height:1.5; }
 
-/* â”€â”€ CANDIDATE NAME â”€â”€ */
-.name-row  { position:absolute; left:68mm; top:68mm; width:168mm; text-align:center; }
-.name-txt  { font-family:\'Great Vibes\',cursive; font-size:44pt; color:#123B78;
-             margin:0; line-height:1.1; }
+/* ---- BOTTOM RIGHT: OPERATIONS MANAGER SIGNATURE ---- */
+.osig-box { position:absolute; left:150mm; top:164mm; width:72mm; text-align:right; }
+.osig-line{ border-top:0.7pt solid #C89B3C; width:52mm; margin:1mm 0 1mm auto; }
+.osig-role{ font-size:5.6pt; font-weight:700; color:#A87F2E; text-transform:uppercase; letter-spacing:1px; }
+.osig-name{ font-family:'dejavuserif',serif; font-size:8.5pt; font-weight:700; color:#0F3D73; }
+.osig-desg{ font-size:5.4pt; color:#7A8296; }
 
-/* â”€â”€ DESCRIPTION â”€â”€ */
-.desc-row  { position:absolute; left:73mm; top:98mm; width:158mm; text-align:center; }
-.desc-txt  { font-size:7.8pt; color:#4A5568; line-height:1.8; margin:0; font-weight:400; }
+/* ---- FOOTER ---- */
+.sec-line { position:absolute; left:70mm; top:191mm; width:157mm; border-top:0.6pt solid #C89B3C; }
+.sec-txt  { position:absolute; left:60mm; top:192.6mm; width:177mm; text-align:center;
+            font-size:4.8pt; color:#A87F2E; letter-spacing:1.4px; text-transform:uppercase; }
 
-/* â”€â”€ INFO GRID â”€â”€ */
-.grid-wrap { position:absolute; left:68mm; top:115mm; width:168mm; }
-.gtbl      { width:100%; border-collapse:collapse; border:1.5px solid #C89A2B; background:#fff; }
-.gtbl td   { border:1px solid #E8D99A; padding:2.2mm 2.8mm; vertical-align:top; }
-.g-lbl     { font-size:5.3pt; color:#C89A2B; font-weight:700; text-transform:uppercase;
-             letter-spacing:1.2px; margin-bottom:2px; }
-.g-val     { font-size:8.5pt; color:#123B78; font-weight:700; line-height:1.2; }
-.g-val-lg  { font-size:9pt; color:#123B78; font-weight:700; line-height:1.2; }
-.passed    { display:inline-block; background:#15803D; color:#fff; font-size:6.5pt;
-             font-weight:700; padding:.6mm 2.5mm; border-radius:2px;
-             text-transform:uppercase; letter-spacing:.5px; }
-
-/* â”€â”€ DATES â”€â”€ */
-.dates-wrap { position:absolute; left:68mm; top:155mm; width:168mm; }
-.dtbl       { width:100%; border-collapse:collapse; border:1px solid #E8D99A; background:#FDFCF7; }
-.dtbl td    { border:1px solid #E8D99A; padding:2.8mm 1mm; text-align:center; width:25%; }
-.d-lbl      { font-size:5.3pt; color:#C89A2B; font-weight:700; text-transform:uppercase;
-              letter-spacing:1px; margin-bottom:2px; }
-.d-val      { font-size:9pt; color:#123B78; font-weight:700; }
-
-/* â”€â”€ QR BOX â”€â”€ */
-.qr-box    { position:absolute; left:237mm; top:88mm; width:52mm; background:#fff;
-             border:1.5px solid #C89A2B; border-radius:4px; text-align:center; padding:3mm 2mm; }
-.qr-ttl    { font-family:\'Cinzel\',serif; font-size:5.5pt; font-weight:700; color:#123B78;
-             text-transform:uppercase; letter-spacing:1px; margin-bottom:1mm; line-height:1.5; }
-.qr-sub    { font-size:4.5pt; color:#9CA3AF; letter-spacing:.5px; margin-bottom:2mm; }
-.qr-img    { width:37mm; height:37mm; object-fit:contain; }
-.qr-ftr    { font-size:4.5pt; color:#6B7280; margin-top:2mm; line-height:1.6; }
-.qr-no     { font-size:7pt; font-weight:700; color:#C89A2B; margin-top:2.5mm; letter-spacing:.5px; }
-
-/* â”€â”€ SIGNATURES â”€â”€ */
-.sigs-wrap { position:absolute; left:68mm; top:171mm; width:168mm; }
-.stbl      { width:100%; border-collapse:collapse; }
-.stbl td   { border:none; padding:0; vertical-align:bottom; }
-.sig-i     { height:28px; }
-.sig-img   { height:26px; object-fit:contain; }
-.sig-ln-l  { border-top:1px solid #C89A2B; width:120px; margin:1.5mm 0; }
-.sig-ln-r  { border-top:1px solid #C89A2B; width:120px; margin:1.5mm 0 1.5mm auto; }
-.sig-lbl   { font-size:5.5pt; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.8px; }
-.sig-name  { font-size:8.5pt; font-weight:700; color:#123B78; }
+/* ---- HEADER LEFT ---- */
+.hdr-left { position:absolute; left:17mm; top:15mm; width:92mm; }
+.hdr-co   { font-family:'dejavuserif',serif; font-size:9pt; font-weight:700; color:#0F3D73; line-height:1.2; }
+.hdr-sub  { font-size:6pt; color:#A87F2E; letter-spacing:.5px; margin-top:0.5mm; }
+.hdr-iso  { font-size:5pt; color:#7A8296; margin-top:0.5mm; }
+.acc-badge{ display:inline-block; font-size:5pt; font-weight:700; color:#fff; background:#2E7D32; 
+            padding:0.6mm 1.5mm; border-radius:1mm; margin-right:1mm; }
 </style>
 </head><body>
 
-<!-- BACKGROUND -->
+<!-- HEADER : LEFT -->
+<div class="hdr-left">
+  <div style="position:absolute; left:0; top:0; width:15mm;">
+    <img style="width:15mm;height:15mm;object-fit:contain;" src="$client_logo">
+  </div>
+  <div style="position:absolute; left:18mm; top:0; width:74mm;">
+    <div class="hdr-co">Crane Inspection &amp;<br>Maintenance Services</div>
+    <div class="hdr-sub">Intl. Operator Training &amp; Assessment Authority</div>
+    <div class="hdr-iso">ISO 9001:2015 &nbsp;&middot;&nbsp; ISO 45001:2018 &nbsp;&middot;&nbsp; Reg. CIMS/2026/006</div>
+  </div>
+  <div style="position:absolute; left:0; top:18mm; width:92mm;">
+    <span class="acc-badge">ISO Certified</span>
+    <span class="acc-badge">Govt. Approved</span>
+    <span class="acc-badge">Accredited</span>
+  </div>
+</div>
+
+<!-- BACKGROUND ARTWORK (unmodified) -->
 <div style="position:absolute;left:0;top:0;width:297mm;height:210mm;z-index:-100;">
-  <img src="'.$bg_path.'" style="width:297mm;height:210mm;display:block;">
+  <img src="$bg_path" style="width:297mm;height:210mm;display:block;">
 </div>
 
-<!-- FULL-WIDTH GOLD RULES -->
-<div style="position:absolute;left:0;top:33mm;width:297mm;height:1px;border-top:1.5px solid #C89A2B;"></div>
-<div style="position:absolute;left:0;top:34.5mm;width:297mm;height:1px;border-top:.5px solid #C89A2B;"></div>
-<div style="position:absolute;left:0;top:197mm;width:297mm;height:1px;border-top:1px solid #C89A2B;"></div>
-
-<!-- VERTICAL DIVIDER (left panel separator) -->
-<div style="position:absolute;left:67mm;top:37mm;width:1px;height:158mm;border-left:1px solid #E8D99A;"></div>
-
-<!-- HEADER -->
-<div class="hdr">
-  <table style="border:none;border-collapse:collapse;width:100%;">
-    <tr>
-      <td style="border:none;padding:0;width:72px;vertical-align:top;padding-top:2px;">
-        <img style="width:64px;height:64px;object-fit:contain;" src="'.$client_logo.'">
-      </td>
-      <td style="border:none;padding:0 0 0 12px;vertical-align:top;">
-        <div class="hdr-co">CRANE INSPECTION &amp; MAINTENANCE SERVICES</div>
-        <div class="hdr-sub">Approved Training &amp; Assessment Center</div>
-        <div class="hdr-slg">Safety &bull; Quality &bull; Excellence</div>
-        <div class="hdr-iso">ISO 9001:2015 Certified &nbsp;|&nbsp; Reg No: CIMS/2026/006</div>
-      </td>
-    </tr>
-  </table>
+<!-- TITLE -->
+<div class="ttl-wrap">
+  <div class="ttl-h1">Operator Certificate</div>
+  <div class="ttl-sub">Certificate of Competency</div>
+  <div class="ttl-orn">&#8212;&nbsp; &#9670; &nbsp;&#8212;</div>
 </div>
 
-<!-- CERTIFICATE NO -->
+<!-- CERT NO -->
 <div class="cno-box">
   <div class="cno-lbl">Certificate No.</div>
   <div class="cno-sep"></div>
-  <div class="cno-val">'.htmlspecialchars($cert_no).'</div>
+  <div class="cno-val">$e_cert</div>
 </div>
 
-<!-- EMBLEM -->
-<div class="emblem-box">
-  <img class="emblem-img" src="'.$gold_seal_path.'">
-</div>
-
-<!-- PHOTO FRAME -->
-<div class="ph-outer">
-  <div class="ph-frame">
-    <img class="ph-img" src="'.$photo_path.'">
-  </div>
-  <div class="ph-badge">&#9733; &nbsp;Certified Operator&nbsp; &#9733;</div>
-</div>
+<!-- PHOTO -->
+<div class="ph-card"><img class="ph-img" src="$photo_path"></div>
+<div class="ph-badge"><span class="vtick">&#10003;</span>&nbsp; Certified Operator &nbsp;<span class="vtick">&#9733;</span></div>
 
 <!-- SEAL -->
-<div class="seal-box">
-  <img class="seal-img" src="'.$partner_badge_path.'">
-</div>
+<div class="seal-box"><img class="seal-img" src="$seal_path"></div>
 
-<!-- CERTIFICATE TITLE -->
-<div class="ttl-blk">
-  <h1 class="ttl-h1">Operator Certificate</h1>
-  <div class="ttl-orn">&#8212; &#10022; &#8212;</div>
-</div>
-
-<!-- THIS IS TO CERTIFY THAT -->
-<div class="cert-row">
-  <table class="cert-tbl">
-    <tr>
-      <td style="width:38%;"><span class="cert-line"></span></td>
-      <td><span class="cert-txt">This is to certify that</span></td>
-      <td style="width:38%;"><span class="cert-line"></span></td>
-    </tr>
-  </table>
-</div>
-
-<!-- CANDIDATE NAME -->
+<!-- CENTER : CERTIFIES / NAME / DESIGNATION -->
+<div class="certifies">This Certifies That</div>
 <div class="name-row">
-  <p class="name-txt">'.htmlspecialchars($name).'</p>
+  <div class="name-txt">$e_name</div>
+  <div class="name-ul"></div>
 </div>
+<div class="desig-txt">$e_desig</div>
 
-<!-- DESCRIPTION -->
+<!-- CENTER : STATEMENT -->
+<div class="div-top"></div>
 <div class="desc-row">
-  <p class="desc-txt">has successfully completed the required training &amp; assessment and demonstrated<br>
-  the necessary competence in accordance with the standards and requirements<br>of our training program.</p>
+  <p class="desc-txt">Has successfully completed the required operator training, practical assessment,
+  and competency evaluation in accordance with international safety standards.</p>
+</div>
+<div class="div-bot"></div>
+
+<!-- CENTER : COMPACT DATA STRIP -->
+<div class="info-strip">
+  Operator ID <b>$e_id</b> &nbsp;<span class="dot">&#9670;</span>&nbsp;
+  Standard <b>$e_std</b> &nbsp;<span class="dot">&#9670;</span>&nbsp;
+  Issued <b>$e_issue</b> &nbsp;<span class="dot">&#9670;</span>&nbsp;
+  Valid Until <b>$e_expiry</b>
 </div>
 
-<!-- INFO GRID -->
-<div class="grid-wrap">
-<table class="gtbl">
-  <tr>
-    <td style="width:22%;">
-      <div class="g-lbl">Operator ID</div>
-      <div class="g-val">'.htmlspecialchars($iqama).'</div>
-    </td>
-    <td style="width:37%;">
-      <div class="g-lbl">Designation</div>
-      <div class="g-val-lg">'.htmlspecialchars($designation).'</div>
-    </td>
-    <td style="width:27%;">
-      <div class="g-lbl">Assessment Standard</div>
-      <div class="g-val">'.htmlspecialchars($std).'</div>
-    </td>
-    <td style="width:14%; text-align:center; vertical-align:middle;">
-      <div class="g-lbl">Status</div>
-      <div><span class="passed">PASSED</span></div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" style="border-top:1.5px solid #C89A2B;">
-      <div class="g-lbl">Training Program</div>
-      <div class="g-val-lg">'.htmlspecialchars($program).'</div>
-    </td>
-    <td colspan="2" style="border-top:1.5px solid #C89A2B; background:#FDFCF8;">
-      <div class="g-lbl">Assessment Period</div>
-      <div class="g-val">'.htmlspecialchars($completion_date).' &nbsp;&mdash;&nbsp; '.htmlspecialchars($renewal_date).'</div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4" style="border-top:1.5px solid #C89A2B; background:#F9F8F3; padding:2mm 2.8mm;">
-      <div class="g-lbl" style="color:#123B78; margin-bottom:3px;">Equipment / Category Certified For</div>
-      '.$eq_html.'
-    </td>
-  </tr>
-</table>
+<!-- EQUIPMENT -->
+<div class="equip-wrap">
+  <div class="equip-hd">Equipment / Category Certified</div>
+  $eq_table
 </div>
 
-<!-- DATES BAR -->
-<div class="dates-wrap">
-<table class="dtbl">
-  <tr>
-    <td><div class="d-lbl">Date of Issue</div><div class="d-val">'.htmlspecialchars($completion_date).'</div></td>
-    <td><div class="d-lbl">Expiry Date</div><div class="d-val">'.htmlspecialchars($renewal_date).'</div></td>
-    <td><div class="d-lbl">Validity</div><div class="d-val">'.htmlspecialchars($validity).'</div></td>
-    <td style="border-right:none;"><div class="d-lbl">Renewal Due</div><div class="d-val">Before '.htmlspecialchars($renewal_date).'</div></td>
-  </tr>
-</table>
+<!-- RIGHT : VERIFICATION -->
+<div class="qr-card">
+  <div style="color:#C89B3C;font-size:9pt;">&#10003;</div>
+  <div class="qr-ttl">Certificate Verification</div>
+  <img class="qr-img" src="$qr_path">
+  <div class="qr-scan">Scan to Verify</div>
+  <div class="qr-ftr">$verify_url</div>
+  <div class="qr-no">$e_cert</div>
+</div>
+<div class="dvb-card">
+  <div class="dvb-t1">&#10003; Digitally Verified</div>
+  <div class="dvb-t2">Authenticated by CIMS Global<br>Secure Credential Registry</div>
 </div>
 
-<!-- QR VERIFICATION -->
-<div class="qr-box">
-  <div class="qr-ttl">Scan to Verify<br>Certificate Authenticity</div>
-  <div class="qr-sub">Official Verification Portal</div>
-  <img class="qr-img" src="'.$qr_path.'">
-  <div class="qr-ftr">This certificate is valid<br>only with official verification</div>
-  <div class="qr-no">'.htmlspecialchars($cert_no).'</div>
+<!-- BOTTOM LEFT : INSPECTOR SIGNATORY -->
+<div class="isig-box">
+  $insp_img
+  <div class="isig-line"></div>
+  <div class="isig-role">Authorized Signatory</div>
+  <div class="isig-name">$e_instr</div>
+  <div class="isig-desg">Assessor / Inspector</div>
 </div>
 
-<!-- SIGNATURES -->
-<div class="sigs-wrap">
-<table class="stbl">
-<tr>
-  <td style="width:42%; text-align:left; vertical-align:bottom;">
-    <div class="sig-i">';
-if ($insp_sig) $html .= '<img class="sig-img" src="'.$insp_sig.'">';
-else            $html .= '<div style="height:26px;"></div>';
-$html .= '</div>
-    <div class="sig-ln-l"></div>
-    <div class="sig-lbl">Authorized Signatory</div>
-    <div class="sig-name">'.htmlspecialchars($instructor).'</div>
-  </td>
-  <td style="width:16%; text-align:center;"></td>
-  <td style="width:42%; text-align:right; vertical-align:bottom;">
-    <div class="sig-i" style="text-align:right;">';
-if ($mgr_sig) $html .= '<img class="sig-img" src="'.$mgr_sig.'">';
-else          $html .= '<div style="height:26px;"></div>';
-$html .= '</div>
-    <div class="sig-ln-r"></div>
-    <div class="sig-lbl" style="text-align:right;">Operations Manager</div>
-    <div class="sig-name" style="text-align:right;">Eng. Khalid A. Alghamdi</div>
-  </td>
-</tr>
-</table>
+<!-- BOTTOM RIGHT : OPERATIONS MANAGER -->
+<div class="osig-box">
+  <div style="text-align:right;">$mgr_img</div>
+  <div class="osig-line"></div>
+  <div class="osig-role">Operations Manager</div>
+  <div class="osig-name">Eng. Khalid A. Alghamdi</div>
+  <div class="osig-desg">Operations Department</div>
 </div>
 
-</body></html>';
+<!-- FOOTER -->
+<div class="sec-line"></div>
+<div class="sec-txt">Secure Serial: $e_cert &nbsp;&middot;&nbsp; Verification Portal &nbsp;&middot;&nbsp; Anti-Fraud Security Features</div>
+
+</body></html>
+HTML;
 
 try {
     $mpdf = new \Mpdf\Mpdf([
         'format'=>'A4-L','margin_left'=>0,'margin_right'=>0,
         'margin_top'=>0,'margin_bottom'=>0,'margin_header'=>0,'margin_footer'=>0,
         'img_dpi'=>96,'tempDir'=>__DIR__.'/../tmp',
+        'default_font'=>'dejavusanscondensed',
     ]);
     $mpdf->SetDisplayMode('fullpage');
     $mpdf->setAutoPageBreak(false);
+
+    /* Faint diagonal security watermark (native mPDF) */
+    $mpdf->SetWatermarkText('CERTIFIED');
+    $mpdf->showWatermarkText   = true;
+    $mpdf->watermarkTextAlpha  = 0.045;
+    $mpdf->watermark_font      = 'dejavuserif';
+
     $mpdf->WriteHTML($html);
     if (ob_get_length()) ob_end_clean();
     $mpdf->Output('Operator_Certificate_'.$cert_no.'.pdf', \Mpdf\Output\Destination::DOWNLOAD);
