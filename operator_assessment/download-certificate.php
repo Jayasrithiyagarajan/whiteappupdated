@@ -51,7 +51,7 @@ $instructor      = ucwords(strtolower($assessment['inspector_name']));
 
 /* ---- Absolute Paths ---- */
 function abs_path($rel) { $p = realpath($rel); return $p ? str_replace('\\','/',$p) : ''; }
-$bg_path            = abs_path(__DIR__.'/../document/bg.png');
+$bg_path            = abs_path(__DIR__.'/../document/bg.jpg');
 $logo_path          = abs_path(__DIR__.'/../document/logo.png');
 $qr_path            = abs_path(__DIR__.'/../document/code.png');
 $partner_badge_path = abs_path(__DIR__.'/../document/trusted_partner_badge.png');

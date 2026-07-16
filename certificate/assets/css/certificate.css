@@ -1,0 +1,68 @@
+body { 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'dejavusanscondensed', sans-serif; 
+    color: #0B2B5C;
+}
+table { border-collapse: collapse; }
+.main-wrapper {
+    padding: 45mm 18mm 5mm 18mm;
+    box-sizing: border-box;
+}
+.header-left { width: 25%; text-align: center; vertical-align: middle; }
+.header-center { width: 50%; text-align: center; vertical-align: middle; }
+.header-right { width: 25%; text-align: center; vertical-align: middle; }
+
+.cims-logo { height: 35mm; }
+.leea-logo { height: 25mm; }
+
+.co-name { font-family: 'dejavuserif', serif; font-size: 22pt; font-weight: bold; color: #0B2B5C; line-height: 1.1; margin: 0; }
+.co-div { font-size: 8pt; font-weight: bold; color: #C55A11; text-transform: uppercase; margin-top: 1mm; letter-spacing: 0.5px; }
+.co-cr { font-size: 10pt; font-weight: bold; color: #0B2B5C; margin-top: 1mm; }
+
+.cert-title-area { text-align: center; margin-top: 1mm; }
+.cert-title { font-family: 'dejavuserif', serif; font-size: 18pt; font-weight: bold; color: #0B2B5C; letter-spacing: 1px; }
+.cert-subtitle { font-family: 'dejavuserif', serif; font-size: 10pt; font-weight: bold; color: #0B2B5C; }
+
+.certifies { font-size: 9pt; font-weight: bold; color: #C5A059; text-transform: uppercase; margin-top: 2mm; letter-spacing: 1px; text-align: center;}
+.name-txt { font-family: 'dejavuserif', serif; font-size: 24pt; font-weight: bold; color: #0B2B5C; text-transform: uppercase; margin-top: 1.5mm; text-align: center;}
+.employed-by { font-size: 10pt; font-weight: bold; color: #0B2B5C; margin-top: 1mm; text-align: center;}
+.company-name { font-family: 'dejavuserif', serif; font-size: 14pt; font-weight: bold; color: #C55A11; text-transform: uppercase; margin-top: 1mm; text-align: center;}
+.vessel-loc { font-size: 10pt; font-weight: bold; color: #0B2B5C; margin-top: 1mm; text-transform: uppercase; text-align: center;}
+
+.layout-table { width: 100%; margin-top: -10mm; }
+.left-col { width: 20%; vertical-align: top; text-align: center; }
+.center-col { width: 60%; vertical-align: top; }
+.right-col { width: 20%; vertical-align: top; text-align: center; }
+
+.qr-box { border: 1.5pt solid #C5A059; padding: 2mm; border-radius: 2mm; width: 35mm; margin: 0 auto; background: #fff; }
+.qr-img { width: 30mm; height: 30mm; }
+.qr-btn { background: #0B2B5C; color: #fff; font-size: 7pt; font-weight: bold; padding: 2mm; margin-top: 2mm; border-radius: 1mm; }
+.cert-no { font-size: 7.5pt; font-weight: bold; margin-top: 2mm; color: #0B2B5C; }
+
+.photo-img { width: 35mm; height: 42mm; object-fit: cover; border-radius: 2mm; border: 1pt solid #C5A059; }
+
+.success-ribbon { background: #0B2B5C; color: #fff; font-size: 8.5pt; font-weight: bold; text-align: center; padding: 2mm; border-radius: 1.5mm; margin-top: 2mm; text-transform: uppercase;}
+.equip-list { margin-top: 2mm; font-size: 8pt; font-weight: bold; color: #0B2B5C; line-height: 1.6; padding-left: 20mm; }
+.recognition { font-size: 7pt; color: #333; text-align: center; margin-top: 2mm; line-height: 1.4; padding: 0 5mm; }
+
+.cards-container { width: 100%; border: 1pt solid #E5DFD3; margin-top: 3mm; border-radius: 2mm; background: #FAFAFA; }
+.cards-table { width: 100%; }
+.card-td { border: 0.5pt dashed #ccc; padding: 2mm; vertical-align: middle; width: 33.33%; text-align: center; }
+.card-icon { height: 6mm; margin-bottom: 1mm; }
+.card-lbl { font-size: 5.5pt; font-weight: bold; color: #555; text-transform: uppercase; margin-bottom: 1mm; }
+.card-val { font-size: 7.5pt; font-weight: bold; color: #0B2B5C; }
+.card-td-4 { width: 25%; border: 0.5pt dashed #ccc; padding: 2mm; vertical-align: middle; text-align: center; }
+
+.status-box { background: #2E7D32; color: #fff; font-weight: bold; font-size: 7.5pt; padding: 1mm 3mm; border-radius: 1mm; display: inline-block; }
+
+.sig-table { width: 100%; margin-top: 2mm; }
+.sig-img { height: 12mm; }
+.sig-name { font-family: 'dejavuserif', serif; font-size: 11pt; color: #0B2B5C; margin-top: 1mm; }
+.sig-line { border-top: 1pt solid #C5A059; width: 45mm; margin: 1mm auto; }
+.sig-role { font-size: 7pt; font-weight: bold; color: #C55A11; text-transform: uppercase; }
+
+.footer-table { width: 100%; margin-top: 3mm; border-top: 1pt solid #C5A059; padding-top: 2mm; }
+.footer-text { font-size: 6.5pt; color: #333; line-height: 1.4; }
+.footer-icon { width: 3mm; vertical-align: middle; margin-right: 1mm; }
+.iso-badge { height: 10mm; }
