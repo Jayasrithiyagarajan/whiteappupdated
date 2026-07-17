@@ -1,13 +1,28 @@
 <?php
 try {
+    $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+    $fontDirs = $defaultConfig['fontDir'];
+
+    $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+    $fontData = $defaultFontConfig['fontdata'];
+
     $mpdf = new \Mpdf\Mpdf([
+        'fontDir' => array_merge($fontDirs, [
+            __DIR__ . '/../fonts',
+        ]),
+        'fontdata' => $fontData + [
+            'poppins' => [
+                'R' => 'Poppins-Regular.ttf',
+                'B' => 'Poppins-Bold.ttf',
+            ]
+        ],
+        'default_font' => 'poppins',
         'format' => 'A4',
         'margin_left' => 0, 'margin_right' => 0,
         'margin_top' => 0, 'margin_bottom' => 0,
         'margin_header' => 0, 'margin_footer' => 0,
         'img_dpi' => 96,
         'tempDir' => __DIR__.'/../../tmp',
-        'default_font' => 'dejavusanscondensed',
     ]);
     
     $mpdf->SetDisplayMode('fullpage');

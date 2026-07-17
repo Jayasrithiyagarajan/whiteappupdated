@@ -468,7 +468,7 @@ if (file_exists('../inc/nav.php')) {
                             <?php endif; ?>
 
                             <?php if (strtoupper($row['status']) === 'COMPLETED'): ?>
-                                <a href="download-certificate.php?id=<?= $row['id']; ?>" class="action-btn btn-success-custom" target="_blank" title="Download Certificate">
+                                <a href="../certificate/generate_certificate.php?id=<?= $row['id']; ?>" class="action-btn btn-success-custom" target="_blank" title="Download Certificate">
                                     <i class="fas fa-file-pdf"></i>
                                 </a>
                                 <a href="../operator_card/view-card.php?id=<?= $row['id']; ?>" class="action-btn" style="background: #eab308;" target="_blank" title="Operator Card">

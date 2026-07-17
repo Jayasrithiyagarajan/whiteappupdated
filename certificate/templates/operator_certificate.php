@@ -4,12 +4,9 @@ if (!file_exists($bg_img)) $bg_img = abs_path(__DIR__.'/../../document/bg.png');
 ?>
 <!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
-body { 
-    margin: 0; padding: 0; 
-    font-family: 'dejavusanscondensed', sans-serif; 
-    color: #0B2B5C;
-}
-.val { font-weight: bold; color: #0B2B5C; }
+body { font-family: 'poppins', sans-serif; font-size: 10pt; color: #002B5B; }
+.val { font-family: 'poppins', sans-serif; font-weight: bold; color: #002B5B; }
+.eq-li { margin-bottom: 2mm; }
 </style>
 </head><body>
 
@@ -22,7 +19,7 @@ body {
 
 <!-- QR & Cert No -->
 <img src="<?= $certificate['qr'] ?>" style="position:absolute; left: 19.5mm; top: 76.5mm; width: 28mm; height: 28mm;" alt="QR">
-<div class="val" style="position:absolute; left: 27mm; top: 120.3mm; font-size: 7.2pt; width:30mm; text-align:left;"><?= htmlspecialchars($certificate['certificate_no']) ?></div>
+<div class="val" style="position:absolute; left: 27mm; top: 120.3mm; font-size: 7pt; width:30mm; text-align:left;"><?= htmlspecialchars($certificate['certificate_no']) ?></div>
 
 <!-- Photo -->
 <?php if (!empty($certificate['photo'])): ?>
@@ -31,11 +28,11 @@ body {
 <?php endif; ?>
 
 <!-- Name, Company, Vessel -->
-<div class="val" style="position:absolute; left:0; top: 91.5mm; width: 210mm; text-align: center; font-family: 'dejavuserif', serif; font-size: 18pt; text-transform: uppercase;">
+<div class="val" style="position:absolute; left:0; top: 91.5mm; width: 210mm; text-align: center; font-family: 'poppins', sans-serif; font-size: 18pt; text-transform: uppercase;">
     <?= htmlspecialchars($certificate['candidate_name']) ?>
 </div>
 
-<div class="val" style="position:absolute; left:0; top: 110mm; width: 210mm; text-align: center; font-family: 'dejavuserif', serif; font-size: 13pt; color: #C55A11; text-transform: uppercase;">
+<div class="val" style="position:absolute; left:0; top: 110mm; width: 210mm; text-align: center; font-family: 'poppins', sans-serif; font-size: 13pt; color: #C55A11; text-transform: uppercase;">
     <?= htmlspecialchars($certificate['company']['name']) ?>
 </div>
 
@@ -45,7 +42,7 @@ body {
 </div>
 
 <!-- Equipment List -->
-<div style="position:absolute; left: 35mm; top: 142mm; width: 162mm; font-size: 10pt; font-weight: bold; line-height: 1.6;">
+<div style="position:absolute; left: 35mm; top: 142mm; width: 162mm; font-size: 9pt; font-weight: bold; line-height: 1.5;">
     <?php foreach ($certificate['equipment'] as $eq): ?>
         &bull; <?= htmlspecialchars(trim($eq['type'].' '.$eq['manufacturer'].' '.$eq['model'])) ?> 
         <?php if (!empty($eq['capacity'])): ?>
