@@ -468,14 +468,14 @@ if (!$logged_in_user) {
           max-width: 170px !important;
       }
 
-      table.dataTable thead th:nth-child(11),
-      table.dataTable tbody td:nth-child(11) {
+      table.dataTable thead th:nth-child(4),
+      table.dataTable tbody td:nth-child(4) {
           width: 130px !important;
           min-width: 130px !important;
           max-width: 130px !important;
       }
 
-      table.dataTable tbody td:nth-child(11),
+      table.dataTable tbody td:nth-child(4),
       table.dataTable tbody td:nth-child(8) {
           white-space: normal !important;
           overflow-wrap: anywhere;
@@ -713,13 +713,13 @@ if (!$logged_in_user) {
                         <th>Project ID</th>
                         <th>Date</th>
                         <th>Progress</th>
+                        <th>Action</th>
                         <th>Checklist</th>
                         <th>Report</th>
                         <th>Reviewer</th>
                         <th>Certificate</th>
                         <th>Customer</th>
                         <th>Status</th>
-                        <th>Action</th>
                         <th>Equip.ID</th>
                         <th>Checklist Name</th>
                         <th>Sticker No</th>

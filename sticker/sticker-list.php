@@ -177,7 +177,7 @@ $(document).ready(function() {
         autoWidth: false,
         pageLength: 25,
         lengthMenu: [10, 25, 50, 100],
-        order: [[3, 'desc']],
+        order: [[0, 'desc']],
 
         ajax: {
             url: 'fetch_stickers.php',

@@ -25,21 +25,22 @@ $columns = [
     0 => "pi.project_no",
     1 => "pi.creation_date",
     2 => "pi.checklist_status",
-    3 => "pi.report_status",
-    4 => "pi.inspection_type",
-    5 => "pi.review_status",
-    6 => "pi.certificatestatus",
-    7 => "pi.customer_name",
-    8 => "pi.project_status",
-    9 => "pi.project_no", // Action Column placeholder
-    10 => "pi.equipment_id",
-    11 => "pi.checklist_type",
-    12 => "ci.sticker_no",
-    13 => "pi.project_no", // Certificate Column placeholder
-    14 => "pi.equipment_type",
-    15 => "pi.equipment_location",
-    16 => "pi.inspector_name",
-    17 => "pi.project_no"  // Delete/Action Column placeholder
+    3 => "pi.project_no", // Action Column placeholder
+    4 => "pi.checklist_status",
+    5 => "pi.report_status",
+    6 => "pi.inspection_type",
+    7 => "pi.review_status",
+    8 => "pi.certificatestatus",
+    9 => "pi.customer_name",
+    10 => "pi.project_status",
+    11 => "pi.equipment_id",
+    12 => "pi.checklist_type",
+    13 => "ci.sticker_no",
+    14 => "pi.project_no", // Certificate Column placeholder
+    15 => "pi.equipment_type",
+    16 => "pi.equipment_location",
+    17 => "pi.inspector_name",
+    18 => "pi.project_no"  // Delete/Action Column placeholder
 ];
 
 // Base Query - FORCED PENDING STATUS
@@ -275,6 +276,7 @@ foreach ($projects as $row) {
         $pNo,
         $date,
         $progressHtml,
+        $detailsBtn,
         $row['checklist_status'],
         $row['report_status'],
         ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A')),
@@ -282,7 +284,6 @@ foreach ($projects as $row) {
         ucfirst($row['certificatestatus']),
         $row['customer_name'],
         $statusBtn . $expiryBadge,
-        $detailsBtn,
         $row['equipment_id'],
         ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
         $row['sticker_no'] ?? 'N/A',

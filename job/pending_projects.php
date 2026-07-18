@@ -462,22 +462,22 @@ if (!$logged_in_user) {
           white-space: nowrap;
       }
 
-      table.dataTable thead th:nth-child(8),
-      table.dataTable tbody td:nth-child(8) {
+      table.dataTable thead th:nth-child(9),
+      table.dataTable tbody td:nth-child(9) {
           width: 170px !important;
           min-width: 170px !important;
           max-width: 170px !important;
       }
 
-      table.dataTable thead th:nth-child(11),
-      table.dataTable tbody td:nth-child(11) {
+      table.dataTable thead th:nth-child(4),
+      table.dataTable tbody td:nth-child(4) {
           width: 130px !important;
           min-width: 130px !important;
           max-width: 130px !important;
       }
 
-      table.dataTable tbody td:nth-child(11),
-      table.dataTable tbody td:nth-child(8) {
+      table.dataTable tbody td:nth-child(4),
+      table.dataTable tbody td:nth-child(9) {
           white-space: normal !important;
           overflow-wrap: anywhere;
           word-break: break-word;
@@ -707,6 +707,7 @@ if (!$logged_in_user) {
                         <th>Project ID</th>
                         <th>Date</th>
                         <th>Progress</th>
+                        <th>Action</th>
                         <th>Checklist</th>
                         <th>Report</th>
                         <th>Inspection Type</th>
@@ -714,7 +715,6 @@ if (!$logged_in_user) {
                         <th>Certificate</th>
                         <th>Customer</th>
                         <th>Status</th>
-                        <th>Action</th>
                         <th>Equip.ID</th>
                         <th>Checklist Name</th>
                         <th>Sticker No</th>

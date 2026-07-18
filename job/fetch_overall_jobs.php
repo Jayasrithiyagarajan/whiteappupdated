@@ -25,21 +25,22 @@ $columns = [
     0 => "pi.project_no",
     1 => "pi.creation_date",
     2 => "pi.checklist_status",
-    3 => "pi.report_status",
-    4 => "pi.review_status",
-    5 => "pi.certificatestatus",
-    6 => "pi.customer_name",
-    7 => "pi.project_status",
-    8 => "pi.project_no", // Action Column placeholder
-    9 => "pi.equipment_id",
-    10 => "pi.checklist_type",
-    11 => "ci.sticker_no",
-    12 => "pi.project_no", // Certificate Column placeholder
-    13 => "pi.inspection_type",
-    14 => "pi.equipment_type",
-    15 => "pi.equipment_location",
-    16 => "pi.inspector_name",
-    17 => "pi.project_no" // Delete/Action Column placeholder
+    3 => "pi.project_no", // Action Column placeholder
+    4 => "pi.checklist_status",
+    5 => "pi.report_status",
+    6 => "pi.review_status",
+    7 => "pi.certificatestatus",
+    8 => "pi.customer_name",
+    9 => "pi.project_status",
+    10 => "pi.equipment_id",
+    11 => "pi.checklist_type",
+    12 => "ci.sticker_no",
+    13 => "pi.project_no", // Certificate Column placeholder
+    14 => "pi.inspection_type",
+    15 => "pi.equipment_type",
+    16 => "pi.equipment_location",
+    17 => "pi.inspector_name",
+    18 => "pi.project_no" // Delete/Action Column placeholder
 ];
 
 // Base Query
@@ -303,13 +304,13 @@ foreach ($projects as $row) {
         $pNo,
         $date,
         $progressHtml,
+        $detailsBtn,
         $row['checklist_status'],
         $row['report_status'],
         $row['review_status'],
         ucfirst($row['certificatestatus']),
         $row['customer_name'],
         $statusBtn . $expiryBadge,
-        $detailsBtn,
         $row['equipment_id'],
         ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
         $row['sticker_no'] ?? 'N/A',

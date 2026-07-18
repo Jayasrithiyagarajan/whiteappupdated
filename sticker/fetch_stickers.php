@@ -122,8 +122,8 @@ $recordsFiltered = $stmtFiltered->get_result()->fetch_assoc()['total'] ?? 0;
 $stmtFiltered->close();
 
 // Ordering
-$orderColumnIndex = $_POST['order'][0]['column'] ?? 3;
-$orderColumn = $columns[$orderColumnIndex] ?? "created_at";
+$orderColumnIndex = $_POST['order'][0]['column'] ?? 0;
+$orderColumn = $columns[$orderColumnIndex] ?? "sticker_start_no";
 $orderDir = $_POST['order'][0]['dir'] ?? 'desc';
 $orderBy = " ORDER BY $orderColumn $orderDir ";
 

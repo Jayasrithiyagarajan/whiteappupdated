@@ -1,16 +1,19 @@
 <?php
+session_start();
 include_once('../file/config.php');
 
-// Fetch All unique Inspectors, Clients, Years
-// This is used for dropdown population.
-// We might want to respect role restrictions here too? Usually yes.
-// But mostly this is for 'admin' who sees everything.
-// Let's keep it simple: fetch all distinct. Frontend logic or role access will limit visibility if needed, 
-// but filters usually show all options unless data is strictly siloed.
-// If role is restricted, 'fetch_overall_jobs.php' handles the data restriction.
-// Filters can show all, but selecting one not assigned to you will just yield 0 results.
+$role = $_SESSION['role'] ?? '';
+$user = $_SESSION['username'] ?? '';
 
-$where = " WHERE 1=1 "; // No specific filter other than not null
+$where = " WHERE 1=1 "; 
+
+if (!in_array($role, ['admin', 'reviewer', 'quality controller', 'document controller'])) {
+    if ($role === 'customer') {
+        $where .= " AND customer_name = '" . $conn->real_escape_string($user) . "' ";
+    } else {
+        $where .= " AND inspector_name = '" . $conn->real_escape_string($user) . "' ";
+    }
+}
 
 $inspectors = [];
 $res = $conn->query("SELECT DISTINCT inspector_name FROM project_info $where AND inspector_name IS NOT NULL AND inspector_name != '' ORDER BY inspector_name ASC");
