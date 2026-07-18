@@ -74,6 +74,10 @@ if (isset($_GET['inspector_name'])) {
             ];
         }
 
+        usort($options, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+
         echo json_encode($options);
     } else {
         echo json_encode([

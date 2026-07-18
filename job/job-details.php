@@ -627,6 +627,9 @@ endif; ?>
                                             <a href="../document/report/view.php?project_no=<?php echo $data['project_no']; ?>&report_no=<?php echo $data['report_no']; ?>" target="_blank">
     <span class="bg-primary text-white status-btn completed"> View Report</span>
 </a>
+<a href="../document/report/download.php?project_no=<?php echo $data['project_no']; ?>&report_no=<?php echo $data['report_no']; ?>" target="_blank">
+    <span class="bg-success text-white status-btn completed" style="margin-left: 8px;"> Download Report</span>
+</a>
 
 <!--<a href="../sticker/download-white.php?sticker_start_no=<?php echo $data['sticker_number_issued']; ?>" target="_blank">-->
 <!--    <span class="bg-warning text-white status-btn ps-2 completed"> View Sticker</span>-->
@@ -720,6 +723,9 @@ endif; ?>
                     <li class="cert-item <?php echo $certificateClass; ?>" data-cert-index="<?php echo $index; ?>">
                         <a href="../document/<?php echo htmlspecialchars($path); ?>/view.php?project_no=<?php echo $data['project_no']; ?>" class="d-inline-block mt-2"  target="_blank">
                             <span class="bg-primary text-white status-btn completed">View Certificate</span>
+                        </a>
+                        <a href="../document/<?php echo htmlspecialchars($path); ?>/download.php?project_no=<?php echo $data['project_no']; ?>" class="d-inline-block mt-2" style="margin-left: 8px;" target="_blank">
+                            <span class="bg-success text-white status-btn completed">Download Certificate</span>
                         </a>
                     </li>
                     <?php

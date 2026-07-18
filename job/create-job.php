@@ -27,7 +27,7 @@ $customerQuery = "SELECT * FROM customers ORDER BY customer_name ASC";
 $customerResult = $conn->query($customerQuery);
 
 // Fetch inspector names
-$inspectorQuery = "SELECT * FROM inspectors";
+$inspectorQuery = "SELECT * FROM inspectors ORDER BY inspector_name ASC";
 $inspectorResult = mysqli_query($conn, $inspectorQuery);
 ?>
 
@@ -339,17 +339,17 @@ $inspectorResult = mysqli_query($conn, $inspectorQuery);
                                         <label class="font-14 bold mb-10">Type of Inspection <span class="text-danger">*</span></label>
                                         <select name="inspection_type" class="theme-input-style">
                                             <option value="" disabled selected>Select Type of Inspection</option>
-                                            <option value="healthcheck">Offshore Crane Health Check</option>
-                                            <option value="loadtestwithload">Thorough Examination </option>
-                                            <option value="mobile">Mobile Crane with Load Test</option>
-                                            <option value="withloadtest">Load Test</option>
                                             <option value="lifting">Below the Hook Lifting Gears</option>
-                                            <option value="mpi">MPI</option>
                                             <option value="eddycurrent">Eddy Current</option>
-                                            <option value="liquidpenetrantinspection">LPI</option>
-                                            <option value="rocktest">RT</option>
-                                            <option value="ut">UT</option>
                                             <option value="lmi">LMI</option>
+                                            <option value="withloadtest">Load Test</option>
+                                            <option value="liquidpenetrantinspection">LPI</option>
+                                            <option value="mobile">Mobile Crane with Load Test</option>
+                                            <option value="mpi">MPI</option>
+                                            <option value="healthcheck">Offshore Crane Health Check</option>
+                                            <option value="rocktest">RT</option>
+                                            <option value="loadtestwithload">Thorough Examination </option>
+                                            <option value="ut">UT</option>
                                         </select>
                                     </div>
 

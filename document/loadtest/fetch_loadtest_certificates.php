@@ -11,7 +11,7 @@ $length = intval($_POST['length']);
 $search = $_POST['search']['value'] ?? '';
 
 /* IMPORTANT: project IDs are stored like CIMS6545, so sort by their numeric part. */
-$projectNoSort = "CAST(REGEXP_REPLACE(lc.project_no, '[^0-9]', '') AS UNSIGNED)";
+$projectNoSort = "CAST(SUBSTRING(lc.project_no, 5) AS UNSIGNED)";
 $columns = [
     $projectNoSort,
     'lc.certificate_no',
@@ -110,7 +110,8 @@ $res = $conn->query($sql);
 $data = [];
 
 while($r=$res->fetch_assoc()){
-    $initial = strtoupper($r['inspector_name'][0]);
+    $inspector_name = $r['inspector_name'] ?? '';
+    $initial = !empty($inspector_name) ? strtoupper($inspector_name[0]) : '?';
 
     $data[]=[
         $r['project_no'],
