@@ -204,6 +204,21 @@ if (!empty($projectIds)) {
     }
 }
 
+// Inspection Type Mapping
+$inspectionTypeMap = [
+    'healthcheck' => 'Offshore Crane Health Check',
+    'lifting' => 'Below the Hook Lifting Gears',
+    'loadtestwithload' => 'Thorough Examination',
+    'mobile' => 'Crane With Load Test',
+    'withloadtest' => 'Load Test',
+    'mpi' => 'MPI',
+    'eddycurrent' => 'Eddy Current',
+    'liquidpenetrantinspection' => 'LPI',
+    'rocktest' => 'RT',
+    'ut' => 'UT',
+    'lmi' => 'LMI'
+];
+
 // Format Output
 foreach ($projects as $row) {
     // ID
@@ -279,7 +294,7 @@ foreach ($projects as $row) {
         $detailsBtn,
         $row['checklist_status'],
         $row['report_status'],
-        ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A')),
+        $inspectionTypeMap[strtolower($row['inspection_type'] ?? '')] ?? ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A')),
         $row['review_status'],
         ucfirst($row['certificatestatus']),
         $row['customer_name'],

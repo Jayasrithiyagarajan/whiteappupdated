@@ -345,6 +345,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                         </div>
                         <form action="update_report.php" method="POST" class="create-job-form">
                             <input type="hidden" name="report_no" value="<?php echo $report_no; ?>">
+                            <input type="hidden" name="project_no" value="<?php echo $project_no; ?>">
                             <div class="row">
                                 <div class="col-lg-6 mb-30">
                                     <div class="create-job-section">
@@ -356,7 +357,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
 
                                 <div class="form-group">
                                     <label class="font-14 bold mb-2">Manufacturer</label>
-                                    <input type="text" class="theme-input-style" value="<?php echo htmlspecialchars($manufacturer); ?>" readonly>
+                                    <input type="text" class="theme-input-style" name="manufacturer" value="<?php echo htmlspecialchars($manufacturer); ?>">
                                 </div>
 
                                 <div class="form-group">
@@ -386,7 +387,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
 
                                 <div class="form-group">
                                     <label class="font-14 bold mb-2">Capacity</label>
-                                    <input type="text" class="theme-input-style" value="<?php echo htmlspecialchars($capacity_swl); ?>" readonly>                    
+                                    <input type="text" class="theme-input-style" name="capacity_swl" value="<?php echo htmlspecialchars($capacity_swl); ?>">                    
                                 </div>
 
                                 <div class="form-group">
@@ -400,12 +401,12 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                         <h4 class="font-16 create-job-section-title"><i class="icofont-settings"></i> Additional Information</h4>
                                 <div class="form-group">
                                     <label class="font-14 bold mb-2">Equipment Identification Number</label>
-                                    <input type="text" class="theme-input-style" value="<?php echo htmlspecialchars($equipment_id); ?>" readonly>
+                                    <input type="text" class="theme-input-style" name="equipment_id" value="<?php echo htmlspecialchars($equipment_id); ?>">
                                 </div>
 
                                 <div class="form-group">
                                     <label class="font-14 bold mb-2">Equipment Serial Number</label>
-                                    <input type="text" class="theme-input-style" name="equipment_serial_no" value="<?php echo htmlspecialchars($crane_serial_no); ?>" readonly>
+                                    <input type="text" class="theme-input-style" name="equipment_serial_no" value="<?php echo htmlspecialchars($crane_serial_no); ?>">
                                 </div>
 
                                 <div class="form-group">

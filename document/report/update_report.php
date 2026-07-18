@@ -20,6 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $corrective_action = mysqli_real_escape_string($conn, $_POST['corrective_action']);
     $no_of_equipments_inspected = mysqli_real_escape_string($conn, $_POST['no_of_equipments_inspected']);
 
+    $project_no = isset($_POST['project_no']) ? mysqli_real_escape_string($conn, $_POST['project_no']) : '';
+    $manufacturer = isset($_POST['manufacturer']) ? mysqli_real_escape_string($conn, $_POST['manufacturer']) : '';
+    $capacity_swl = isset($_POST['capacity_swl']) ? mysqli_real_escape_string($conn, $_POST['capacity_swl']) : '';
+    $equipment_id = isset($_POST['equipment_id']) ? mysqli_real_escape_string($conn, $_POST['equipment_id']) : '';
+    $equipment_serial_no = isset($_POST['equipment_serial_no']) ? mysqli_real_escape_string($conn, $_POST['equipment_serial_no']) : '';
+
     $update_query = "
         UPDATE reports SET 
             model = '$model',
@@ -35,6 +41,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ";
 
     if (mysqli_query($conn, $update_query)) {
+        if (!empty($project_no)) {
+            $update_checklist = "
+                UPDATE checklist_information SET
+                    manufacturer = '$manufacturer',
+                    capacity_swl = '$capacity_swl',
+                    crane_serial_no = '$equipment_serial_no'
+                WHERE project_no = '$project_no'
+            ";
+            mysqli_query($conn, $update_checklist);
+
+            $update_project = "
+                UPDATE project_info SET
+                    equipment_id = '$equipment_id'
+                WHERE project_no = '$project_no'
+            ";
+            mysqli_query($conn, $update_project);
+        }
+        
         header("Location: index.php"); // optionally redirect
     } else {
         echo "Error updating report: " . mysqli_error($conn);

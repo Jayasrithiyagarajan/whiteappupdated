@@ -427,9 +427,10 @@ if (!$logged_in_user) {
       table.dataTable thead .sorting_asc_disabled,
       table.dataTable thead .sorting_desc_disabled {
           background-color: #2b526c !important;
-          background-image: none !important;
           color: #ffffff !important;
-          padding-right: 16px !important;
+          padding-right: 30px !important;
+          background-image: none !important;
+          position: relative;
       }
 
       table.dataTable thead .sorting:before,
@@ -437,13 +438,33 @@ if (!$logged_in_user) {
       table.dataTable thead .sorting_asc:before,
       table.dataTable thead .sorting_asc:after,
       table.dataTable thead .sorting_desc:before,
-      table.dataTable thead .sorting_desc:after,
-      table.dataTable thead .sorting_asc_disabled:before,
-      table.dataTable thead .sorting_asc_disabled:after,
-      table.dataTable thead .sorting_desc_disabled:before,
-      table.dataTable thead .sorting_desc_disabled:after {
-          display: none !important;
-          content: "" !important;
+      table.dataTable thead .sorting_desc:after {
+          position: absolute;
+          bottom: 14px;
+          display: block;
+          opacity: 0.3 !important;
+          font-size: 0.85em;
+          color: #ffffff !important;
+      }
+
+      table.dataTable thead .sorting:before,
+      table.dataTable thead .sorting_asc:before,
+      table.dataTable thead .sorting_desc:before {
+          right: 1.2em;
+          content: "\25B2" !important;
+      }
+
+      table.dataTable thead .sorting:after,
+      table.dataTable thead .sorting_asc:after,
+      table.dataTable thead .sorting_desc:after {
+          right: 0.4em;
+          content: "\25BC" !important;
+      }
+
+      table.dataTable thead .sorting_asc:before,
+      table.dataTable thead .sorting_desc:after {
+          opacity: 1 !important;
+          color: #4ade80 !important; /* Bright green for active state */
       }
 
       table.dataTable tbody,

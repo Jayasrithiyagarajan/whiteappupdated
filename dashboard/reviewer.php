@@ -20,7 +20,7 @@ $result_total_projects = mysqli_query($conn, "SELECT COUNT(*) AS total_projects 
 $total_projects = mysqli_fetch_assoc($result_total_projects)['total_projects'];
 
 // Query to get total pending reviews
-$result_pending_reviews = mysqli_query($conn, "SELECT COUNT(*) AS total_pending_reviews FROM project_info WHERE review_status = 'Pending'");
+$result_pending_reviews = mysqli_query($conn, "SELECT COUNT(*) AS total_pending_reviews FROM project_info p WHERE p.review_status = 'Pending' AND EXISTS (SELECT 1 FROM checklist_information c WHERE c.project_no = p.project_no) AND EXISTS (SELECT 1 FROM reports r WHERE r.project_no = p.project_no)");
 $total_pending_reviews = mysqli_fetch_assoc($result_pending_reviews)['total_pending_reviews'];
 
 // Query to get total completed reviews
@@ -28,14 +28,14 @@ $result_completed_reviews = mysqli_query($conn, "SELECT COUNT(*) AS total_comple
 $total_completed_reviews = mysqli_fetch_assoc($result_completed_reviews)['total_completed_reviews'];
 
 // Query to get recent projects requiring reviews
-$query_recent_reviews = "SELECT project_no, customer_name, review_status, creation_date FROM project_info WHERE review_status = 'Pending' ORDER BY creation_date DESC LIMIT 5";
+$query_recent_reviews = "SELECT p.project_no, p.customer_name, p.review_status, p.creation_date FROM project_info p WHERE p.review_status = 'Pending' AND EXISTS (SELECT 1 FROM checklist_information c WHERE c.project_no = p.project_no) AND EXISTS (SELECT 1 FROM reports r WHERE r.project_no = p.project_no) ORDER BY p.creation_date DESC LIMIT 5";
 $result_recent_reviews = mysqli_query($conn, $query_recent_reviews);
 
 // Fetch notifications for reviewers (notifications meant for any reviewer)
 $query_notifications = "SELECT id, project_no, customer_name, notification_message, created_at 
                         FROM project_notifications 
                         WHERE notification_message LIKE '%ready for reviewing%' 
-                        AND project_no IN (SELECT project_no FROM project_info WHERE review_status = 'Pending')
+                        AND project_no IN (SELECT p.project_no FROM project_info p WHERE p.review_status = 'Pending' AND EXISTS (SELECT 1 FROM checklist_information c WHERE c.project_no = p.project_no) AND EXISTS (SELECT 1 FROM reports r WHERE r.project_no = p.project_no))
                         ORDER BY created_at DESC";
 
 $result_notifications = mysqli_query($conn, $query_notifications);
@@ -1216,7 +1216,7 @@ if (isset($_POST['project_no'])) {
                             </thead>
                             <tbody>
                                 <?php
-                                $query_recent = "SELECT * FROM project_info ORDER BY creation_date DESC LIMIT 10";
+                                $query_recent = "SELECT p.* FROM project_info p WHERE p.review_status = 'Pending' AND EXISTS (SELECT 1 FROM checklist_information c WHERE c.project_no = p.project_no) AND EXISTS (SELECT 1 FROM reports r WHERE r.project_no = p.project_no) ORDER BY p.creation_date DESC LIMIT 10";
                                 $result_recent = mysqli_query($conn, $query_recent);
                                 while ($row = mysqli_fetch_assoc($result_recent)):
                                     $review_status = $row['review_status'];
