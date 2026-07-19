@@ -58,6 +58,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ";
             mysqli_query($conn, $update_project);
         }
+
+        // Handle Receiver Signature Image Upload
+        if (!empty($project_no) && isset($_FILES['receiver_sign']) && $_FILES['receiver_sign']['error'] === UPLOAD_ERR_OK) {
+            $upload_dir = '../uploads/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+            $file_tmp = $_FILES['receiver_sign']['tmp_name'];
+            $file_dest = $upload_dir . $project_no . '.png';
+            
+            // Move the uploaded file and overwrite the existing one
+            move_uploaded_file($file_tmp, $file_dest);
+        }
         
         header("Location: index.php"); // optionally redirect
     } else {

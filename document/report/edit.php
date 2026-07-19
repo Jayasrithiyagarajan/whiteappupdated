@@ -343,7 +343,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                 <button type="button" class="btn btn-outline-primary"><i class="icofont-list"></i> View List</button>
                             </a>
                         </div>
-                        <form action="update_report.php" method="POST" class="create-job-form">
+                        <form action="update_report.php" method="POST" class="create-job-form" enctype="multipart/form-data">
                             <input type="hidden" name="report_no" value="<?php echo $report_no; ?>">
                             <input type="hidden" name="project_no" value="<?php echo $project_no; ?>">
                             <div class="row">
@@ -470,6 +470,12 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                         min="1"
                                         required
                                     >
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="font-14 bold mb-2">Report Receiver Sign (Image)</label>
+                                    <input type="file" class="theme-input-style" name="receiver_sign" accept="image/*">
+                                    <small class="text-muted">Upload a new image to replace the current signature.</small>
                                 </div>
                                                                 </div>
                                 </div>

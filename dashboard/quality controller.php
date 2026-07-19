@@ -478,7 +478,7 @@ $urgent_res = mysqli_query($conn, $urgent_query);
         </div>
 
         <div class="row">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
                 <div class="modern-card animate-up" style="animation-delay: 0.1s">
                     <div class="stat-card-inner">
                         <div>
@@ -491,7 +491,7 @@ $urgent_res = mysqli_query($conn, $urgent_query);
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="modern-card animate-up" style="animation-delay: 0.2s">
                     <div class="stat-card-inner">
@@ -506,7 +506,7 @@ $urgent_res = mysqli_query($conn, $urgent_query);
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6 mb-4">
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
                 <div class="modern-card animate-up" style="animation-delay: 0.3s">
                     <div class="stat-card-inner">
                         <div>
@@ -519,7 +519,7 @@ $urgent_res = mysqli_query($conn, $urgent_query);
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="modern-card animate-up" style="animation-delay: 0.4s">
                     <div class="stat-card-inner">
@@ -656,7 +656,7 @@ $urgent_res = mysqli_query($conn, $urgent_query);
                             </thead>
                             <tbody>
                                 <?php
-                                $recent_query = "SELECT * FROM project_info ORDER BY creation_date DESC LIMIT 10";
+                                $recent_query = "SELECT * FROM project_info WHERE project_status = 'Pending' AND certificatestatus = 'Certificate Created' ORDER BY creation_date DESC LIMIT 10";
                                 $recent_res = mysqli_query($conn, $recent_query);
                                 while($row = mysqli_fetch_assoc($recent_res)): 
                                     $qc_status = $row['project_status'];
