@@ -133,7 +133,7 @@ if (!empty($projectId)) {
     ";
 
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssssssss", $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId);
+    $stmt->bind_param("ssssssssss", $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId, $projectId);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -354,7 +354,7 @@ endif; ?>
                 <div class="row">
                     <div class="label">Checklist:</div>
                     <div class="value">
-                    <a href="../document/checklist/preview.php?project_no=<?php echo htmlspecialchars($projectId); ?>" class="download-link">Download Checklist</a>
+                    <a href="../document/checklist/type/view/<?php echo htmlspecialchars($checklistType); ?>.php?checklist_type=<?php echo htmlspecialchars($checklistType); ?>&checklist_no=<?php echo htmlspecialchars($checklistNo); ?>" class="download-link" target="_blank">Download Checklist</a>
                     </div>
                 </div>
             <?php

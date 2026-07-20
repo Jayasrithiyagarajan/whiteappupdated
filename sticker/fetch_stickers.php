@@ -182,8 +182,14 @@ while ($row = $result->fetch_assoc()) {
         $downloadBtn = "<a href='download.php?sticker_start_no={$row['sticker_start_no']}' target='_blank' class='text-primary ml-1' title='Download'><i class='icofont-download'></i></a>";
     }
     
-    $actions = "<div class='d-flex align-items-center justify-content-center'>$downloadBtn 
-                <a href='delete-sticker.php?id={$row['sticker_start_no']}' onclick='return confirm(\"Delete this sticker?\");' class='text-danger ml-2'><i class='icofont-trash'></i></a></div>";
+    $deleteBtn = '';
+    if (empty($row['project_no'])) {
+        $deleteBtn = "<a href='delete-sticker.php?id={$row['sticker_start_no']}' onclick='return confirm(\"Delete this sticker?\");' class='text-danger ml-2'><i class='icofont-trash'></i></a>";
+    } else {
+        $deleteBtn = "<span class='text-muted ml-2' title='Cannot delete assigned sticker' style='cursor: not-allowed;'><i class='icofont-trash'></i></span>";
+    }
+    
+    $actions = "<div class='d-flex align-items-center justify-content-center'>$downloadBtn $deleteBtn</div>";
 
     $data[] = [
         "#" . $row['sticker_start_no'],
