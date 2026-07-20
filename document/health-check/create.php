@@ -10,7 +10,7 @@ if (isset($_GET['project_no']) && !empty($_GET['project_no'])) {
     SELECT 
         p.project_no, p.customer_name, p.customer_email, p.customer_mobile, p.inspector_name,
         c.checklist_no, c.inspection_date, c.crane_serial_no, c.capacity_swl, c.equipment_no, c.vessel_name, c.year_model,
-        r.report_no, r.manufacturer, r.type, r.model, r.next_inspection_due_date
+        r.report_no, r.jrn, r.manufacturer, r.type, r.model, r.next_inspection_due_date
     FROM 
         project_info p
     LEFT JOIN 
@@ -272,7 +272,7 @@ $newCertificateNo = "CHC-{$formattedNumber}-{$currentYear}-{$project_no}";
                                 <label class="font-14 bold">JRN</label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="text" class="theme-input-style" name="jrn" placeholder="JRN" required>
+                                <input type="text" class="theme-input-style" name="jrn" value="<?php echo htmlspecialchars($data['jrn'] ?? ''); ?>"  placeholder="JRN" required>
                             </div>
                         </div>
                         <div class="form-row mb-20">

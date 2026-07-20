@@ -9,7 +9,7 @@ if (isset($_GET['project_no']) && !empty($_GET['project_no'])) {
     SELECT 
         p.project_no, p.customer_name, p.customer_email, p.customer_mobile, p.inspector_name,
         c.checklist_no, c.inspection_date, c.crane_serial_no, c.capacity_swl,
-        r.report_no, r.sticker_number_issued, r.next_inspection_due_date,
+        r.report_no, r.jrn, r.sticker_number_issued, r.next_inspection_due_date,
         cu.city
     FROM 
         project_info p
