@@ -501,7 +501,7 @@ $currentYear = date('Y');
                                     <td><input type="text" class="theme-input-style" data-field="wll_swl" value="<?= htmlspecialchars($gear['wll_swl'] ?? '') ?>"></td>
                                     <td><input type="number" class="theme-input-style" data-field="qty" min="1" value="<?= htmlspecialchars($gear['qty'] ?? '') ?>"></td>
                                     <td><input type="text" class="theme-input-style" data-field="type" value="<?= htmlspecialchars($gear['type'] ?? '') ?>"></td>
-                                    <td><input type="date" class="theme-input-style" data-field="date_last_examination" value="<?= htmlspecialchars($gear['date_last_examination'] ?? '') ?>"></td>
+                                    <td><input type="text" class="theme-input-style" data-field="date_last_examination" value="<?= htmlspecialchars($gear['date_last_examination'] ?? '') ?>"></td>
                                     <td><textarea class="theme-input-style" data-field="test_details"><?= htmlspecialchars($gear['test_details'] ?? '') ?></textarea></td>
                                     <td>
                                         <select class="custom-select" data-field="status">

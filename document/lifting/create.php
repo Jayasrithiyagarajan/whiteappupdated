@@ -15,7 +15,7 @@ SELECT
     p.customer_email,
     p.customer_mobile,
     p.inspector_name,
-    r.report_no,
+    r.report_no, r.jrn,
     r.date_of_inspection,
     r.next_inspection_due_date,
     c.city
@@ -315,7 +315,7 @@ $today = date('Y-m-d');
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">JRN</label>
-                                <input type="text" name="jrn" class="theme-input-style" required>
+                                <input type="text" name="jrn" value="<?php echo htmlspecialchars($data['jrn'] ?? ''); ?>"  class="theme-input-style" required>
                             </div>
                         </div>
                         <div class="row">
@@ -480,7 +480,7 @@ $today = date('Y-m-d');
                                     <td><input type="text" class="theme-input-style" data-field="wll_swl"></td>
                                     <td><input type="number" class="theme-input-style" data-field="qty" min="1"></td>
                                     <td><input type="text" class="theme-input-style" data-field="type"></td>
-                                    <td><input type="date" class="theme-input-style" data-field="date_last_examination"></td>
+                                    <td><input type="text" class="theme-input-style" data-field="date_last_examination"></td>
                                     <td><textarea class="theme-input-style" data-field="test_details"></textarea></td>
                                     <td>
                                         <select class="custom-select" data-field="status">
