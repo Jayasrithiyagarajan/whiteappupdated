@@ -202,7 +202,7 @@ if ($stmt_leea) {
                 <td style="width: 20%; text-align: right;">
     <p style="font-size: 12px; margin: 0; text-align: right;">
         <b>Report No:</b> <?php echo htmlspecialchars($row['report_no']); ?><br>
-        <b>JRN No:</b> 
+        <b>JRN No: <?php echo htmlspecialchars($row['jrn']); ?></b> 
     </p>
     <img src="../../document/code.png" height="100px" alt="QR Code">
 </td>
