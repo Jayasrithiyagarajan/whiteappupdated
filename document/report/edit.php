@@ -13,7 +13,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
            p.project_no, p.creation_date, p.sticker_status, p.customer_name, p.equipment_location,
            p.inspector_name, p.checklist_type, p.equipment_id,
            r.report_no, r.model, r.type, r.prev_sticker_no, r.issued_company, 
-           r.next_inspection_due_date, r.deficiency, r.corrective_action, r.inspection_status, r.no_of_equipments_inspected
+           r.next_inspection_due_date, r.deficiency, r.corrective_action, r.inspection_status, r.no_of_equipments_inspected, r.jrn, r.capacity
     FROM checklist_information c
     JOIN project_info p ON c.project_no = p.project_no
     JOIN reports r ON r.project_no = p.project_no AND r.report_no = '$report_no'
@@ -32,7 +32,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
         $equipment_type = $row['equipment_type'];
         $inspection_date = $row['inspection_date'];
         $manufacturer = $row['manufacturer'];
-        $capacity_swl = $row['capacity_swl'];
+        $capacity_swl = (isset($row['capacity']) && $row['capacity'] !== '') ? $row['capacity'] : $row['capacity_swl'];
         $sticker_no = $row['sticker_no'];
         $crane_serial_no = $row['crane_serial_no'];
         $creation_date = $row['creation_date'];
@@ -50,6 +50,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
         $next_inspection_due_date = $row['next_inspection_due_date'];
         $inspection_status = $row['inspection_status'];
         $no_of_equipments_inspected = $row['no_of_equipments_inspected'];
+        $jrn = $row['jrn'];
         $deficiency = $row['deficiency'];
         $corrective_action = $row['corrective_action'];
         $report_no = $row['report_no'];
@@ -423,6 +424,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                     <label class="font-14 bold mb-2">Expiry Selection</label>
                                     <select class="theme-input-style" id="expiry_selection" name="expiry_selection">
                                         <option value="">Select Expiry Period</option>
+                                        <option value="3_months">3 Months</option>
                                         <option value="6_months">6 Months</option>
                                         <option value="1_year">1 Year</option>
                                         <option value="5_years">5 Years</option>
@@ -470,6 +472,11 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                         min="1"
                                         required
                                     >
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="font-14 bold mb-2">JRN</label>
+                                    <input type="text" class="theme-input-style" name="jrn" value="<?php echo htmlspecialchars($jrn ?? ''); ?>" placeholder="Enter JRN">
                                 </div>
                                 
                                 <div class="form-group">
@@ -533,7 +540,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (inspectionDateVal && expirySelectionVal) {
             const date = new Date(inspectionDateVal);
             if (!isNaN(date.getTime())) {
-                if (expirySelectionVal === '6_months') {
+                if (expirySelectionVal === '3_months') {
+                    date.setMonth(date.getMonth() + 3);
+                } else if (expirySelectionVal === '6_months') {
                     date.setMonth(date.getMonth() + 6);
                 } else if (expirySelectionVal === '1_year') {
                     date.setFullYear(date.getFullYear() + 1);

@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deficiency = mysqli_real_escape_string($conn, $_POST['deficiency']);
     $corrective_action = mysqli_real_escape_string($conn, $_POST['corrective_action']);
     $no_of_equipments_inspected = mysqli_real_escape_string($conn, $_POST['no_of_equipments_inspected']);
+    $jrn = isset($_POST['jrn']) ? mysqli_real_escape_string($conn, $_POST['jrn']) : '';
 
     $project_no = isset($_POST['project_no']) ? mysqli_real_escape_string($conn, $_POST['project_no']) : '';
     $manufacturer = isset($_POST['manufacturer']) ? mysqli_real_escape_string($conn, $_POST['manufacturer']) : '';
@@ -36,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             inspection_status = '$inspection_status',
             deficiency = '$deficiency',
             corrective_action = '$corrective_action',
-            no_of_equipments_inspected = '$no_of_equipments_inspected'
+            no_of_equipments_inspected = '$no_of_equipments_inspected',
+            jrn = '$jrn',
+            capacity = '$capacity_swl'
         WHERE report_no = '$report_no'
     ";
 
