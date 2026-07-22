@@ -417,6 +417,7 @@ if (isset($_GET['project_no'])) {
                     <label class="font-14 bold mb-2">Expiry Selection</label>
                     <select class="theme-input-style" id="expiry_selection" name="expiry_selection">
                         <option value="">Select Expiry Period</option>
+                        <option value="3_months">3 Months</option>
                         <option value="6_months">6 Months</option>
                         <option value="1_year">1 Year</option>
                         <option value="5_years">5 Years</option>
@@ -501,10 +502,10 @@ if (isset($_GET['project_no'])) {
               
 
 
-                <!--<div class="form-group">-->
-                <!--    <label class="font-14 bold mb-2">JRN</label>-->
-                <!--    <input type="text" class="theme-input-style" placeholder="Enter JRN" name="jrn">-->
-                <!--</div>-->
+                <div class="form-group">
+                    <label class="font-14 bold mb-2">JRN</label>
+                    <input type="text" class="theme-input-style" placeholder="Enter JRN" name="jrn">
+                </div>
 
                                                 </div>
                                 </div>
@@ -584,7 +585,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (inspectionDateVal && expirySelectionVal) {
             const date = new Date(inspectionDateVal);
             if (!isNaN(date.getTime())) {
-                if (expirySelectionVal === '6_months') {
+                if (expirySelectionVal === '3_months') {
+                    date.setMonth(date.getMonth() + 3);
+                } else if (expirySelectionVal === '6_months') {
                     date.setMonth(date.getMonth() + 6);
                 } else if (expirySelectionVal === '1_year') {
                     date.setFullYear(date.getFullYear() + 1);

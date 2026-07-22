@@ -7,7 +7,7 @@ include_once('../../file/config.php'); // Assuming your database connection is h
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $project_no = $_POST['project_no'];
-    // $jrn = $_POST['jrn'];
+    $jrn = $_POST['jrn'];
     $checklist_no = $_POST['checklist_no'];
     $report_no = $_POST['report_no'];   
     $issued_company = $_POST['issued_company'];
@@ -55,16 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $insertQuery = "INSERT INTO reports (
         project_no, checklist_no, report_no, issued_company, client_company_name, manufacturer, model, type, prev_sticker_no, issued_by, capacity, 
         equipment_id_no, equipment_serial_no, location, date_of_inspection, next_inspection_due_date, 
-        inspection_status, sticker_number_issued, no_of_equipments_inspected, created_at, deficiency, corrective_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        inspection_status, sticker_number_issued, no_of_equipments_inspected, created_at, deficiency, corrective_action, jrn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Prepare statement
     $stmt = $conn->prepare($insertQuery);
 
     // Bind parameters
-    $stmt->bind_param("ssssssssssssssssssssss", 
+    $stmt->bind_param("sssssssssssssssssssssss", 
         $project_no, $checklist_no, $report_no, $issued_company, $client_company_name, $manufacturer, $model, $type, $prev_sticker_no, $issued_by, $capacity,
         $equipment_id_no, $equipment_serial_no, $location, $date_of_inspection, $next_inspection_due_date, 
-        $inspection_status, $sticker_number_issued, $no_of_equipments_inspected, $created_at, $deficiency, $corrective_action);
+        $inspection_status, $sticker_number_issued, $no_of_equipments_inspected, $created_at, $deficiency, $corrective_action, $jrn);
 
     // Execute statement and check for errors
     if ($stmt->execute()) {

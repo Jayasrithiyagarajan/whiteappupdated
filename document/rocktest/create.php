@@ -10,7 +10,7 @@ if (isset($_GET['project_no']) && !empty($_GET['project_no'])) {
     SELECT 
         p.project_no, p.customer_name, p.customer_email, p.customer_mobile, p.inspector_name, p.equipment_location,
         c.checklist_no, c.inspection_date, c.crane_serial_no, c.capacity_swl, c.equipmenttype,
-        r.report_no, r.date_of_inspection, r.next_inspection_due_date, r.manufacturer, r.model
+        r.report_no, r.jrn, r.date_of_inspection, r.next_inspection_due_date, r.manufacturer, r.model
     FROM 
         project_info p
     LEFT JOIN 
