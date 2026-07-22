@@ -15,7 +15,7 @@ SELECT
     p.customer_name,
     p.equipment_location,
     p.inspector_name,
-    r.report_no,
+    r.report_no, r.jrn,
     r.date_of_inspection,
     r.next_inspection_due_date,
     r.manufacturer,
