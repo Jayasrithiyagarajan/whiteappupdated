@@ -8,7 +8,7 @@ if (isset($_GET['project_no']) && !empty($_GET['project_no'])) {
     SELECT 
         p.project_no, p.customer_name, p.customer_email, p.customer_mobile, p.inspector_name,
         c.checklist_no, c.inspection_date, c.crane_serial_no, c.capacity_swl, c.model_no, c.manufacturer, c.equipment_no, c.equipmenttype, c.year_model,
-        r.report_no, r.sticker_number_issued, r.location, r.date_of_inspection, r.prev_sticker_no, r.next_inspection_due_date
+        r.report_no, r.jrn, r.sticker_number_issued, r.location, r.date_of_inspection, r.prev_sticker_no, r.next_inspection_due_date
     FROM 
         project_info p
     LEFT JOIN 
@@ -380,7 +380,7 @@ if (isset($_GET['project_no']) && !empty($_GET['project_no'])) {
                         </div>
                         <div class="form-row">
                             <label>JRN</label>
-                            <input type="text" class="theme-input-style" placeholder="Enter JRN" name="jrn" required>
+                            <input type="text" class="theme-input-style" placeholder="Enter JRN" name="jrn" value="<?php echo htmlspecialchars($data['jrn'] ?? ''); ?>"  required>
                         </div>
                         <div class="form-row">
                             <label>Common Text Area</label>

@@ -15,7 +15,7 @@ $stmt = $conn->prepare("
         p.customer_email,
         p.customer_mobile,
         p.inspector_name,
-        r.report_no,
+        r.report_no, r.jrn,
         r.location,
         r.date_of_inspection,
         r.next_inspection_due_date,
@@ -263,7 +263,7 @@ $year = date('Y');
                     </div>
                     <div class="col-md-3">
                         <label>JRN</label>
-                        <input type="text" name="jrn" class="theme-input-style" placeholder="Enter JRN" required>
+                        <input type="text" name="jrn" value="<?php echo htmlspecialchars($data['jrn'] ?? ''); ?>"  class="theme-input-style" placeholder="Enter JRN" required>
                     </div>
                     <div class="col-md-3">
                         <label>Project No</label>

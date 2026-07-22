@@ -1209,6 +1209,7 @@ if (isset($_POST['project_no'])) {
                                 <tr>
                                     <th>Project ID</th>
                                     <th>Customer</th>
+                                    <th>Inspector</th>
                                     <th>Start Date</th>
                                     <th>Review Status</th>
                                     <th>Action</th>
@@ -1226,6 +1227,9 @@ if (isset($_POST['project_no'])) {
                                         <td class="font-weight-bold">#<?php echo str_pad($row['project_no'], 5, "0", STR_PAD_LEFT); ?></td>
                                         <td>
                                             <div class="font-weight-600 text-dark"><?php echo htmlspecialchars($row['customer_name']); ?></div>
+                                        </td>
+                                        <td>
+                                            <div class="font-weight-600 text-dark"><?php echo htmlspecialchars($row['inspector_name']); ?></div>
                                         </td>
                                         <td>
                                             <div class="small text-muted"><?php echo date('d M Y', strtotime($row['creation_date'])); ?></div>
