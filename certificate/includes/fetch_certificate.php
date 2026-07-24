@@ -26,12 +26,13 @@ $photo_stmt->bind_param("i", $assessment_id);
 $photo_stmt->execute();
 $photo = $photo_stmt->get_result()->fetch_assoc();
 
-$base_url = 'http://localhost/whiteappupdated/';
-$photo_path = $base_url . 'assets/img/avatar/avatar-1.png';
+$photo_path = abs_path(__DIR__ . '/../../assets/img/avatar/avatar-1.png');
 if ($photo && !empty($photo['file_path'])) {
-    $fp = $photo['file_path'];
-    if (strpos($fp, '../') === 0) $fp = substr($fp, 3);
-    $photo_path = $base_url . $fp;
+    $fp = str_replace('../', '', $photo['file_path']);
+    $local_fp = abs_path(__DIR__ . '/../../' . $fp);
+    if ($local_fp && file_exists($local_fp)) {
+        $photo_path = $local_fp;
+    }
 }
 
 $equipment = require __DIR__.'/fetch_equipment.php';
@@ -63,6 +64,8 @@ if (!empty($assessment['date_of_assessment']) && !empty($assessment['date_of_exp
     }
 }
 
+$qr_path = abs_path(__DIR__.'/../../document/operatorcode.png');
+
 return [
     'certificate_no'      => $assessment['assessment_no'] ?? '',
     'validation_no'       => $assessment['assessment_no'] ?? '',
@@ -77,11 +80,11 @@ return [
     'issue_date'          => $issue_date,
     'expiry_date'         => $expiry_date,
     'validity'            => $validity,
-    'qr'                  => abs_path(__DIR__.'/../../document/code.png'),
+    'qr'                  => $qr_path,
     'signatures'          => $signatures,
     'equipment'           => $equipment,
     'vessel_location'     => 'AL-KHOBAR, SAUDI ARABIA', // Adjust from db if exists
     'renewal_due'         => 'Before ' . $expiry_date,
-    'verify_url'          => 'verify.cims-global.org',
+    'verify_url'          => 'https://appcims.com/whiteapp/certificate/verify.php?cert=' . ($assessment['assessment_no'] ?? ''),
     'generated_at'        => date('Y-m-d H:i:s')
 ];

@@ -22,7 +22,6 @@ if (isset($_POST['save_data_lifting'])) {
         $created_at            = date('Y-m-d H:i:s');
 
         /* ================= SINGLE COMMON FIELDS ================= */
-        $applicable_standards     = $_POST['applicable_standards'];
         $employer_name_address    = $_POST['employer_name_address'];
         $address_of_premises      = $_POST['address_of_premises'];
         $next_examination_date    = $_POST['next_examination_date'];
@@ -46,6 +45,7 @@ if (isset($_POST['save_data_lifting'])) {
             $wll_swl               = $_POST['wll_swl'] ?? [];
             $qty                   = $_POST['qty'] ?? [];
             $type                  = $_POST['type'] ?? [];
+            $applicable_standards  = $_POST['applicable_standards'] ?? [];
             $date_last_examination = $_POST['date_last_examination'] ?? [];
             $description           = $_POST['description'] ?? [];
             $test_details          = $_POST['test_details'] ?? [];
@@ -59,6 +59,7 @@ if (isset($_POST['save_data_lifting'])) {
                     'wll_swl' => $wll_swl[$index] ?? '',
                     'qty' => $qty[$index] ?? '',
                     'type' => $type[$index] ?? '',
+                    'applicable_standards' => $applicable_standards[$index] ?? '',
                     'date_last_examination' => $date_last_examination[$index] ?? '',
                     'description' => $description[$index] ?? '',
                     'test_details' => $test_details[$index] ?? '',
@@ -118,6 +119,8 @@ if (isset($_POST['save_data_lifting'])) {
                 throw new Exception("Certificate number missing in one or more rows.");
             }
 
+            $rowApplicableStandards = $row['applicable_standards'] ?? '';
+
             $stmt->bind_param(
                 "ssssssssssssssssssssssssssss",
                 $date_of_report,
@@ -134,7 +137,7 @@ if (isset($_POST['save_data_lifting'])) {
                 $quality_controller,
                 $created_at,
                 $employer_name_address,
-                $applicable_standards,
+                $rowApplicableStandards,
                 $row['identification_no'],
                 $row['wll_swl'],
                 $row['qty'],

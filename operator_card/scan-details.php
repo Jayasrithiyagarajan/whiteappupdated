@@ -33,6 +33,11 @@ if (!$card) {
     die("Verification details not found. The assessment might be incomplete or the card ID is invalid.");
 }
 
+if (!empty($card['certificate_no'])) {
+    header("Location: ../certificate/verify.php?cert=" . urlencode($card['certificate_no']));
+    exit;
+}
+
 // Adjust photo path if needed
 $photo_path = $card['photo_path'];
 if (strpos($photo_path, '../') === 0) {

@@ -9,6 +9,7 @@ $url = 'http://localhost/whiteappupdated/'; // Fallback URL
 $sql = "SELECT 
             oa.operator_name,
             oa.assessment_no as certificate_no,
+            oa.training_program as training_program,
             oa.operator_id_passport as id_iqama,
             c.customer_name as company,
             oa.date_of_assessment as issue_date,
@@ -254,6 +255,10 @@ $equipment = $equipment_list;
             font-weight: 800 !important;
         }
 
+        .back-card .id-body {
+            padding: 10px 25px 0 25px;
+        }
+
         .header-right {
             font-size: 20px;
             font-weight: 800 !important;
@@ -262,50 +267,56 @@ $equipment = $equipment_list;
 
         .equipment-box {
             border: 2px solid #062b63;
-            border-radius: 12px;
+            border-radius: 10px;
             background: rgba(255, 255, 255, 0.92);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             overflow: hidden;
         }
 
         .equipment-title {
             background: #062b63;
             color: #ffffff;
-            font-size: 13.5px;
+            font-size: 14.5px;
             font-weight: 700;
-            padding: 8px 15px;
+            padding: 6px 12px;
             text-align: center;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            border-radius: 10px 10px 0 0;
         }
 
         .equipment-list {
-            padding: 8px;
+            padding: 4px;
         }
 
         .equipment-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11.5px;
         }
 
         .equipment-table th {
             background: rgba(240, 244, 248, 0.85);
             color: #062b63;
             text-align: left;
-            padding: 6px 10px;
+            padding: 6px 8px;
             border: 1px solid #d6dce6;
             text-transform: uppercase;
             font-weight: 700;
-            font-size: 10px;
+            font-size: 12px;
+            vertical-align: middle;
+            line-height: 1.35;
         }
 
         .equipment-table td {
-            padding: 5px 10px;
+            padding: 6px 8px;
             border: 1px solid #d6dce6;
-            color: #333;
-            line-height: 1.2;
+            color: #111;
+            font-weight: 600;
+            font-size: 13px;
+            line-height: 1.45;
+            vertical-align: middle;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
 
         .equipment-table tr:nth-child(even) {
@@ -313,13 +324,18 @@ $equipment = $equipment_list;
         }
 
         .center-text {
-            font-size: 12.5px;
-            line-height: 1.4;
+            position: absolute;
+            bottom: 135px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.35;
             text-align: center;
-            color: #222;
-            padding: 0 40px;
-            margin-bottom: 25px;
-            position: relative;
+            color: #111;
+            padding: 0 35px;
+            box-sizing: border-box;
             z-index: 2;
         }
 
@@ -356,8 +372,9 @@ $equipment = $equipment_list;
         .footer-text {
             flex: 1;
             padding: 0 25px;
-            font-size: 13px;
-            line-height: 1.4;
+            font-size: 13.5px;
+            font-weight: 700;
+            line-height: 1.45;
             text-align: center;
         }
 
@@ -365,11 +382,11 @@ $equipment = $equipment_list;
             /* color: #ffcc00; */
             color: #ffffff; /* White color */
             margin-right: 4px;
-            font-size: 12.5px;
+            font-size: 13px;
         }
 
         .footer-text strong {
-            font-size: 13.5px;
+            font-size: 15.5px;
             letter-spacing: 0.3px;
         }
 
@@ -437,10 +454,13 @@ $equipment = $equipment_list;
             .header-title         { font-size: 16px !important; letter-spacing: 0.4px !important; }
             .company-name         { font-size: 19px !important; text-shadow: none !important; }
             .division-name        { font-size: 11px !important; }
-            .equipment-title      { font-size: 14px !important; }
-            .equipment-item       { font-size: 13px !important; }
-            .center-text          { font-size: 13px !important; }
-            .footer-text          { font-size: 12px !important; }
+            .equipment-title      { font-size: 16px !important; }
+            .equipment-table th   { font-size: 13px !important; }
+            .equipment-table td   { font-size: 14px !important; font-weight: 600 !important; line-height: 1.45 !important; word-break: break-word !important; }
+            .equipment-item       { font-size: 14px !important; }
+            .center-text          { font-size: 14px !important; position: absolute !important; bottom: 135px !important; left: 0 !important; right: 0 !important; width: 100% !important; text-align: center !important; }
+            .footer-text          { font-size: 13.5px !important; font-weight: 700 !important; }
+            .footer-text strong   { font-size: 15.5px !important; }
             .id-footer            { font-size: 15px !important; font-weight: 700 !important; }
         }
     </style>
@@ -528,7 +548,7 @@ $equipment = $equipment_list;
 
         <!-- FOOTER -->
         <div class="id-footer">
-            <div class="text-center" style="text-transform: uppercase; font-weight: bold;"><?= htmlspecialchars($card['operator_designation']); ?></div>
+            <div class="text-center" style="text-transform: uppercase; font-weight: bold;"><?= htmlspecialchars($card['training_program']); ?> OPERATOR</div>
         </div>
     </div>
 
@@ -543,7 +563,7 @@ $equipment = $equipment_list;
         <div class="id-header" style="font-weight: bold;">
             <div>Cert. No. <?= htmlspecialchars($card['certificate_no']); ?></div>
             <div class="header-right">
-                <?= htmlspecialchars($card['operator_designation']); ?>
+                <?= htmlspecialchars($card['training_program']); ?> OPERATOR
             </div>
         </div>
 
@@ -578,16 +598,16 @@ $equipment = $equipment_list;
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
 
-        <!-- NOTE -->
-        <div class="center-text" style="margin-top: -25px;">
-            This certification card issued hereto remains a property of
-            <strong>Crane Inspection &amp; Maintenance Services (CIMS)</strong>.
-            If either lost or expired, please notify or return it respectively
-            to the address written here below.
+            <!-- NOTE -->
+            
         </div>
-
+<div class="center-text">
+                This certification card issued hereto remains a property of
+                <strong>Crane Inspection &amp; Maintenance Services (CIMS)</strong>.
+                If either lost or expired, please notify or return it respectively
+                to the address written here below.
+            </div>
         <!-- FOOTER -->
         <div class="id-footer-back">
             <div class="footer-content">
@@ -601,7 +621,7 @@ $equipment = $equipment_list;
                 </div> -->
 
                 <div class="footer-text">
-    <strong style="color: #fff; font-size: 14.5px;">
+    <strong style="color: #fff; font-size: 15.5px;">
         CRANE INSPECTION AND MAINTENANCE SERVICES
     </strong><br>
 
@@ -620,8 +640,8 @@ $equipment = $equipment_list;
 
     
 </div>
-                <!-- Adjust QR to link to this card -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= $url . 'operator_card/scan-details.php?id=' . $id; ?>" alt="QR Code" class="footer-img">
+                <!-- Adjust QR to link to verification page -->
+                <img src="https://quickchart.io/qr?text=<?= urlencode('https://appcims.com/whiteapp/certificate/verify.php?cert=' . ($card['certificate_no'] ?? '')) ?>&size=150" alt="QR Code" class="footer-img">
             </div>
         </div>
     </div>

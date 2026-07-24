@@ -273,11 +273,12 @@ $currentYear = date('Y');
     #certificateTable th:nth-child(5), #certificateTable td:nth-child(5) { min-width: 120px; } /* WLL/SWL */
     #certificateTable th:nth-child(6), #certificateTable td:nth-child(6) { min-width: 80px; }  /* Qty */
     #certificateTable th:nth-child(7), #certificateTable td:nth-child(7) { min-width: 150px; } /* Type */
-    #certificateTable th:nth-child(8), #certificateTable td:nth-child(8) { min-width: 160px; } /* Date Last Exam */
-    #certificateTable th:nth-child(9), #certificateTable td:nth-child(9) { min-width: 280px; } /* Test Details */
-    #certificateTable th:nth-child(10), #certificateTable td:nth-child(10) { min-width: 100px; } /* Status */
-    #certificateTable th:nth-child(11), #certificateTable td:nth-child(11) { min-width: 100px; } /* Safe */
-    #certificateTable th:nth-child(12), #certificateTable td:nth-child(12) { min-width: 80px; }  /* Action */
+    #certificateTable th:nth-child(8), #certificateTable td:nth-child(8) { min-width: 160px; } /* Applicable Standards */
+    #certificateTable th:nth-child(9), #certificateTable td:nth-child(9) { min-width: 160px; } /* Date Last Exam */
+    #certificateTable th:nth-child(10), #certificateTable td:nth-child(10) { min-width: 280px; } /* Test Details */
+    #certificateTable th:nth-child(11), #certificateTable td:nth-child(11) { min-width: 100px; } /* Status */
+    #certificateTable th:nth-child(12), #certificateTable td:nth-child(12) { min-width: 100px; } /* Safe */
+    #certificateTable th:nth-child(13), #certificateTable td:nth-child(13) { min-width: 80px; }  /* Action */
 
     /* Make textareas and inputs take full width of cell */
     #certificateTable .theme-input-style, 
@@ -339,20 +340,9 @@ $currentYear = date('Y');
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label class="form-label">Color Code</label>
                                 <input type="text" name="color_code" class="theme-input-style" value="<?= htmlspecialchars($firstCertificate['color_code'] ?? '') ?>" placeholder="Optional">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Applicable Standards</label>
-                                <select name="applicable_standards" class="custom-select" required>
-                                    <option value="">Select standard</option>
-                                    <option value="ASME B30.9" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.9' ? 'selected' : '' ?>>ASME B30.9</option>
-                                    <option value="ASME B30.26" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.26' ? 'selected' : '' ?>>ASME B30.26</option>
-                                    <option value="ASME B30.20" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.20' ? 'selected' : '' ?>>ASME B30.20</option>
-                                    <option value="ASME B30.10" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.10' ? 'selected' : '' ?>>ASME B30.10</option>
-                                    <option value="ASME B30.30" <?= ($firstCertificate['applicable_standards'] ?? '') === 'ASME B30.30' ? 'selected' : '' ?>>ASME B30.30</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -481,6 +471,7 @@ $currentYear = date('Y');
                                     <th>WLL/SWL</th>
                                     <th>Qty</th>
                                     <th>Type</th>
+                                    <th>Applicable Standards</th>
                                     <th>Date Last Exam</th>
                                     <th>Test Details</th>
                                     <th>Status</th>
@@ -501,6 +492,16 @@ $currentYear = date('Y');
                                     <td><input type="text" class="theme-input-style" data-field="wll_swl" value="<?= htmlspecialchars($gear['wll_swl'] ?? '') ?>"></td>
                                     <td><input type="number" class="theme-input-style" data-field="qty" min="1" value="<?= htmlspecialchars($gear['qty'] ?? '') ?>"></td>
                                     <td><input type="text" class="theme-input-style" data-field="type" value="<?= htmlspecialchars($gear['type'] ?? '') ?>"></td>
+                                    <td>
+                                        <select class="custom-select" data-field="applicable_standards">
+                                            <option value="">Select standard</option>
+                                            <option value="ASME B30.9" <?= ($gear['applicable_standards'] ?? '') === 'ASME B30.9' ? 'selected' : '' ?>>ASME B30.9</option>
+                                            <option value="ASME B30.26" <?= ($gear['applicable_standards'] ?? '') === 'ASME B30.26' ? 'selected' : '' ?>>ASME B30.26</option>
+                                            <option value="ASME B30.20" <?= ($gear['applicable_standards'] ?? '') === 'ASME B30.20' ? 'selected' : '' ?>>ASME B30.20</option>
+                                            <option value="ASME B30.10" <?= ($gear['applicable_standards'] ?? '') === 'ASME B30.10' ? 'selected' : '' ?>>ASME B30.10</option>
+                                            <option value="ASME B30.30" <?= ($gear['applicable_standards'] ?? '') === 'ASME B30.30' ? 'selected' : '' ?>>ASME B30.30</option>
+                                        </select>
+                                    </td>
                                     <td><input type="text" class="theme-input-style" data-field="date_last_examination" value="<?= htmlspecialchars($gear['date_last_examination'] ?? '') ?>"></td>
                                     <td><textarea class="theme-input-style" data-field="test_details"><?= htmlspecialchars($gear['test_details'] ?? '') ?></textarea></td>
                                     <td>

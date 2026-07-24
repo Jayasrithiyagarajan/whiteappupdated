@@ -1,5 +1,5 @@
 <?php
-$bg_img = abs_path(__DIR__.'/../../document/bg.jpg'); // New portrait bg.jpg
+$bg_img = abs_path(__DIR__.'/../../document/bg.jpeg'); // New portrait bg.jpg
 if (!file_exists($bg_img)) $bg_img = abs_path(__DIR__.'/../../document/bg.png'); // Fallback
 ?>
 <!DOCTYPE html><html><head><meta charset="UTF-8">
@@ -18,12 +18,15 @@ body { font-family: 'poppins', sans-serif; font-size: 10pt; color: #002B5B; }
 <!-- DYNAMIC CONTENT: MUST BE DIRECT CHILDREN OF BODY FOR MPDF ABSOLUTE POSITIONING -->
 
 <!-- QR & Cert No -->
-<img src="<?= $certificate['qr'] ?>" style="position:absolute; left: 19.5mm; top: 76.5mm; width: 28mm; height: 28mm;" alt="QR">
-<div class="val" style="position:absolute; left: 27mm; top: 120.3mm; font-size: 7pt; width:30mm; text-align:left;"><?= htmlspecialchars($certificate['certificate_no']) ?></div>
+<div style="position:absolute; left: 15.5mm; top: 78.5mm; width: 29mm; height: 29mm;">
+    <img src="<?= $certificate['qr'] ?>" style="width: 100%; height: 100%; display: block;" alt="QR">
+</div>
+<div class="val" style="position:absolute; left: 28mm; top: 120.3mm; font-size: 6pt; width: 18mm; text-align: left; white-space: nowrap;"><?= htmlspecialchars($certificate['certificate_no']) ?></div>
 
 <!-- Photo -->
 <?php if (!empty($certificate['photo'])): ?>
-<div style="position:absolute; left: 163mm; top: 80mm; width: 34mm; height: 44mm; background-image: url('<?= $certificate['photo'] ?>'); background-position: center center; background-repeat: no-repeat; background-image-resize: 4;">
+<div style="position:absolute; left: 162mm; top: 78mm; width: 35mm; height: 44mm; text-align: center;">
+    <img src="<?= $certificate['photo'] ?>" style="max-width: 35mm; max-height: 44mm; margin: 0 auto; display: block;" alt="Photo">
 </div>
 <?php endif; ?>
 

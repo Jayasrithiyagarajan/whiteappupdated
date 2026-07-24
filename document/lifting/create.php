@@ -254,11 +254,12 @@ $today = date('Y-m-d');
     #certificateTable th:nth-child(5), #certificateTable td:nth-child(5) { min-width: 120px; } /* WLL/SWL */
     #certificateTable th:nth-child(6), #certificateTable td:nth-child(6) { min-width: 80px; }  /* Qty */
     #certificateTable th:nth-child(7), #certificateTable td:nth-child(7) { min-width: 150px; } /* Type */
-    #certificateTable th:nth-child(8), #certificateTable td:nth-child(8) { min-width: 160px; } /* Date Last Exam */
-    #certificateTable th:nth-child(9), #certificateTable td:nth-child(9) { min-width: 280px; } /* Test Details */
-    #certificateTable th:nth-child(10), #certificateTable td:nth-child(10) { min-width: 100px; } /* Status */
-    #certificateTable th:nth-child(11), #certificateTable td:nth-child(11) { min-width: 100px; } /* Safe */
-    #certificateTable th:nth-child(12), #certificateTable td:nth-child(12) { min-width: 80px; }  /* Action */
+    #certificateTable th:nth-child(8), #certificateTable td:nth-child(8) { min-width: 160px; } /* Applicable Standards */
+    #certificateTable th:nth-child(9), #certificateTable td:nth-child(9) { min-width: 160px; } /* Date Last Exam */
+    #certificateTable th:nth-child(10), #certificateTable td:nth-child(10) { min-width: 280px; } /* Test Details */
+    #certificateTable th:nth-child(11), #certificateTable td:nth-child(11) { min-width: 100px; } /* Status */
+    #certificateTable th:nth-child(12), #certificateTable td:nth-child(12) { min-width: 100px; } /* Safe */
+    #certificateTable th:nth-child(13), #certificateTable td:nth-child(13) { min-width: 80px; }  /* Action */
 
     /* Make textareas and inputs take full width of cell */
     #certificateTable .theme-input-style, 
@@ -319,20 +320,9 @@ $today = date('Y-m-d');
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label class="form-label">Color Code</label>
                                 <input type="text" name="color_code" class="theme-input-style" placeholder="Optional">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Applicable Standards</label>
-                                <select name="applicable_standards" class="custom-select" required>
-                                    <option value="">Select standard</option>
-                                    <option value="ASME B30.9">ASME B30.9</option>
-                                    <option value="ASME B30.26">ASME B30.26</option>
-                                    <option value="ASME B30.20">ASME B30.20</option>
-                                    <option value="ASME B30.10">ASME B30.10</option>
-                                    <option value="ASME B30.30">ASME B30.30</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -461,6 +451,7 @@ $today = date('Y-m-d');
                                     <th>WLL/SWL</th>
                                     <th>Qty</th>
                                     <th>Type</th>
+                                    <th>Applicable Standards</th>
                                     <th>Date Last Exam</th>
                                     <th>Test Details</th>
                                     <th>Status</th>
@@ -480,6 +471,16 @@ $today = date('Y-m-d');
                                     <td><input type="text" class="theme-input-style" data-field="wll_swl"></td>
                                     <td><input type="number" class="theme-input-style" data-field="qty" min="1"></td>
                                     <td><input type="text" class="theme-input-style" data-field="type"></td>
+                                    <td>
+                                        <select class="custom-select" data-field="applicable_standards" required>
+                                            <option value="">Select standard</option>
+                                            <option value="ASME B30.9">ASME B30.9</option>
+                                            <option value="ASME B30.26">ASME B30.26</option>
+                                            <option value="ASME B30.20">ASME B30.20</option>
+                                            <option value="ASME B30.10">ASME B30.10</option>
+                                            <option value="ASME B30.30">ASME B30.30</option>
+                                        </select>
+                                    </td>
                                     <td><input type="text" class="theme-input-style" data-field="date_last_examination"></td>
                                     <td><textarea class="theme-input-style" data-field="test_details"></textarea></td>
                                     <td>

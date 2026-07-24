@@ -22,7 +22,6 @@ try {
     $customer_email = $_POST['customer_email'];
     $technical_manager = $_POST['technical_manager'];
     $quality_controller = $_POST['quality_controller'];
-    $applicable_standards = $_POST['applicable_standards'];
     $employer_name_address = $_POST['employer_name_address'];
     $address_of_premises = $_POST['address_of_premises'];
     $next_examination_date = $_POST['next_examination_date'];
@@ -45,6 +44,7 @@ try {
         $wll_swls = $_POST['wll_swl'] ?? [];
         $qtys = $_POST['qty'] ?? [];
         $types = $_POST['type'] ?? [];
+        $applicable_standards = $_POST['applicable_standards'] ?? [];
         $date_last_examinations = $_POST['date_last_examination'] ?? [];
         $descriptions = $_POST['description'] ?? [];
         $test_detailss = $_POST['test_details'] ?? [];
@@ -58,6 +58,7 @@ try {
                 'wll_swl' => $wll_swls[$index] ?? '',
                 'qty' => $qtys[$index] ?? '',
                 'type' => $types[$index] ?? '',
+                'applicable_standards' => $applicable_standards[$index] ?? '',
                 'date_last_examination' => $date_last_examinations[$index] ?? '',
                 'description' => $descriptions[$index] ?? '',
                 'test_details' => $test_detailss[$index] ?? '',
@@ -120,6 +121,8 @@ try {
             throw new Exception("Certificate number missing in one or more rows.");
         }
 
+        $rowApplicableStandards = $row['applicable_standards'] ?? '';
+
         $insertStmt->bind_param(
             "sssssssssssssssssssssssssss",
             $project_no,
@@ -141,7 +144,7 @@ try {
             $inspector,
             $mobile,
             $color_code,
-            $applicable_standards,
+            $rowApplicableStandards,
             $report_no,
             $date_of_report,
             $jrn,

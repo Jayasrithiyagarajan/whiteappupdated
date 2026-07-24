@@ -369,7 +369,7 @@ if ($checklistResult && $checklistResult->num_rows > 0) {
                                     
                                     <div class="form-group">
                                         <label class="font-14 bold mb-2">LOCATION</label>
-                                        <input type="text" name="location" class="theme-input-style" value="<?php echo htmlspecialchars($location); ?>" readonly>
+                                        <input type="text" name="location" class="theme-input-style" value="<?php echo htmlspecialchars($location); ?>">
                                     </div>
                                     
                                     <div class="form-group">

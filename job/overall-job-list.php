@@ -475,6 +475,15 @@ if (!$logged_in_user) {
           max-width: 130px !important;
       }
 
+      table.dataTable thead th:nth-child(5),
+      table.dataTable tbody td:nth-child(5) {
+          min-width: 140px !important;
+          max-width: 200px !important;
+          white-space: normal !important;
+          word-break: normal !important;
+          overflow-wrap: break-word !important;
+      }
+
       table.dataTable tbody td:nth-child(4),
       table.dataTable tbody td:nth-child(8) {
           white-space: normal !important;
@@ -714,19 +723,19 @@ if (!$logged_in_user) {
                         <th>Date</th>
                         <th>Progress</th>
                         <th>Action</th>
+                        <th>Equip. ID</th>
+                        <th>Checklist Name</th>
+                        <th>Sticker No</th>
+                        <th>Equip. Type</th>
+                        <th>Location</th>
                         <th>Checklist</th>
                         <th>Report</th>
                         <th>Reviewer</th>
                         <th>Certificate</th>
                         <th>Customer</th>
                         <th>Status</th>
-                        <th>Equip.ID</th>
-                        <th>Checklist Name</th>
-                        <th>Sticker No</th>
                         <th>Certificate Type</th>
                         <th>Inspection Type</th>
-                        <th>Equip.Type</th>
-                        <th>Location</th>
                         <th>Inspector</th>
                         <th>Action</th>
                     </tr>
@@ -800,7 +809,7 @@ $(document).ready(function() {
         ],
 
         columnDefs: [
-            { targets: -1, orderable: false }
+            { targets: [3, -1], orderable: false }
         ],
 
         initComplete: function() {

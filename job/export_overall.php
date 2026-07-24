@@ -121,7 +121,7 @@ header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="overall_jobs_'.date('Y-m-d_H-i-s').'.csv"');
 
 $output = fopen('php://output', 'w');
-fputcsv($output, array('Project No', 'Date', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status', 'Customer', 'Project Status', 'Expiry Status', 'Sticker No', 'Checklist Type', 'Equipment Type', 'Equipment ID', 'Location', 'Inspector'));
+fputcsv($output, array('Project No', 'Date', 'Equipment ID', 'Checklist Type', 'Sticker No', 'Equipment Type', 'Location', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status', 'Customer', 'Project Status', 'Expiry Status', 'Inspector'));
 
 while($row = $result->fetch_assoc()) {
     
@@ -136,6 +136,11 @@ while($row = $result->fetch_assoc()) {
     fputcsv($output, array(
         $row['project_no'],
         $row['creation_date'],
+        $row['equipment_id'],
+        $row['checklist_type'],
+        $row['sticker_no'],
+        $row['equipment_type'],
+        $row['equipment_location'],
         $row['checklist_status'],
         $row['report_status'],
         $row['review_status'],
@@ -143,11 +148,6 @@ while($row = $result->fetch_assoc()) {
         $row['customer_name'],
         $row['project_status'],
         $expiryStr,
-        $row['sticker_no'],
-        $row['checklist_type'],
-        $row['equipment_type'],
-        $row['equipment_id'],
-        $row['equipment_location'],
         $row['inspector_name']
     ));
 }
