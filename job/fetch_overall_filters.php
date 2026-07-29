@@ -15,27 +15,48 @@ if (!in_array($role, ['admin', 'reviewer', 'quality controller', 'document contr
     }
 }
 
+$cacheKey = 'overall_filters_' . md5($role . '_' . $user);
+if (isset($_SESSION[$cacheKey]) && empty($_GET['refresh'])) {
+    echo $_SESSION[$cacheKey];
+    exit;
+}
+
 $inspectors = [];
 $res = $conn->query("SELECT DISTINCT inspector_name FROM project_info $where AND inspector_name IS NOT NULL AND inspector_name != '' ORDER BY inspector_name ASC");
-while($row = $res->fetch_assoc()){
-    $inspectors[] = $row['inspector_name'];
+if ($res) {
+    while($row = $res->fetch_assoc()){
+        $inspectors[] = $row['inspector_name'];
+    }
 }
 
 $clients = [];
 $res2 = $conn->query("SELECT DISTINCT customer_name FROM project_info $where AND customer_name IS NOT NULL AND customer_name != '' ORDER BY customer_name ASC");
-while($row = $res2->fetch_assoc()){
-    $clients[] = $row['customer_name'];
+if ($res2) {
+    while($row = $res2->fetch_assoc()){
+        $clients[] = $row['customer_name'];
+    }
 }
 
 $years = [];
-$res3 = $conn->query("SELECT DISTINCT YEAR(creation_date) as yr FROM project_info $where AND creation_date IS NOT NULL ORDER BY yr DESC");
-while($row = $res3->fetch_assoc()){
-    $years[] = $row['yr'];
+$res3 = $conn->query("SELECT MIN(creation_date) as min_d, MAX(creation_date) as max_d FROM project_info $where");
+if ($res3 && $row = $res3->fetch_assoc()) {
+    if (!empty($row['min_d']) && !empty($row['max_d'])) {
+        $minYear = (int)date('Y', strtotime($row['min_d']));
+        $maxYear = (int)date('Y', strtotime($row['max_d']));
+        for ($y = $maxYear; $y >= $minYear; $y--) {
+            $years[] = (string)$y;
+        }
+    } else {
+        $years[] = date('Y');
+    }
 }
 
-echo json_encode([
+$output = json_encode([
     'inspectors' => $inspectors,
     'clients' => $clients,
     'years' => $years
 ]);
+
+$_SESSION[$cacheKey] = $output;
+echo $output;
 ?>

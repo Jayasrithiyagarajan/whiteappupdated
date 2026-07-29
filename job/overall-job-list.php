@@ -34,7 +34,7 @@ if (!$logged_in_user) {
       }
 
       .overall-jobs-directory .container-fluid {
-          max-width: 1440px;
+          max-width: 100%;
       }
 
       .directory-hero {
@@ -484,6 +484,16 @@ if (!$logged_in_user) {
           overflow-wrap: break-word !important;
       }
 
+      table.dataTable thead th:nth-child(10),
+      table.dataTable tbody td:nth-child(10) {
+          width: 200px !important;
+          min-width: 200px !important;
+          max-width: 200px !important;
+          white-space: normal !important;
+          word-break: break-word !important;
+          overflow-wrap: break-word !important;
+      }
+
       table.dataTable tbody td:nth-child(4),
       table.dataTable tbody td:nth-child(8) {
           white-space: normal !important;
@@ -676,6 +686,7 @@ if (!$logged_in_user) {
             <div class="filter-item">
                 <label>Year</label>
                 <select id="filter-year">
+                    <option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
                     <option value="">All Years</option>
                 </select>
             </div>
@@ -728,16 +739,16 @@ if (!$logged_in_user) {
                         <th>Sticker No</th>
                         <th>Equip. Type</th>
                         <th>Location</th>
+                        <th>Customer</th>
+                        <th>Inspector</th>
+                        <th>Status</th>
+                        <th>Action</th>
                         <th>Checklist</th>
                         <th>Report</th>
                         <th>Reviewer</th>
                         <th>Certificate</th>
-                        <th>Customer</th>
-                        <th>Status</th>
                         <th>Certificate Type</th>
                         <th>Inspection Type</th>
-                        <th>Inspector</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -847,8 +858,11 @@ function loadFilters(){
             });
 
             var yearSelect = $('#filter-year');
+            var currentYear = '<?php echo date('Y'); ?>';
             res.years.forEach(function(y){
-                yearSelect.append('<option value="'+y+'">'+y+'</option>');
+                 if (y != currentYear) {
+                     yearSelect.append('<option value="'+y+'">'+y+'</option>');
+                 }
             });
         }
     });
@@ -880,7 +894,7 @@ function clearFilters(){
     $('#filter-client').val('');
     $('#filter-date-from').val('');
     $('#filter-date-to').val('');
-    $('#filter-year').val('');
+    $('#filter-year').val('<?php echo date('Y'); ?>');
     $('#status-filter').val('');
     $('#filter-expiry-status').val('');
     $('#job-search').val('');

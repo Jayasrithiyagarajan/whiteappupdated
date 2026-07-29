@@ -278,7 +278,7 @@ foreach ($projects as $row) {
     }
 
     // Action Details
-    $detailsBtn = "<a href='job-details.php?id={$row['project_no']}'><button type='button' class='btn btn-sm' style='padding: 6px 9px; font-size: 11px;'>Details <i class='icofont-arrow-right'></i></button></a>";
+    $detailsBtn = "<a href='job-details.php?id={$row['project_no']}' target='_blank'><button type='button' class='btn btn-sm' style='padding: 6px 9px; font-size: 11px;'>Details <i class='icofont-arrow-right'></i></button></a>";
 
     // Delete Button (Admin)
     $deleteBtn = "";
@@ -292,21 +292,21 @@ foreach ($projects as $row) {
         $date,
         $progressHtml,
         $detailsBtn,
-        $row['checklist_status'],
-        $row['report_status'],
-        $inspectionTypeMap[strtolower($row['inspection_type'] ?? '')] ?? ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A')),
-        $row['review_status'],
-        ucfirst($row['certificatestatus']),
-        $row['customer_name'],
-        $statusBtn . $expiryBadge,
         $row['equipment_id'],
         ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
         $row['sticker_no'] ?? 'N/A',
-        $certHtml,
         $row['equipment_type'],
         ucfirst($row['equipment_location']),
+        $row['customer_name'],
         $row['inspector_name'],
-        $deleteBtn
+        $statusBtn . $expiryBadge,
+        $deleteBtn,
+        $row['checklist_status'],
+        $row['report_status'],
+        $row['review_status'],
+        ucfirst($row['certificatestatus']),
+        $certHtml,
+        $inspectionTypeMap[strtolower($row['inspection_type'] ?? '')] ?? ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A'))
     ];
 }
 

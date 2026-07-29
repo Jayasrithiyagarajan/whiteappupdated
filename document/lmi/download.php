@@ -27,8 +27,30 @@ $inspection_date = date("d-m-Y", strtotime($lmi['inspection_date']));
 $next_inspection = date("d-m-Y", strtotime($lmi['next_inspection_date']));
 
 $inspector_signature_img = "../../inspector/uploads/$inspector_name/images/signature_image.jpg";
-// Define the path to the technical manager's signature
-$authenticating_signature_img = "../uploads/$technical_manager_name.jpg";
+
+// Technical Manager Signature
+$tech_mgr_name = $lmi['technical_manager'];
+$upload_dir = "../uploads/";
+$allowed_extensions = ['jpg', 'png', 'jpeg'];
+$technical_manager_signature_path = '';
+$technical_manager_signature_html = '';
+
+// Loop through allowed extensions and check which file exists
+foreach ($allowed_extensions as $ext) {
+    $path = $upload_dir . $tech_mgr_name . '.' . $ext;
+    if (file_exists($path)) {
+        $technical_manager_signature_path = $path;
+        break;
+    }
+}
+
+// Generate HTML
+if ($technical_manager_signature_path !== '') {
+    $technical_manager_signature_html = '<img src="' . htmlspecialchars($technical_manager_signature_path) . '" class="sign" alt="Technical Manager Signature">';
+} else {
+    // Use a placeholder signature image if the actual one is not found
+    $technical_manager_signature_html = '<img src="../sign.jpg" class="sign" alt="Default Signature">';
+}
 
 $leea_number = "12345";
 
@@ -99,14 +121,28 @@ $html = <<<HTML
             margin-bottom: 3px;
         }
         th, td {
-            padding: 4px;
+            padding: 2px 4px;
             border: 1px solid #000;
             text-align: left;
-            font-size: 10px;
+            font-size: 9px;
+        }
+        .center-table th, .center-table td {
+            text-align: center;
         }
         .section-title {
             background-color: #bfdaef;
+            font-size: 9px;
+        }
+        .section-heading {
+            background-color: #1a4f8b;
+            color: #ffffff;
             font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            padding: 2px 0;
+            margin: 2px 0;
+            border: 1px solid #000;
         }
         .header, .footer {
             text-align: center;
@@ -165,7 +201,7 @@ $html = <<<HTML
 <div class="container">
 
         <div class="header">
-            <img src="../head1.jpg" alt="Header Image">
+            <img src="../head.jpg" alt="Header Image">
         </div>        
         <img src="../leea.png" class="leea" alt="Leea">  
         <img src="../code.png" class="qrcode" alt="Qr Code">
@@ -196,9 +232,7 @@ $html = <<<HTML
 </tr>
 </table>
 
-<p style="text-align: center; font-size: 10px; margin: 1px 0;">
-    <b>CRANE DETAILS</b>
-</p>
+<div class="section-heading">CRANE DETAILS</div>
 <table>     
 <tr>
 <td class="section-title" style="width: 25%;"><b>MANUFACTURER</b></td>
@@ -219,15 +253,15 @@ $html = <<<HTML
 <td>MIN: {$lmi['boom_min']} m | MAX: {$lmi['boom_max']} m</td>
 </tr>
 </table>
-<p style="text-align: center; font-size: 10px; margin: 1px 0;">
-    <b>LOAD MOMENT INDICATOR DETAILS</b>
-</p>
+<div class="section-heading">LOAD MOMENT INDICATOR DETAILS</div>
 <table>
 
 <tr>
 <td class="section-title"><b>MAKE</b></td>
 <td>{$lmi['lmi_make']}</td>
-<td class="section-title"><b>MODEL | TYPE</b></td>
+<td class="section-title"><b>MODEL</b></td>
+<td>{$lmi['lmi_model_type']}</td>
+<td class="section-title"><b> TYPE</b></td>
 <td>{$lmi['lmi_model_type']}</td>
 <td class="section-title"><b>SERIAL NO.</b></td>
 <td>{$lmi['lmi_serial']}</td>
@@ -237,9 +271,7 @@ $html = <<<HTML
 
 </table>
 
-<p style="text-align: center; font-size: 10px; margin: 1px 0;">
-    <b>STANDARD LOAD CELL DETAILS (USED FOR CALIBRATION)</b>
-</p>
+<div class="section-heading">STANDARD LOAD CELL DETAILS (USED FOR CALIBRATION)</div>
 
 <table>
 
@@ -248,9 +280,7 @@ $html = <<<HTML
 
 </table>
 
-<p style="text-align: center; font-size: 10px; margin: 1px 0;">
-    <b>CALIBRATION TABLE</b>
-</p>
+<div class="section-heading">CALIBRATION TABLE</div>
 <table>
 <tr class="center">
     <th style="width: 25%; text-align: center;" class="section-title">
@@ -278,7 +308,7 @@ $html = <<<HTML
 </table>
 
 
-<table>
+<table class="center-table">
 <tr class="center"><th style="width: 25%;" class="section-title">MAIN BOOM ANGLE</th><th style="width: 25%;" class="section-title">ACTUAL</th><th style="width: 25%;" class="section-title">LMI READING</th><th style="width: 25%;" class="section-title">REMARKS</th></tr>
 <tr><td>Min</td><td>{$lmi['angle_min_actual']}</td><td>{$lmi['angle_min_lmi']}</td><td>{$lmi['angle_min_remark']}</td></tr>
 <tr><td>Medium</td><td>{$lmi['angle_mid_actual']}</td><td>{$lmi['angle_mid_lmi']}</td><td>{$lmi['angle_mid_remark']}</td></tr>
@@ -286,7 +316,7 @@ $html = <<<HTML
 </table>
 
 
-<table>
+<table class="center-table">
 <tr class="center"><th style="width: 25%;" colspan="2" class="section-title">RADIUS LOAD COMPARISON</th><th style="width: 25%;" class="section-title">AS PER LOAD CHART</th><th style="width: 25%;" class="section-title">LMI READING</th><th style="width: 25%;" class="section-title">REMARKS</th></tr>
 <tr><td rowspan="2">Main</td>
 <td>3 Mtr</td>
@@ -300,9 +330,7 @@ $html = <<<HTML
 <tr><td>Aux</td><td>{$lmi['radius_aux_chart']}</td><td>3 - 36 Mtr<td>{$lmi['radius_aux_lmi']}</td><td>{$lmi['radius_aux_remark']}</td></tr>
 </table>
 
-<p style="text-align: center; font-size: 10px; margin: 1px 0;">
-    <b>LOAD CELL CALIBRATION</b>
-</p>
+<div class="section-heading">LOAD CELL CALIBRATION</div>
 <table>
 
 <tr class="center">
@@ -317,9 +345,7 @@ $html = <<<HTML
 <td style="text-align: center;">{$lmi['load_remark']}</td>
 </tr>
 </table>
-<p style="text-align: center; text-decoration: underline; font-size: 10px; margin: 1px 0;">
-    <b>SAFETY CUT OFF AND ALARMS</b>
-</p>
+<div class="section-heading">SAFETY CUT OFF AND ALARMS</div>
 
 <table>
 <tr><td><b>Anti-two Block Condition:</b></td> <td> {$lmi['anti_two_block']}</td></tr>
@@ -373,7 +399,7 @@ $html = <<<HTML
 	  <img src="$inspector_signature_img" class="sign" alt="Inspector Signature">
 	</td>
 	<td  style="text-align: center;">
-	    <img src="$inspector_signature_img" class="sign" alt="Technical Manager Signature">
+	    {$technical_manager_signature_html}
 	</td>
 	</tr>
     </tbody>

@@ -291,7 +291,7 @@ foreach ($projects as $row) {
     }
 
     // Action Details
-    $detailsBtn = "<a href='job-details.php?id={$row['project_no']}'><button type='button' class='btn btn-sm' style='padding: 6px 9px; font-size: 11px;'>Details <i class='icofont-arrow-right'></i></button></a>";
+    $detailsBtn = "<a href='job-details.php?id={$row['project_no']}' target='_blank'><button type='button' class='btn btn-sm' style='padding: 6px 9px; font-size: 11px;'>Details <i class='icofont-arrow-right'></i></button></a>";
 
     // Delete Button (Admin)
     $deleteBtn = "";
@@ -310,16 +310,16 @@ foreach ($projects as $row) {
         $row['sticker_no'] ?? 'N/A',
         $row['equipment_type'],
         ucfirst($row['equipment_location']),
+        $row['customer_name'],
+        $row['inspector_name'],
+        $statusBtn . $expiryBadge,
+        $deleteBtn,
         $row['checklist_status'],
         $row['report_status'],
         $row['review_status'],
         ucfirst($row['certificatestatus']),
-        $row['customer_name'],
-        $statusBtn . $expiryBadge,
         $certHtml,
-        ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A')),
-        $row['inspector_name'],
-        $deleteBtn
+        ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A'))
     ];
 }
 

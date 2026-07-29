@@ -18,6 +18,7 @@ SELECT
     r.report_no, r.jrn,
     r.date_of_inspection,
     r.next_inspection_due_date,
+    r.location,
     c.city
 FROM project_info p
 LEFT JOIN reports r ON r.project_no = p.project_no
@@ -338,7 +339,7 @@ $today = date('Y-m-d');
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Address of Premises</label>
-                                <input type="text" name="address_of_premises" class="theme-input-style" value="<?= htmlspecialchars($data['city']) ?>" readonly>
+                                <input type="text" name="address_of_premises" class="theme-input-style" value="<?= htmlspecialchars($data['location']) ?>" readonly>
                             </div>
                         </div>
                         <div class="row">
@@ -479,6 +480,12 @@ $today = date('Y-m-d');
                                             <option value="ASME B30.20">ASME B30.20</option>
                                             <option value="ASME B30.10">ASME B30.10</option>
                                             <option value="ASME B30.30">ASME B30.30</option>
+                                            <option value="EN 795:2012 & ANSI Z359.1">EN 795:2012 & ANSI Z359.1</option>
+                                            <option value="EN 361:2002 & ANSI Z359.11">EN 361:2002 & ANSI Z359.11</option>
+                                            <option value="EN 1496:2016 & ANSI Z359.1">EN 1496:2016 & ANSI Z359.1</option>
+                                            <option value="EN 795:2012 & ANSI Z359.1">EN 795:2012 &ANSI Z359.1</option>
+                                            <option value="EN 355:2002 & ANSI Z359.13">EN 355:2002 & ANSI Z359.13</option>
+                                            
                                         </select>
                                     </td>
                                     <td><input type="text" class="theme-input-style" data-field="date_last_examination"></td>

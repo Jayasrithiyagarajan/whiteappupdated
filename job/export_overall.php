@@ -121,7 +121,7 @@ header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="overall_jobs_'.date('Y-m-d_H-i-s').'.csv"');
 
 $output = fopen('php://output', 'w');
-fputcsv($output, array('Project No', 'Date', 'Equipment ID', 'Checklist Type', 'Sticker No', 'Equipment Type', 'Location', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status', 'Customer', 'Project Status', 'Expiry Status', 'Inspector'));
+fputcsv($output, array('Project No', 'Date', 'Equipment ID', 'Checklist Type', 'Sticker No', 'Equipment Type', 'Location', 'Customer', 'Inspector', 'Project Status', 'Expiry Status', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status'));
 
 while($row = $result->fetch_assoc()) {
     
@@ -141,14 +141,14 @@ while($row = $result->fetch_assoc()) {
         $row['sticker_no'],
         $row['equipment_type'],
         $row['equipment_location'],
+        $row['customer_name'],
+        $row['inspector_name'],
+        $row['project_status'],
+        $expiryStr,
         $row['checklist_status'],
         $row['report_status'],
         $row['review_status'],
-        $row['certificatestatus'],
-        $row['customer_name'],
-        $row['project_status'],
-        $expiryStr,
-        $row['inspector_name']
+        $row['certificatestatus']
     ));
 }
 

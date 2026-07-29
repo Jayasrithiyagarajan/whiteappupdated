@@ -26,7 +26,30 @@ $inspection_date = date("d-m-Y", strtotime($lmi['inspection_date']));
 $next_inspection = date("d-m-Y", strtotime($lmi['next_inspection_date']));
 
 $inspector_signature_img = "../../inspector/uploads/$inspector_name/images/signature_image.jpg";
-$authenticating_signature_img = "../uploads/$technical_manager_name.jpg";
+
+// Technical Manager Signature
+$tech_mgr_name = $lmi['technical_manager'];
+$upload_dir = "../uploads/";
+$allowed_extensions = ['jpg', 'png', 'jpeg'];
+$technical_manager_signature_path = '';
+$technical_manager_signature_html = '';
+
+// Loop through allowed extensions and check which file exists
+foreach ($allowed_extensions as $ext) {
+    $path = $upload_dir . $tech_mgr_name . '.' . $ext;
+    if (file_exists($path)) {
+        $technical_manager_signature_path = $path;
+        break;
+    }
+}
+
+// Generate HTML
+if ($technical_manager_signature_path !== '') {
+    $technical_manager_signature_html = '<img src="' . htmlspecialchars($technical_manager_signature_path) . '" class="sign" alt="Technical Manager Signature">';
+} else {
+    // Use a placeholder signature image if the actual one is not found
+    $technical_manager_signature_html = '<img src="../sign.jpg" class="sign" alt="Default Signature">';
+}
 
 /* ================= LEEA NUMBER ================= */
 $leea_number = "N/A";
@@ -140,7 +163,7 @@ th, td {
 <div class="container">
 
 <div class="header">
-    <img src="../head1.jpg">
+    <img src="../head.jpg">
 </div>
 
 <img src="../leea.png" class="leea">
@@ -256,7 +279,7 @@ th, td {
 </tr>
 <tr>
     <td colspan="2"><img src="$inspector_signature_img" class="sign"></td>
-    <td><img src="$authenticating_signature_img" class="sign"></td>
+    <td>{$technical_manager_signature_html}</td>
 </tr>
 </table>
 

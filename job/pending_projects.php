@@ -490,6 +490,23 @@ if (!$logged_in_user) {
           max-width: 170px !important;
       }
 
+      table.dataTable thead th:nth-child(5),
+      table.dataTable tbody td:nth-child(5) {
+          min-width: 140px !important;
+          word-break: normal !important;
+          white-space: normal !important;
+      }
+
+      table.dataTable thead th:nth-child(10),
+      table.dataTable tbody td:nth-child(10) {
+          width: 200px !important;
+          min-width: 200px !important;
+          max-width: 200px !important;
+          white-space: normal !important;
+          word-break: break-word !important;
+          overflow-wrap: break-word !important;
+      }
+
       table.dataTable thead th:nth-child(4),
       table.dataTable tbody td:nth-child(4) {
           width: 130px !important;
@@ -729,21 +746,21 @@ if (!$logged_in_user) {
                         <th>Date</th>
                         <th>Progress</th>
                         <th>Action</th>
-                        <th>Checklist</th>
-                        <th>Report</th>
-                        <th>Inspection Type</th>
-                        <th>Reviewer</th>
-                        <th>Certificate</th>
-                        <th>Customer</th>
-                        <th>Status</th>
-                        <th>Equip.ID</th>
+                        <th>Equip. ID</th>
                         <th>Checklist Name</th>
                         <th>Sticker No</th>
-                        <th>Certificate Type</th>
-                        <th>Equip.Type</th>
+                        <th>Equip. Type</th>
                         <th>Location</th>
+                        <th>Customer</th>
                         <th>Inspector</th>
+                        <th>Status</th>
                         <th>Action</th>
+                        <th>Checklist</th>
+                        <th>Report</th>
+                        <th>Reviewer</th>
+                        <th>Certificate</th>
+                        <th>Certificate Type</th>
+                        <th>Inspection Type</th>
                     </tr>
                 </thead>
                 <tbody>
