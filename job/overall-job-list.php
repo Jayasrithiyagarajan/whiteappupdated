@@ -18,6 +18,7 @@ if (!$logged_in_user) {
     <title>Overall Job List</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/premium-nav.css">
 
@@ -329,6 +330,7 @@ if (!$logged_in_user) {
 
       .table-shell {
           padding: 24px;
+          overflow-x: auto;
       }
 
       .dataTables_wrapper {
@@ -461,8 +463,8 @@ if (!$logged_in_user) {
           white-space: nowrap;
       }
 
-      table.dataTable thead th:nth-child(8),
-      table.dataTable tbody td:nth-child(8) {
+      table.dataTable thead th:nth-child(7),
+      table.dataTable tbody td:nth-child(7) {
           width: 170px !important;
           min-width: 170px !important;
           max-width: 170px !important;
@@ -484,8 +486,8 @@ if (!$logged_in_user) {
           overflow-wrap: break-word !important;
       }
 
-      table.dataTable thead th:nth-child(10),
-      table.dataTable tbody td:nth-child(10) {
+      table.dataTable thead th:nth-child(8),
+      table.dataTable tbody td:nth-child(8) {
           width: 200px !important;
           min-width: 200px !important;
           max-width: 200px !important;
@@ -495,7 +497,7 @@ if (!$logged_in_user) {
       }
 
       table.dataTable tbody td:nth-child(4),
-      table.dataTable tbody td:nth-child(8) {
+      table.dataTable tbody td:nth-child(7) {
           white-space: normal !important;
           overflow-wrap: anywhere;
           word-break: break-word;
@@ -707,6 +709,14 @@ if (!$logged_in_user) {
                 </select>
             </div>
             <div class="filter-item">
+                <label>Certificate</label>
+                <select id="filter-certificate">
+                    <option value="">All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+            <div class="filter-item">
                 <button class="btn-clear" onclick="clearFilters()"><i class="icofont-close"></i> Clear Filters</button>
             </div>
         </div>
@@ -735,14 +745,14 @@ if (!$logged_in_user) {
                         <th>Progress</th>
                         <th>Action</th>
                         <th>Equip. ID</th>
-                        <th>Checklist Name</th>
                         <th>Sticker No</th>
-                        <th>Equip. Type</th>
                         <th>Location</th>
                         <th>Customer</th>
                         <th>Inspector</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th>Checklist Name</th>
+                        <th>Equip. Type</th>
                         <th>Checklist</th>
                         <th>Report</th>
                         <th>Reviewer</th>
@@ -764,6 +774,7 @@ if (!$logged_in_user) {
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
@@ -777,7 +788,6 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         responsive: true,
-        scrollX: true,
         autoWidth: false,
         pageLength: 25,
         lengthMenu: [10, 25, 50, 100],
@@ -794,6 +804,7 @@ $(document).ready(function() {
                 d.filter_year = $('#filter-year').val();
                 d.status_filter = $('#status-filter').val();
                 d.filter_expiry_status = $('#filter-expiry-status').val();
+                d.filter_certificate = $('#filter-certificate').val();
             }
         },
 
@@ -810,6 +821,7 @@ $(document).ready(function() {
                         filter_year: $('#filter-year').val(),
                         status_filter: $('#status-filter').val(),
                         filter_expiry_status: $('#filter-expiry-status').val(),
+                        filter_certificate: $('#filter-certificate').val(),
                         search_value: dt.search()
                     });
                     window.location.href = 'export_overall.php?' + params;
@@ -820,7 +832,9 @@ $(document).ready(function() {
         ],
 
         columnDefs: [
-            { targets: [3, -1], orderable: false }
+            { targets: [3, 10], orderable: false },
+            { targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], className: 'all' },
+            { targets: [11, 12, 13, 14, 15, 16, 17, 18], className: 'none' }
         ],
 
         initComplete: function() {
@@ -831,7 +845,7 @@ $(document).ready(function() {
     loadFilters();
     loadStats();
 
-    $('#filter-inspector, #filter-client, #filter-date-from, #filter-date-to, #filter-year, #status-filter, #filter-expiry-status').on('change', function() {
+    $('#filter-inspector, #filter-client, #filter-date-from, #filter-date-to, #filter-year, #status-filter, #filter-expiry-status, #filter-certificate').on('change', function() {
         table.ajax.reload();
         loadStats();
     });
@@ -897,6 +911,7 @@ function clearFilters(){
     $('#filter-year').val('<?php echo date('Y'); ?>');
     $('#status-filter').val('');
     $('#filter-expiry-status').val('');
+    $('#filter-certificate').val('');
     $('#job-search').val('');
 
     table.search('');

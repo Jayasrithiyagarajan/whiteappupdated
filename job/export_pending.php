@@ -17,6 +17,7 @@ $dateFrom        = $_GET['filter_date_from'] ?? '';
 $dateTo          = $_GET['filter_date_to'] ?? '';
 $yearFilter      = $_GET['filter_year'] ?? '';
 $expiryFilter    = $_GET['filter_expiry_status'] ?? '';
+$certificateFilter = $_GET['filter_certificate'] ?? '';
 
 // Base Query - FORCE PENDING
 $sqlBase = "FROM project_info pi LEFT JOIN checklist_information ci ON pi.project_no = ci.project_no";
@@ -72,6 +73,14 @@ if (!empty($expiryFilter)) {
     }
 }
 
+// Certificate Logic
+if (!empty($certificateFilter)) {
+    if ($certificateFilter === 'Pending') {
+        $where .= " AND pi.checklist_status = 'Created' AND pi.report_status = 'Generated' AND pi.review_status = 'Completed' AND pi.certificatestatus = 'Pending' ";
+    } elseif ($certificateFilter === 'Completed') {
+        $where .= " AND pi.certificatestatus = 'Completed' ";
+    }
+}
 
 // Global Search
 if (!empty($search)) {
@@ -115,7 +124,7 @@ header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="pending_jobs_'.date('Y-m-d_H-i-s').'.csv"');
 
 $output = fopen('php://output', 'w');
-fputcsv($output, array('Project No', 'Date', 'Equipment ID', 'Checklist Type', 'Sticker No', 'Equipment Type', 'Location', 'Customer', 'Inspector', 'Project Status', 'Expiry Status', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status'));
+fputcsv($output, array('Project No', 'Date', 'Equipment ID', 'Sticker No', 'Location', 'Customer', 'Inspector', 'Project Status', 'Expiry Status', 'Checklist Name', 'Equipment Type', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status', 'Inspection Type'));
 
 while($row = $result->fetch_assoc()) {
     
@@ -131,18 +140,19 @@ while($row = $result->fetch_assoc()) {
         $row['project_no'],
         date('d-m-Y', strtotime($row['creation_date'])),
         $row['equipment_id'],
-        $row['checklist_type'],
         $row['sticker_no'],
-        $row['equipment_type'],
         $row['equipment_location'],
         $row['customer_name'],
         $row['inspector_name'],
         $row['project_status'],
         $expiryStr,
+        ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
+        $row['equipment_type'],
         $row['checklist_status'],
         $row['report_status'],
         $row['review_status'],
-        $row['certificatestatus']
+        $row['certificatestatus'],
+        ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A'))
     ));
 }
 

@@ -19,6 +19,7 @@ $dateTo = $_POST['filter_date_to'] ?? '';
 $yearFilter = $_POST['filter_year'] ?? '';
 $expiryFilter = $_POST['filter_expiry_status'] ?? '';
 $statusFilter = $_POST['status_filter'] ?? ''; // Existing job status filter
+$certificateFilter = $_POST['filter_certificate'] ?? '';
 
 // Columns mapping
 $columns = [
@@ -27,20 +28,20 @@ $columns = [
     2 => "pi.checklist_status",
     3 => "pi.project_no", // Action Column placeholder
     4 => "pi.equipment_id",
-    5 => "pi.checklist_type",
-    6 => "ci.sticker_no",
-    7 => "pi.equipment_type",
-    8 => "pi.equipment_location",
-    9 => "pi.checklist_status",
-    10 => "pi.report_status",
-    11 => "pi.review_status",
-    12 => "pi.certificatestatus",
-    13 => "pi.customer_name",
-    14 => "pi.project_status",
-    15 => "pi.project_no", // Certificate Column placeholder
-    16 => "pi.inspection_type",
-    17 => "pi.inspector_name",
-    18 => "pi.project_no" // Delete/Action Column placeholder
+    5 => "ci.sticker_no",
+    6 => "pi.equipment_location",
+    7 => "pi.customer_name",
+    8 => "pi.inspector_name",
+    9 => "pi.project_status",
+    10 => "pi.project_no", // Action Column placeholder
+    11 => "pi.checklist_type",
+    12 => "pi.equipment_type",
+    13 => "pi.checklist_status",
+    14 => "pi.report_status",
+    15 => "pi.review_status",
+    16 => "pi.certificatestatus",
+    17 => "pi.project_no", // Certificate Column placeholder
+    18 => "pi.inspection_type"
 ];
 
 // Base Query
@@ -106,6 +107,14 @@ if (!empty($expiryFilter)) {
     }
 }
 
+// Certificate Logic
+if (!empty($certificateFilter)) {
+    if ($certificateFilter === 'Pending') {
+        $where .= " AND pi.checklist_status = 'Created' AND pi.report_status = 'Generated' AND pi.review_status = 'Completed' AND pi.certificatestatus = 'Pending' ";
+    } elseif ($certificateFilter === 'Completed') {
+        $where .= " AND pi.certificatestatus = 'Completed' ";
+    }
+}
 
 // Global Search
 if (!empty($search)) {
@@ -306,14 +315,14 @@ foreach ($projects as $row) {
         $progressHtml,
         $detailsBtn,
         $row['equipment_id'],
-        ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
         $row['sticker_no'] ?? 'N/A',
-        $row['equipment_type'],
         ucfirst($row['equipment_location']),
         $row['customer_name'],
         $row['inspector_name'],
         $statusBtn . $expiryBadge,
         $deleteBtn,
+        ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
+        $row['equipment_type'],
         $row['checklist_status'],
         $row['report_status'],
         $row['review_status'],

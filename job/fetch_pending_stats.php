@@ -10,6 +10,8 @@ $clientFilter    = $_POST['filter_client'] ?? '';
 $dateFrom        = $_POST['filter_date_from'] ?? '';
 $dateTo          = $_POST['filter_date_to'] ?? '';
 $yearFilter      = $_POST['filter_year'] ?? '';
+$expiryFilter    = $_POST['filter_expiry_status'] ?? '';
+$certificateFilter = $_POST['filter_certificate'] ?? '';
 
 // Base Query - FORCE PENDING
 $where = " WHERE project_status = 'Pending' ";
@@ -52,6 +54,24 @@ if (!empty($yearFilter)) {
     $where .= " AND YEAR(creation_date) = ? ";
     $params[] = $yearFilter;
     $types .= "s";
+}
+
+// Active/Expired Logic
+if (!empty($expiryFilter)) {
+    if ($expiryFilter === 'Expired') {
+        $where .= " AND (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = p.project_no) < CURDATE() ";
+    } elseif ($expiryFilter === 'Active') {
+        $where .= " AND ( (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = p.project_no) >= CURDATE() OR (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = p.project_no) IS NULL ) ";
+    }
+}
+
+// Certificate Logic
+if (!empty($certificateFilter)) {
+    if ($certificateFilter === 'Pending') {
+        $where .= " AND p.checklist_status = 'Created' AND p.report_status = 'Generated' AND p.review_status = 'Completed' AND p.certificatestatus = 'Pending' ";
+    } elseif ($certificateFilter === 'Completed') {
+        $where .= " AND p.certificatestatus = 'Completed' ";
+    }
 }
 
 // 1. Total (Pending Projects matching filters)
