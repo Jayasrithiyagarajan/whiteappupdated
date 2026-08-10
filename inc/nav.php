@@ -129,6 +129,7 @@ if ($role == '' || $role == 'guest') {
                      <li><a href="<?php echo $url; ?>job/create-job.php">Create New Project</a></li>
                   <?php endif; ?>
                   <li><a href="<?php echo $url; ?>job/overall-job-list.php">Over all Projects</a></li>
+                  <li><a href="<?php echo $url; ?>job/current_year_completed.php">Current Year Completed projects</a></li>
                   <li><a href="<?php echo $url; ?>job/pending_projects.php">Pending Projects</a></li>
                </ul>
                <!-- End Sub Menu -->
