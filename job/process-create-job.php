@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $creation_date_post = isset($_POST['creation_date']) ? $conn->real_escape_string($_POST['creation_date']) : date('Y-m-d');
     $creation_date = $creation_date_post . ' ' . date('H:i:s');
     $inspection_type = isset($_POST['inspection_type']) ? $conn->real_escape_string($_POST['inspection_type']) : '';
+    $payment_mode = isset($_POST['payment_mode']) ? $conn->real_escape_string($_POST['payment_mode']) : 'Credit';
 
     // Fetch customer name
     $customerQuery = $conn->prepare("SELECT customer_name FROM customers WHERE id = ?");
@@ -44,12 +45,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Insert project
     $stmt = $conn->prepare("INSERT INTO project_info (project_no, creation_date, equipment_type, sticker_status, 
                           equipment_location, equipment_id, customer_id, customer_name, customer_email, 
-                          customer_mobile, inspector_name, checklist_type, inspection_type)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          customer_mobile, inspector_name, checklist_type, inspection_type, payment_mode)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     
-    $stmt->bind_param("ssssssissssss", $project_no, $creation_date, $equipment_type, $sticker_status,
+    $stmt->bind_param("ssssssisssssss", $project_no, $creation_date, $equipment_type, $sticker_status,
                      $equipment_location, $equipment_id, $customer_id, $customer_name, $customer_email,
-                     $customer_mobile, $inspector_name, $checklist_type, $inspection_type);
+                     $customer_mobile, $inspector_name, $checklist_type, $inspection_type, $payment_mode);
 
     if ($stmt->execute()) {
         // Add notification

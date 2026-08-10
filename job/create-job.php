@@ -31,6 +31,8 @@ $inspectorQuery = "SELECT * FROM inspectors ORDER BY inspector_name ASC";
 $inspectorResult = mysqli_query($conn, $inspectorQuery);
 ?>
 
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     .create-job-glass {
         position: relative;
@@ -213,8 +215,8 @@ $inspectorResult = mysqli_query($conn, $inspectorQuery);
 
     .create-job-glass .theme-input-style {
         width: 100%;
-        min-height: 48px;
-        padding: 12px 14px;
+        min-height: 40px;
+        padding: 8px 12px;
         border: 1px solid rgba(148, 163, 184, 0.26);
         border-radius: 12px;
         background: rgba(255, 255, 255, 0.72);
@@ -287,6 +289,57 @@ $inspectorResult = mysqli_query($conn, $inspectorQuery);
             padding: 18px;
         }
     }
+
+    /* Select2 Custom Styling to match theme-input-style */
+    .select2-container .select2-selection--single {
+        min-height: 40px;
+        padding: 6px 12px;
+        border: 1px solid rgba(148, 163, 184, 0.26);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.72);
+        color: #111827;
+        font-weight: 700;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        display: flex;
+        align-items: center;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px;
+        right: 14px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #111827;
+        line-height: normal;
+        padding-left: 0;
+    }
+    .select2-container--default.select2-container--open .select2-selection--single {
+        border-color: rgba(37, 99, 235, 0.42);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+    .select2-dropdown {
+        border: 1px solid rgba(37, 99, 235, 0.42);
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+        overflow: hidden;
+        z-index: 9999;
+    }
+    .select2-search--dropdown .select2-search__field {
+        border-radius: 6px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        padding: 8px 12px;
+        outline: none;
+    }
+    .select2-search--dropdown .select2-search__field:focus {
+        border-color: rgba(37, 99, 235, 0.42);
+    }
+    .select2-results__option {
+        padding: 10px 14px;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #2563eb;
+    }
 </style>
 
 <!-- Main Content -->
@@ -309,129 +362,155 @@ $inspectorResult = mysqli_query($conn, $inspectorQuery);
                             </a>
                         </div>
 
-                        <form id="projectForm" class="create-job-form">
+                        <form id="projectForm" class="create-job-form" style="padding: 15px;">
                             <div class="row">
                                 <!-- Project Data Section -->
-                                <div class="col-lg-6 mb-30">
-                                    <div class="create-job-section">
-                                    <h4 class="font-16 create-job-section-title"><i class="icofont-paper"></i> Project Data</h4>
-                                    
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Project No <span class="text-danger">*</span></label>
-                                        <input type="text" name="project_no" class="theme-input-style" 
-                                               value="<?php echo htmlspecialchars($formattedProjectNo); ?>" readonly>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Date of Creation</label>
-                                        <input type="date" name="creation_date" class="theme-input-style" value="<?php echo date('Y-m-d'); ?>">
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Equipment Category</label>
-                                        <select name="equipment_type" class="theme-input-style">
-                                            <option value="Lifting Equipment">Lifting Equipment</option>
-                                            <option value="NDT Equipment">NDT Equipment</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Type of Inspection <span class="text-danger">*</span></label>
-                                        <select name="inspection_type" class="theme-input-style">
-                                            <option value="" disabled selected>Select Type of Inspection</option>
-                                            <option value="lifting">Below the Hook Lifting Gears</option>
-                                            <option value="eddycurrent">Eddy Current</option>
-                                            <option value="lmi">LMI</option>
-                                            <option value="withloadtest">Load Test</option>
-                                            <option value="liquidpenetrantinspection">LPI</option>
-                                            <option value="mobile">Mobile Crane with Load Test</option>
-                                            <option value="mpi">MPI</option>
-                                            <option value="healthcheck">Offshore Crane Health Check</option>
-                                            <option value="rocktest">RT</option>
-                                            <option value="loadtestwithload">Thorough Examination </option>
-                                            <option value="ut">UT</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Sticker / Non Sticker</label>
-                                        <select name="sticker_status" class="theme-input-style">
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Equipment Location</label>
-                                        <input type="text" name="equipment_location" class="theme-input-style" placeholder="Location">
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Equipment ID <span class="text-danger">*</span></label>
-                                        <input type="text" name="equipment_id" class="theme-input-style" placeholder="Enter Equipment ID">
-                                    </div>
+                                <div class="col-lg-12 mb-15">
+                                    <div class="create-job-section" style="padding: 15px 24px; min-height: auto;">
+                                        <h4 class="font-16 create-job-section-title" style="margin-bottom: 15px; padding-bottom: 10px;"><i class="icofont-paper"></i> Project Data</h4>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Project No <span class="text-danger">*</span></label>
+                                                    <input type="text" name="project_no" class="theme-input-style" value="<?php echo htmlspecialchars($formattedProjectNo); ?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Equipment Category</label>
+                                                    <select name="equipment_type" class="theme-input-style">
+                                                        <option value="Lifting Equipment">Lifting Equipment</option>
+                                                        <option value="NDT Equipment">NDT Equipment</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Type of Inspection <span class="text-danger">*</span></label>
+                                                    <select name="inspection_type" class="theme-input-style">
+                                                        <option value="" disabled selected>Select Type of Inspection</option>
+                                                        <option value="lifting">Below the Hook Lifting Gears</option>
+                                                        <option value="eddycurrent">Eddy Current</option>
+                                                        <option value="lmi">LMI</option>
+                                                        <option value="withloadtest">Load Test</option>
+                                                        <option value="liquidpenetrantinspection">LPI</option>
+                                                        <option value="mobile">Mobile Crane with Load Test</option>
+                                                        <option value="mpi">MPI</option>
+                                                        <option value="healthcheck">Offshore Crane Health Check</option>
+                                                        <option value="rocktest">RT</option>
+                                                        <option value="loadtestwithload">Thorough Examination </option>
+                                                        <option value="ut">UT</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Sticker / Non Sticker</label>
+                                                    <select name="sticker_status" class="theme-input-style">
+                                                        <option value="Yes">Yes</option>
+                                                        <option value="No">No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Equipment Location</label>
+                                                    <input type="text" name="equipment_location" class="theme-input-style" placeholder="Location">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Equipment ID <span class="text-danger">*</span></label>
+                                                    <input type="text" name="equipment_id" class="theme-input-style" placeholder="Enter Equipment ID">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Payment Mode</label>
+                                                    <select name="payment_mode" class="theme-input-style">
+                                                        <option value="Credit">Credit</option>
+                                                        <option value="Cash">Cash</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Date of Creation</label>
+                                                    <input type="date" name="creation_date" class="theme-input-style" value="<?php echo date('Y-m-d'); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Customer & Inspector Section -->
-                                <div class="col-lg-6 mb-30">
-                                    <div class="create-job-section">
-                                    <h4 class="font-16 create-job-section-title"><i class="icofont-users-alt-4"></i> Customer & Inspector Details</h4>
+                                <div class="col-lg-12 mb-15">
+                                    <div class="create-job-section" style="padding: 15px 24px; min-height: auto;">
+                                    <h4 class="font-16 create-job-section-title" style="margin-bottom: 15px; padding-bottom: 10px;"><i class="icofont-users-alt-4"></i> Customer & Inspector Details</h4>
 
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Select Customer <span class="text-danger">*</span></label>
-                                        <select name="customer_id" id="customer-select" class="theme-input-style">
-                                            <option value="">Select Customer</option>
-                                            <?php
-                                            if ($customerResult && $customerResult->num_rows > 0) {
-                                                while ($row = $customerResult->fetch_assoc()) {
-                                                    echo "<option value='" . $row['id'] . "'>" . htmlspecialchars($row['customer_name']) . "</option>";
-                                                }
-                                            } else {
-                                                echo "<option value='' disabled>No customers found</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Customer Email</label>
-                                        <input type="email" id="customer-email" name="email" class="theme-input-style" placeholder="Customer Email" readonly>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Customer Mobile</label>
-                                        <input type="number" id="customer-mobile" name="mobile" class="theme-input-style" placeholder="Customer Mobile" readonly>
-                                    </div>
-
-                                    <div class="form-group mb-20">
-                                        <label class="font-14 bold mb-10">Select Inspector <span class="text-danger">*</span></label>
-                                        <select name="inspector_name" id="inspector_select" class="theme-input-style">
-                                            <option value="" disabled selected>Select an Inspector</option>
-                                            <?php
-                                            if ($inspectorResult && mysqli_num_rows($inspectorResult) > 0) {
-                                                while ($row = mysqli_fetch_assoc($inspectorResult)) {
-                                                    echo '<option value="' . htmlspecialchars($row['inspector_name']) . '">' . htmlspecialchars($row['inspector_name']) . '</option>';
-                                                }
-                                            } else {
-                                                echo '<option value="">No Inspectors Found</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group mb-20" id="crane-section">
-                                        <label class="font-14 bold mb-10">Handle Crane</label>
-                                        <select id="crane_select" name="checklist_type" class="theme-input-style">
-                                            <option value="" disabled selected>Select a Crane</option>
-                                        </select>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Select Customer <span class="text-danger">*</span></label>
+                                                    <select name="customer_id" id="customer-select" class="theme-input-style">
+                                                        <option value="">Select Customer</option>
+                                                        <?php
+                                                        if ($customerResult && $customerResult->num_rows > 0) {
+                                                            while ($row = $customerResult->fetch_assoc()) {
+                                                                echo "<option value='" . $row['id'] . "'>" . htmlspecialchars($row['customer_name']) . "</option>";
+                                                            }
+                                                        } else {
+                                                            echo "<option value='' disabled>No customers found</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Select Inspector <span class="text-danger">*</span></label>
+                                                    <select name="inspector_name" id="inspector_select" class="theme-input-style">
+                                                        <option value="" disabled selected>Select an Inspector</option>
+                                                        <?php
+                                                        if ($inspectorResult && mysqli_num_rows($inspectorResult) > 0) {
+                                                            while ($row = mysqli_fetch_assoc($inspectorResult)) {
+                                                                echo '<option value="' . htmlspecialchars($row['inspector_name']) . '">' . htmlspecialchars($row['inspector_name']) . '</option>';
+                                                            }
+                                                        } else {
+                                                            echo '<option value="">No Inspectors Found</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6" id="crane-section">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Handle Crane</label>
+                                                    <select id="crane_select" name="checklist_type" class="theme-input-style">
+                                                        <option value="" disabled selected>Select a Crane</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Customer Email</label>
+                                                    <input type="email" id="customer-email" name="email" class="theme-input-style" placeholder="Customer Email" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="form-group mb-10">
+                                                    <label class="font-14 bold mb-1">Customer Mobile</label>
+                                                    <input type="number" id="customer-mobile" name="mobile" class="theme-input-style" placeholder="Customer Mobile" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-row">
-                                <div class="col-12 create-job-actions">
+                                <div class="col-12 create-job-actions" style="margin-top: 5px; padding-top: 15px;">
                                     <button type="submit" id="submitBtn" class="btn btn-primary long">Save Project</button>
                                 </div>
                             </div>
@@ -450,8 +529,15 @@ $inspectorResult = mysqli_query($conn, $inspectorQuery);
 <?php
 include_once('../inc/footer.php');
 ?>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 $(document).ready(function() {
+    // Initialize Select2 on dropdowns
+    $('select').select2({
+        width: '100%'
+    });
+
     // Handle customer selection
     $('#customer-select').change(function() {
         var customerId = $(this).val();
@@ -494,14 +580,14 @@ $(document).ready(function() {
                     response.forEach(function(item) {
                         optionsHtml += `<option value="${item.value}">${item.label}</option>`;
                     });
-                    $('#crane_select').html(optionsHtml);
+                    $('#crane_select').html(optionsHtml).trigger('change');
                 },
                 error: function(xhr, status, error) {
                     console.error("Error fetching cranes:", error);
                 }
             });
         } else {
-            $('#crane_select').html('<option value="">Select Crane</option>');
+            $('#crane_select').html('<option value="">Select Crane</option>').trigger('change');
         }
     });
 
