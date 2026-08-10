@@ -1,13 +1,7 @@
 <?php
 date_default_timezone_set('Asia/Riyadh');
-// $url2 = 'https://appcims.com/whiteapp/';
 $url2 = 'http://localhost/whiteappupdated/';
 
-// Database credentials
-// $servername = "localhost";  // Database server
-// $username = "appciark_admin";         // Database username
-// $password = "Anand@raj029";             // Database password
-// $dbname = "appciark_whiteapp";  // Database name
 
 $servername = "localhost";  // Database server
 $username = "root";         // Database username
