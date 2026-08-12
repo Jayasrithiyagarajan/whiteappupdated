@@ -34,7 +34,8 @@ $sql = "SELECT
             oa.exam_score,
             oa.signals_status,
             oa.signals_score,
-            oa.created_at
+            oa.created_at,
+            oa.date_of_expiry
         FROM operator_assessments oa
         LEFT JOIN customers c ON oa.client_id = c.cus_id
         LEFT JOIN new_users nu ON oa.inspector_id = nu.user_id";
@@ -55,7 +56,32 @@ if ($userRole === 'inspector') {
 $stmt->execute();
 $result = $stmt->get_result();
 
-$total_assessments = $result->num_rows;
+$assessments = [];
+$total_assessments = 0;
+$active_count = 0;
+$expired_count = 0;
+$inspectors_list = [];
+$clients_list = [];
+
+while($row = $result->fetch_assoc()) {
+    $assessments[] = $row;
+    $total_assessments++;
+    
+    if(!empty($row['date_of_expiry'])) {
+        if(strtotime($row['date_of_expiry']) >= strtotime('today')) {
+            $active_count++;
+        } else {
+            $expired_count++;
+        }
+    }
+    
+    if(!empty($row['inspector_name']) && !in_array($row['inspector_name'], $inspectors_list)) {
+        $inspectors_list[] = $row['inspector_name'];
+    }
+    if(!empty($row['client_name']) && !in_array($row['client_name'], $clients_list)) {
+        $clients_list[] = $row['client_name'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +130,47 @@ body {
 
 .container-fluid {
     max-width: 1600px;
+}
+
+/* PREMIUM INPUTS */
+.theme-input-style {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #1e293b;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.9), 0 2px 5px rgba(15, 23, 42, 0.02);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s ease;
+    appearance: none;
+}
+.theme-input-style:focus {
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    outline: none;
+}
+select.theme-input-style {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+.theme-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.dataTables_filter {
+    display: none !important;
 }
 
 .page-hero,
@@ -312,6 +379,7 @@ table.dataTable tbody td:last-child {
 .badge-info-custom { background: #e0f2fe; color: #0369a1; }
 .badge-warning-custom { background: #fef3c7; color: #b45309; }
 .badge-secondary-custom { background: #f1f5f9; color: #475569; }
+.badge-danger-custom { background: #fee2e2; color: #991b1b; }
 
 /* DATATABLE OVERRIDES */
 .dataTables_wrapper .dataTables_filter input {
@@ -388,10 +456,62 @@ if (file_exists('../inc/nav.php')) {
 
     <!-- KPI STATS -->
     <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="kpi-card">
+        <div class="col-md-4 mb-3">
+            <div class="kpi-card" style="border-left: 5px solid #2563eb;">
                 <h6>Total Assessments</h6>
                 <h2 id="stats-total"><?php echo $total_assessments; ?></h2>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="kpi-card" style="border-left: 5px solid #10b981;">
+                <h6>Active (Certificates)</h6>
+                <h2 id="stats-active" style="color: #10b981;"><?php echo $active_count; ?></h2>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="kpi-card" style="border-left: 5px solid #ef4444;">
+                <h6>Expired (Certificates)</h6>
+                <h2 id="stats-expired" style="color: #ef4444;"><?php echo $expired_count; ?></h2>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FILTERS -->
+    <div class="card-box mb-4" style="padding: 24px 28px;">
+        <h5 class="mb-4" style="font-weight: 800; color: #1e293b; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-filter" style="color: #3b82f6;"></i> Search & Filters
+        </h5>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label class="theme-label">Inspector</label>
+                <select id="filter-inspector" class="theme-input-style">
+                    <option value="">All Inspectors</option>
+                    <?php foreach($inspectors_list as $insp): ?>
+                        <option value="<?= htmlspecialchars($insp) ?>"><?= htmlspecialchars($insp) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="theme-label">Client</label>
+                <select id="filter-client" class="theme-input-style">
+                    <option value="">All Clients</option>
+                    <?php foreach($clients_list as $cli): ?>
+                        <option value="<?= htmlspecialchars($cli) ?>"><?= htmlspecialchars($cli) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="theme-label">Status</label>
+                <select id="filter-status" class="theme-input-style">
+                    <option value="">All Statuses</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="theme-label">Global Search</label>
+                <input type="text" id="custom-search" class="theme-input-style" placeholder="Search any text...">
             </div>
         </div>
     </div>
@@ -428,13 +548,26 @@ if (file_exists('../inc/nav.php')) {
                     </tr>
                 </thead>
                 <tbody>
-                <?php while ($row = $result->fetch_assoc()): ?>
+                <?php foreach ($assessments as $row): ?>
                     <tr>
                         <td><strong style="color: #2563eb;"><?= htmlspecialchars($row['assessment_no']); ?></strong></td>
                         <td><?= date('d-M-Y', strtotime($row['date'])); ?></td>
                         <td>
-                            <span style="font-weight: 700; color: #111827;"><?= htmlspecialchars($row['operator_name']); ?></span>
-                            <div class="small text-muted"><?= htmlspecialchars($row['operator_id_passport']); ?></div>
+                            <?php
+                            $cert_status_badge = '';
+                            if (!empty($row['date_of_expiry'])) {
+                                if (strtotime($row['date_of_expiry']) >= strtotime('today')) {
+                                    $cert_status_badge = '<span class="badge-custom badge-success-custom" style="font-size: 9px; padding: 2px 6px; margin-left: 6px; vertical-align: middle;">ACTIVE</span>';
+                                } else {
+                                    $cert_status_badge = '<span class="badge-custom badge-danger-custom" style="font-size: 9px; padding: 2px 6px; margin-left: 6px; vertical-align: middle;">EXPIRED</span>';
+                                }
+                            }
+                            ?>
+                            <div style="display: flex; align-items: center;">
+                                <span style="font-weight: 700; color: #111827;"><?= htmlspecialchars($row['operator_name']); ?></span>
+                                <?= $cert_status_badge; ?>
+                            </div>
+                            <div class="small text-muted" style="margin-top: 2px;"><?= htmlspecialchars($row['operator_id_passport']); ?></div>
                         </td>
                         <td><?= htmlspecialchars($row['client_name'] ?? 'N/A'); ?></td>
                         <td><?= htmlspecialchars($row['location']); ?></td>
@@ -449,8 +582,11 @@ if (file_exists('../inc/nav.php')) {
                         <td><span class="badge-custom badge-secondary-custom"><?= $row['signals_status']; ?></span></td>
 
                         <td class="text-center">
-                            <a href="view-assessment.php?id=<?= $row['id']; ?>" class="action-btn btn-info-custom" title="View">
+                            <a href="view-assessment.php?id=<?= $row['id']; ?>" class="action-btn btn-info-custom" title="View Details">
                                 <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="report-view.php?id=<?= $row['id']; ?>" class="action-btn" style="background: #8b5cf6;" target="_blank" title="Printable Report">
+                                <i class="fas fa-file-alt"></i>
                             </a>
 
                             <?php if ($userRole === 'inspector'): ?>
@@ -477,7 +613,7 @@ if (file_exists('../inc/nav.php')) {
                             <?php endif; ?>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -494,11 +630,12 @@ if (file_exists('../inc/nav.php')) {
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
 $(document).ready(function() {
-    $('#assessmentTable').DataTable({
+    var assessmentTable = $('#assessmentTable').DataTable({
         responsive: true,
         autoWidth: false,
         pageLength: 25,
@@ -509,9 +646,7 @@ $(document).ready(function() {
             paginate: {
                 previous: "<i class='fas fa-chevron-left'></i>",
                 next: "<i class='fas fa-chevron-right'></i>"
-            },
-            search: "_INPUT_",
-            searchPlaceholder: "Search assessments..."
+            }
         },
         buttons: [
             {
@@ -525,6 +660,23 @@ $(document).ready(function() {
                 className: 'btn'
             }
         ]
+    });
+
+    // Custom Filters Logic
+    $('#filter-inspector').on('change', function() {
+        assessmentTable.column(5).search($(this).val()).draw();
+    });
+    
+    $('#filter-client').on('change', function() {
+        assessmentTable.column(3).search($(this).val()).draw();
+    });
+    
+    $('#filter-status').on('change', function() {
+        assessmentTable.column(6).search($(this).val()).draw();
+    });
+    
+    $('#custom-search').on('input', function() {
+        assessmentTable.search($(this).val()).draw();
     });
 });
 </script>

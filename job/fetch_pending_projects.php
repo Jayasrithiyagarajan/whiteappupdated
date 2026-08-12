@@ -313,7 +313,7 @@ foreach ($projects as $row) {
     // Delete Button (Admin)
     $deleteBtn = "";
     if ($role === 'admin') {
-         $deleteBtn = "<button type='button' class='text-danger' onclick='deleteProject({$row['project_no']})' style='padding: 6px 9px; font-size: 14px; border:none; background:none;'><i class='icofont-trash'></i></button>";
+         $deleteBtn = "<button type='button' class='text-danger' onclick='deleteProject(\"{$row['project_no']}\")' style='padding: 6px 9px; font-size: 14px; border:none; background:none;'><i class='icofont-trash'></i></button>";
     }
 
     // row data

@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_assessment']))
     $client_id = $_POST['client_id'];
     $location = mysqli_real_escape_string($conn, $_POST['location']);
     $operating_location = $_POST['operating_location'];
+    $payment_mode = mysqli_real_escape_string($conn, $_POST['payment_mode'] ?? 'credit');
     $training_program = mysqli_real_escape_string($conn, $_POST['training_program']);
     $no_of_equipment = (int)$_POST['no_of_equipment'];
     $inspector_id = $_POST['inspector_id'];
@@ -18,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_assessment']))
     // Insert into operator_assessments table
     $sql = "INSERT INTO operator_assessments 
             (assessment_no, date, operator_name, operator_id_passport, client_id, location, 
-             operating_location, training_program, no_of_equipment, inspector_id, status, created_by) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)";
+             operating_location, payment_mode, training_program, no_of_equipment, inspector_id, status, created_by) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssi", 
+    $stmt->bind_param("sssssssssssi", 
         $assessment_no, 
         $date, 
         $operator_name, 
@@ -30,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_assessment']))
         $client_id, 
         $location, 
         $operating_location, 
-        $training_program,
+        $payment_mode,
+        $training_program, 
         $no_of_equipment, 
         $inspector_id, 
         $created_by

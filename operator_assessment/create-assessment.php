@@ -414,6 +414,20 @@ if (file_exists('../inc/nav.php')) {
                         </div>
 
                         <div class="form-group mb-4">
+                            <label>Payment Mode</label>
+                            <div class="radio-group-pre">
+                                <label>
+                                    <input type="radio" name="payment_mode" value="credit" checked required> 
+                                    <span>Credit</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="payment_mode" value="cash" required> 
+                                    <span>Cash</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
                             <label>Training Program</label>
                             <div class="input-group-premium">
                                 <div class="input-group-text-pre"><i class="fas fa-book-reader"></i></div>
