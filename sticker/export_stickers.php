@@ -19,7 +19,7 @@ $types = "";
 
 // Role Restriction
 if ($role === 'inspector') {
-    $where .= " AND assign_inspector = ? ";
+    $where .= " AND s.assign_inspector = ? ";
     $params[] = $user;
     $types .= "s";
 }
@@ -28,11 +28,11 @@ if ($role === 'inspector') {
 if (!empty($search)) {
     $searchWildcard = "%{$search}%";
     $where .= " AND (
-        sticker_start_no LIKE ? OR
-        project_no LIKE ? OR
-        assign_inspector LIKE ? OR
-        sticker_status LIKE ? OR
-        status LIKE ?
+        s.sticker_start_no LIKE ? OR
+        s.project_no LIKE ? OR
+        s.assign_inspector LIKE ? OR
+        s.sticker_s.status LIKE ? OR
+        s.status LIKE ?
     ) ";
     $params[] = $searchWildcard;
     $params[] = $searchWildcard;
@@ -43,7 +43,7 @@ if (!empty($search)) {
 }
 
 // Query
-$sql = "SELECT * FROM stickers $where ORDER BY created_at DESC";
+$sql = "SELECT s.*, pi.equipment_id, ci.crane_serial_no as equipment_serial_no FROM stickers s LEFT JOIN project_info pi ON s.project_no = pi.project_no LEFT JOIN checklist_information ci ON s.project_no = ci.project_no $where ORDER BY s.created_at DESC";
 
 $stmt = $conn->prepare($sql);
 if(!empty($params)){
@@ -57,7 +57,7 @@ header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="sticker_list_'.date('Y-m-d_H-i-s').'.csv"');
 
 $output = fopen('php://output', 'w');
-fputcsv($output, array('Sticker ID', 'Project ID', 'Inspect By', 'Created At', 'Inspection Date', 'Expiry Date', 'Sticker Status', 'Status'));
+fputcsv($output, array('Sticker ID', 'Project ID', 'Equipment No', 'Equipment Serial No', 'Inspect By', 'Created At', 'Inspection Date', 'Expiry Date', 'Sticker Status', 'Status'));
 
 while($row = $result->fetch_assoc()) {
     
@@ -79,6 +79,8 @@ while($row = $result->fetch_assoc()) {
     fputcsv($output, array(
         $row['sticker_start_no'],
         $row['project_no'],
+        $row['equipment_id'],
+        $row['equipment_serial_no'],
         $row['assign_inspector'],
         $row['created_at'],
         $row['inspection_date'],

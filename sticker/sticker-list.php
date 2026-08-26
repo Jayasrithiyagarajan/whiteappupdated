@@ -28,6 +28,31 @@ if (!$logged_in_user) {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/premium-directory.css">
     <link rel="stylesheet" href="../assets/css/premium-nav.css">
+    <style>
+        .btn-premium-export {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 8px 20px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+            transition: all 0.3s ease !important;
+        }
+        .btn-premium-export:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35) !important;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+            color: #ffffff !important;
+        }
+        .btn-premium-export i {
+            font-size: 18px !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -138,6 +163,8 @@ if (!$logged_in_user) {
                     <tr>
                         <th>Sticker ID</th>
                         <th>Project ID</th>
+                        <th>Equipment No</th>
+                        <th>Equipment Serial No</th>
                         <th>Inspect By</th>
                         <th>Created At</th>
                         <th>Inspection</th>
@@ -192,6 +219,15 @@ $(document).ready(function() {
         },
 
         dom: 'Brtip',
+        buttons: [
+            {
+                text: '<i class="icofont-file-excel"></i> Export Excel',
+                className: 'btn-premium-export',
+                action: function ( e, dt, node, config ) {
+                    exportData();
+                }
+            }
+        ],
         columnDefs: [
             { targets: -1, orderable: false }
         ],

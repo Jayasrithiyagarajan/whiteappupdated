@@ -58,10 +58,10 @@ if (!$use_cache) {
         SUM(certificatestatus = 'Certificate Created' AND project_status = 'Pending') AS qc_pending,
         SUM(project_status = 'Completed') AS qc_closed,
 
-        -- Operator Cards
-        (SELECT COUNT(*) FROM operator_cards) AS op_total,
-        (SELECT COUNT(*) FROM operator_cards WHERE expiry_date >= CURDATE()) AS op_active,
-        (SELECT COUNT(*) FROM operator_cards WHERE expiry_date < CURDATE()) AS op_expired,
+        -- Operator Assessments
+        (SELECT COUNT(*) FROM operator_assessments) AS op_total,
+        (SELECT COUNT(*) FROM operator_assessments WHERE date_of_expiry >= CURDATE()) AS op_active,
+        (SELECT COUNT(*) FROM operator_assessments WHERE date_of_expiry < CURDATE()) AS op_expired,
 
         (SELECT COUNT(*) FROM customers) AS total_customers
     FROM project_info

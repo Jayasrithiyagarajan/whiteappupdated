@@ -39,7 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             corrective_action = '$corrective_action',
             no_of_equipments_inspected = '$no_of_equipments_inspected',
             jrn = '$jrn',
-            capacity = '$capacity_swl'
+            capacity = '$capacity_swl',
+            equipment_serial_no = '$equipment_serial_no',
+            equipment_id_no = '$equipment_id'
         WHERE report_no = '$report_no'
     ";
 

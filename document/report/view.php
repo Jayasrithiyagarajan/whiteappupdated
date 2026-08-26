@@ -397,10 +397,16 @@ below. Specific repairs to correct each deficiency should be noted in the right 
     <button type="button" class="btn btn-danger" onclick="window.print()">Print</button>
 </div> -->
 
-<div class="text-center" style="margin-top: 10px;">
-<!-- <a href="./download.php?project_no=<?php echo $row['project_no']; ?>&report_no=<?php echo $row['report_no']; ?>"> -->
+<div class="text-center" id="non-printable" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px; padding-bottom: 20px;">
+    <a href="index.php">
+        <button type="button" style="padding: 8px 16px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">
+            <i class="fas fa-arrow-left"></i> Back to Report List
+        </button>
+    </a>
     <a href="download.php?project_no=<?php echo $row['project_no']; ?>&report_no=<?php echo $row['report_no']; ?>">
-        <button>Download</button>
+        <button type="button" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">
+            <i class="fas fa-download"></i> Download
+        </button>
     </a>
 </div>
 

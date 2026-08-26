@@ -71,6 +71,8 @@ if ($searchValue != '') {
                           pi.checklist_type LIKE '%$escSearch%' OR 
                           pi.equipment_type LIKE '%$escSearch%' OR 
                           pi.equipment_location LIKE '%$escSearch%' OR 
+                          pi.certificatestatus LIKE '%$escSearch%' OR 
+                          pi.inspection_type LIKE '%$escSearch%' OR 
                           ci.sticker_no LIKE '%$escSearch%') ";
 }
 

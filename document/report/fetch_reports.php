@@ -25,12 +25,14 @@ $columns = [
     "r.date_of_inspection",
     "r.client_company_name",
     "r.equipment_id_no",
+    "r.type",
     "r.equipment_serial_no",
+    "r.no_of_equipments_inspected",
     "r.sticker_number_issued",
     "r.location",
     "r.issued_by",
-    "r.next_inspection_due_date",                   // 10 Expiry Date
-    "r.next_inspection_due_date >= CURDATE()",      // 11 Status (Active/Expired)
+    "r.next_inspection_due_date",                   // 12 Expiry Date
+    "r.next_inspection_due_date >= CURDATE()",      // 13 Status (Active/Expired)
     "r.project_no"
 ];
 
@@ -71,7 +73,9 @@ if ($search !== '') {
     r.checklist_no LIKE '%$search%' OR
     r.client_company_name LIKE '%$search%' OR
     r.equipment_id_no LIKE '%$search%' OR
+    r.type LIKE '%$search%' OR
     r.equipment_serial_no LIKE '%$search%' OR
+    r.no_of_equipments_inspected LIKE '%$search%' OR
     r.sticker_number_issued LIKE '%$search%' OR
     r.location LIKE '%$search%' OR
     r.issued_by LIKE '%$search%' OR
@@ -130,13 +134,20 @@ while ($r = $res->fetch_assoc()) {
     }
 
     $data[] = [
-        $r['project_no'],
+        "<div style='display:flex;align-items:center;gap:8px'>
+            <span>{$r['project_no']}</span>
+            <a href='view.php?project_no={$r['project_no']}&report_no={$r['report_no']}' target='_blank' title='View Report' style='color:#4f46e5;font-size:16px'>
+                <i class='fas fa-eye'></i>
+            </a>
+        </div>",
         $r['report_no'],
         $r['checklist_no'],
         date('d-m-Y', strtotime($r['date_of_inspection'])),
         $r['client_company_name'],
         $r['equipment_id_no'],
+        $r['type'],
         $r['equipment_serial_no'],
+        $r['no_of_equipments_inspected'],
         $r['sticker_number_issued'],
         $r['location'],
         "<div style='display:flex;align-items:center;gap:8px'>

@@ -129,7 +129,9 @@ if (!isset($_SESSION['username'])) {
                         <th>Inspection Date</th>
                         <th>Company</th>
                         <th>Equipment ID</th>
+                        <th>Equipment Type</th>
                         <th>Serial No</th>
+                        <th>No of Items Inspected</th>
                         <th>Sticker No</th>
                         <th>Location</th>
                         <th>Inspector</th>
@@ -193,7 +195,7 @@ $(document).ready(function() {
         ],
 
         columnDefs: [
-            { targets: 12, orderable: false }
+            { targets: 14, orderable: false }
         ],
 
         initComplete: function() {

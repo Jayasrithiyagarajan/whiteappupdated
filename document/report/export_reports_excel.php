@@ -18,7 +18,9 @@ SELECT
  DATE_FORMAT(r.date_of_inspection,'%d-%m-%Y') AS 'Inspection Date',
  r.client_company_name AS 'Company',
  r.equipment_id_no AS 'Equipment ID',
+ r.type AS 'Equipment Type',
  r.equipment_serial_no AS 'Serial No',
+ r.no_of_equipments_inspected AS 'No of Items Inspected',
  r.sticker_number_issued AS 'Sticker No',
  r.location AS 'Location',
  r.issued_by AS 'Inspector'
