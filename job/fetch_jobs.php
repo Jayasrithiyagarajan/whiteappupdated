@@ -222,7 +222,7 @@ foreach ($rows as $row) {
     }
 
     $data[] = array(
-        "project_no" => "#" . str_pad($row["project_no"], 5, "0", STR_PAD_LEFT),
+        "project_no" => '<a href="job-details.php?id=' . $row['project_no'] . '" target="_blank" class="text-primary"><strong>#' . str_pad($row["project_no"], 5, "0", STR_PAD_LEFT) . '</strong></a>',
         "creation_date" => date("d M Y", strtotime($row["creation_date"])),
         "progress" => $progressHtml,
         "checklist_status" => $row['checklist_status'],

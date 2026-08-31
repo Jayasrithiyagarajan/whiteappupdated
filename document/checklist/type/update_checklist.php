@@ -99,8 +99,8 @@ if (isset($_POST['report_no'])) {
     $report_no = $_POST['report_no'] ?? $existing['report_no'] ?? '';
     $inspection_date = $_POST['inspection_date'] ?? $existing['inspection_date'] ?? '';
     
-    // For client name, prioritize header_client_name, then client_name, then existing
-    $client_name_info = $_POST['header_client_name'] ?? $_POST['client_name'] ?? $existing['client_name'] ?? '';
+    // For client company name, use header_client_name if set; otherwise preserve existing company name from DB
+    $client_name_info = (isset($_POST['header_client_name']) && $_POST['header_client_name'] !== '') ? $_POST['header_client_name'] : ($existing['client_name'] ?? '');
     
     $inspected_by = $_POST['inspected_by'] ?? $existing['inspected_by'] ?? '';
     $location = $_POST['location'] ?? $existing['location'] ?? '';
@@ -136,7 +136,7 @@ if (isset($_POST['report_no'])) {
 
     $r_report_no = !empty($_POST['report_no']) ? $_POST['report_no'] : ($existingReport['report_no'] ?? '');
     $r_date_of_inspection = !empty($_POST['inspection_date']) ? $_POST['inspection_date'] : ($existingReport['date_of_inspection'] ?? '');
-    $r_client_company_name = !empty($_POST['header_client_name']) ? $_POST['header_client_name'] : (!empty($_POST['client_name']) ? $_POST['client_name'] : ($existingReport['client_company_name'] ?? ''));
+    $r_client_company_name = !empty($_POST['header_client_name']) ? $_POST['header_client_name'] : ($existingReport['client_company_name'] ?? '');
     $r_issued_by = !empty($_POST['inspected_by']) ? $_POST['inspected_by'] : ($existingReport['issued_by'] ?? '');
     $r_location = !empty($_POST['location']) ? $_POST['location'] : ($existingReport['location'] ?? '');
     $r_sticker_number_issued = !empty($_POST['sticker_no']) ? $_POST['sticker_no'] : ($existingReport['sticker_number_issued'] ?? '');

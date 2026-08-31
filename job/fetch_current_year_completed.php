@@ -234,7 +234,7 @@ if (!empty($projectIds)) {
 // Format Output
 foreach ($projects as $row) {
     // ID
-    $pNo = '<strong>#' . str_pad($row['project_no'], 5, '0', STR_PAD_LEFT) . '</strong>';
+    $pNo = "<a href='job-details.php?id={$row['project_no']}' target='_blank' class='text-primary'><strong>#" . str_pad($row['project_no'], 5, '0', STR_PAD_LEFT) . "</strong></a>";
     $date = date('d M Y', strtotime($row['creation_date']));
 
     // Progress / Actions Logic based on role
