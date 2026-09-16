@@ -635,22 +635,72 @@ $result = $stmt->get_result();
                             </div>
                         </div>
 
+                        <!-- Summary Cards -->
+                        <div class="row mb-30">
+                            <div class="col-lg-2 col-sm-4 mb-3 mb-lg-0">
+                                <div class="card h-100 mb-0 shadow-sm border-0">
+                                    <div class="card-body text-center py-3">
+                                        <h6 class="text-muted mb-1 font-12 text-uppercase font-weight-bold">Total</h6>
+                                        <h3 class="mb-0 font-weight-bolder" id="count-total">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 mb-3 mb-lg-0">
+                                <div class="card h-100 mb-0 shadow-sm border-0">
+                                    <div class="card-body text-center py-3">
+                                        <h6 class="text-success mb-1 font-12 text-uppercase font-weight-bold">Completed</h6>
+                                        <h3 class="mb-0 text-success font-weight-bolder" id="count-completed">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 mb-3 mb-lg-0">
+                                <div class="card h-100 mb-0 shadow-sm border-0">
+                                    <div class="card-body text-center py-3">
+                                        <h6 class="text-primary mb-1 font-12 text-uppercase font-weight-bold">Pending</h6>
+                                        <h3 class="mb-0 text-primary font-weight-bolder" id="count-pending">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 mb-3 mb-sm-0">
+                                <div class="card h-100 mb-0 shadow-sm border-0" style="background-color: #ffcccc;">
+                                    <div class="card-body text-center py-3">
+                                        <h6 class="text-danger mb-1 font-12 text-uppercase font-weight-bold">Expired</h6>
+                                        <h3 class="mb-0 text-danger font-weight-bolder" id="count-expired">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="card h-100 mb-0 shadow-sm border-0" style="background-color: #fff3cd;">
+                                    <div class="card-body text-center py-3">
+                                        <h6 class="mb-1 font-12 text-uppercase font-weight-bold" style="color: #b58500;">Expiring in 7 Days</h6>
+                                        <h3 class="mb-0 font-weight-bolder" style="color: #b58500;" id="count-expiring">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Card -->
                         <div class="card mb-30">
-                            <div class="card-body">
+                            <div class="card-body pb-0">
                                 <div class="d-sm-flex justify-content-between align-items-center">
                                     <h4 class="font-20">Job List</h4>
                                 </div>
                             </div>
-                            
-                            <div class="table-controls mb-3 position-relative" style="max-width: 300px;">
-                                <input type="text" id="searchInput" class="form-control rounded-3 pl-5" placeholder="Search Projects..."/>
-                                <span class="position-absolute" style="top: 50%; left: 12px; transform: translateY(-50%); pointer-events: none;">
-                                    <i class="fa fa-search text-muted"></i>
-                                </span>
-                                <span id="clearSearch" class="position-absolute" style="top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer;">
-                                    <i class="fa fa-times text-muted"></i>
-                                </span>
+                            <div class="d-flex flex-wrap align-items-center mb-3">
+                                <div class="table-controls position-relative mr-3 mb-2 mb-sm-0" style="width: 300px;">
+                                    <input type="text" id="searchInput" class="form-control rounded-3 pl-5" placeholder="Search Projects..."/>
+                                    <span class="position-absolute" style="top: 50%; left: 12px; transform: translateY(-50%); pointer-events: none;">
+                                        <i class="fa fa-search text-muted"></i>
+                                    </span>
+                                    <span id="clearSearch" class="position-absolute" style="top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer;">
+                                        <i class="fa fa-times text-muted"></i>
+                                    </span>
+                                </div>
+                                <div class="filter-controls">
+                                    <button class="btn btn-sm btn-outline-danger mr-2" id="filterExpired">Expired</button>
+                                    <button class="btn btn-sm btn-outline-warning mr-2" id="filterExpiring">Expiring in 7 Days</button>
+                                    <button class="btn btn-sm btn-outline-secondary" id="filterAll">All</button>
+                                </div>
                             </div>
 
                             <div class="table-responsive">
@@ -731,8 +781,29 @@ $stmt_details->execute();
                                                 
                                                 if ($details_result->num_rows > 0):
                                                     $details = $details_result->fetch_assoc();
+                                                    
+                                                    $is_expired = false;
+                                                    $is_expiring_soon = false;
+                                                    $expiry_timestamp = '';
+                                                    if (!empty($details['next_inspection_due_date']) && strtotime($details['next_inspection_due_date'])) {
+                                                        $expiry_timestamp = strtotime($details['next_inspection_due_date']);
+                                                        $today = strtotime('today');
+                                                        $seven_days = $today + (7 * 24 * 60 * 60);
+                                                        
+                                                        if ($expiry_timestamp < $today) {
+                                                            $is_expired = true;
+                                                        } elseif ($expiry_timestamp >= $today && $expiry_timestamp <= $seven_days) {
+                                                            $is_expiring_soon = true;
+                                                        }
+                                                    }
                                                 ?>
-                                                <tr>
+                                                <tr data-expiry="<?php echo $expiry_timestamp; ?>" <?php 
+                                                    if ($is_expired) { 
+                                                        echo 'style="background-color: #ffcccc !important;"'; 
+                                                    } elseif ($is_expiring_soon) { 
+                                                        echo 'style="background-color: #fff3cd !important;"'; 
+                                                    } 
+                                                ?>>
                                                     <td data-order="<?php echo intval(preg_replace('/\D/', '', $row["project_no"])); ?>">
     <?php echo "#" . htmlspecialchars($row["project_no"]); ?>
 </td>
@@ -902,6 +973,42 @@ $stmt_details->execute();
 // $(document).ready(function() {
     // Initialize DataTable with proper configuration
     $(document).ready(function() {
+        
+    // Calculate and update counts
+    let total = 0, completed = 0, pending = 0, expired = 0, expiringSoon = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = Math.floor(today.getTime() / 1000);
+    const sevenDaysFromNow = todayTime + (7 * 24 * 60 * 60);
+
+    $('#job-table tbody tr').each(function() {
+        if ($(this).find('td').length === 1) return; // skip "No projects found" row
+        
+        total++;
+        
+        const statusText = $(this).find('.status-btn a').text().trim().toLowerCase();
+        if (statusText === 'completed') {
+            completed++;
+        } else {
+            pending++;
+        }
+
+        const expiryAttr = $(this).attr('data-expiry');
+        if (expiryAttr) {
+            const expiryTime = parseInt(expiryAttr, 10);
+            if (expiryTime < todayTime) {
+                expired++;
+            } else if (expiryTime >= todayTime && expiryTime <= sevenDaysFromNow) {
+                expiringSoon++;
+            }
+        }
+    });
+
+    $('#count-total').text(total);
+    $('#count-completed').text(completed);
+    $('#count-pending').text(pending);
+    $('#count-expired').text(expired);
+    $('#count-expiring').text(expiringSoon);
     // Initialize DataTable
     const dataTable = $('#job-table').DataTable({
     pageLength: 10,
@@ -931,6 +1038,51 @@ $stmt_details->execute();
         $('#searchInput').val('');
         dataTable.search('').draw();
         $('#searchInput').focus();
+    });
+
+    // Custom filtering function
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex, rowData, counter) {
+        var filterType = $('#job-table').data('filter-type');
+        if (!filterType || filterType === 'all') {
+            return true;
+        }
+
+        var $row = $(settings.aoData[dataIndex].nTr);
+        var expiryTimestamp = $row.attr('data-expiry');
+        
+        if (!expiryTimestamp) {
+            return false; // If no expiry date and filtering is active, hide it.
+        }
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var todayTime = Math.floor(today.getTime() / 1000);
+        var expiryTime = parseInt(expiryTimestamp, 10);
+
+        if (filterType === 'expired') {
+            return expiryTime < todayTime;
+        } else if (filterType === 'expiring') {
+            var sevenDaysFromNow = todayTime + (7 * 24 * 60 * 60);
+            return expiryTime >= todayTime && expiryTime <= sevenDaysFromNow;
+        }
+
+        return true;
+    });
+
+    // Filter button click handlers
+    $('#filterExpired').on('click', function() {
+        $('#job-table').data('filter-type', 'expired');
+        dataTable.draw();
+    });
+
+    $('#filterExpiring').on('click', function() {
+        $('#job-table').data('filter-type', 'expiring');
+        dataTable.draw();
+    });
+
+    $('#filterAll').on('click', function() {
+        $('#job-table').data('filter-type', 'all');
+        dataTable.draw();
     });
 
     // Certificate modal handling with proper event delegation
