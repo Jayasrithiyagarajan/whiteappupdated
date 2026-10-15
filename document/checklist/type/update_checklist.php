@@ -81,7 +81,7 @@ if (!$checklist_no) {
 }
 
 // Update checklist_information ONLY if the fields are present in the form submission
-if (isset($_POST['report_no'])) {
+if (isset($_POST['report_no']) || isset($_POST['sticker_no'])) {
     
     // Fetch existing data so we don't overwrite missing fields with empty strings
     $existing = [];
@@ -139,7 +139,7 @@ if (isset($_POST['report_no'])) {
     $r_client_company_name = !empty($_POST['header_client_name']) ? $_POST['header_client_name'] : ($existingReport['client_company_name'] ?? '');
     $r_issued_by = !empty($_POST['inspected_by']) ? $_POST['inspected_by'] : ($existingReport['issued_by'] ?? '');
     $r_location = !empty($_POST['location']) ? $_POST['location'] : ($existingReport['location'] ?? '');
-    $r_sticker_number_issued = !empty($_POST['sticker_no']) ? $_POST['sticker_no'] : ($existingReport['sticker_number_issued'] ?? '');
+    $r_sticker_number_issued = isset($_POST['sticker_no']) ? $_POST['sticker_no'] : ($existingReport['sticker_number_issued'] ?? '');
     $r_equipment_id_no = !empty($_POST['equipment_no']) ? $_POST['equipment_no'] : ($existingReport['equipment_id_no'] ?? '');
     $r_equipment_serial_no = !empty($_POST['crane_serial_no']) ? $_POST['crane_serial_no'] : ($existingReport['equipment_serial_no'] ?? '');
     $r_type = !empty($_POST['equipmenttype']) ? $_POST['equipmenttype'] : ($existingReport['type'] ?? '');

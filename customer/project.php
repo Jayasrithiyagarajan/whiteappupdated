@@ -41,23 +41,44 @@ if ($result->num_rows > 0) {
 
 include_once('../inc/customer-option.php');
 
-// Fetch project details
-// $sql = "SELECT p.project_no, p.creation_date, p.project_status, 
-//               p.equipment_type, p.equipment_location, p.inspector_name,
-//               p.checklist_status, p.customer_name 
-//         FROM project_info p
-//         WHERE p.customer_name = ?";
+// Fetch unique years for the tabs
+$year_sql = "SELECT DISTINCT YEAR(creation_date) as project_year 
+             FROM project_info 
+             WHERE customer_name = ? AND creation_date IS NOT NULL 
+             ORDER BY project_year DESC";
+$year_stmt = $conn->prepare($year_sql);
+$year_stmt->bind_param("s", $cus_name);
+$year_stmt->execute();
+$year_result = $year_stmt->get_result();
+$available_years = [];
+while ($row = $year_result->fetch_assoc()) {
+    if ($row['project_year']) {
+        $available_years[] = $row['project_year'];
+    }
+}
 
+// Determine selected year (default to current year if not selected)
+$selected_year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+
+// Fetch project details
 $sql = "SELECT p.project_no, p.creation_date, p.project_status, 
                p.equipment_type, p.equipment_location, p.inspector_name,
                p.checklist_status, p.customer_name 
         FROM project_info p
-        WHERE p.customer_name = ?
-        ORDER BY CAST(SUBSTRING(p.project_no, 5) AS UNSIGNED) DESC";
+        WHERE p.customer_name = ? ";
 
+if ($selected_year !== 'All') {
+    $sql .= " AND YEAR(p.creation_date) = ? ";
+}
+
+$sql .= " ORDER BY CAST(SUBSTRING(p.project_no, 5) AS UNSIGNED) DESC";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $cus_name);
+if ($selected_year !== 'All') {
+    $stmt->bind_param("ss", $cus_name, $selected_year);
+} else {
+    $stmt->bind_param("s", $cus_name);
+}
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -588,6 +609,9 @@ $result = $stmt->get_result();
                                         <a class="active p_nav-link has-before" href="../customer/project.php?cusid=<?php echo urlencode($customer['cus_id']); ?>">Projects</a>
                                     </li>
                                     <li>
+                                        <a class="p_nav-link has-before active" href="../customer/operator_assessments.php?cusid=<?php echo urlencode($customer['cus_id']); ?>">Operator assessments</a>
+                                    </li>
+                                    <li>
                                         <a href="../dashboard/customer_kpi_dashboard.php">KPI Analytics</a>
                                     </li>
                                 <div class="px-3">
@@ -633,6 +657,20 @@ $result = $stmt->get_result();
                                     <img src="<?php echo $url; ?>assets/img/svg/writing.svg" alt="" class="svg">
                                 </a>
                             </div>
+                        </div>
+                        <!-- Year Filter Tabs -->
+                        <div class="card mb-4" style="padding: 15px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                            <ul class="nav profile-nav-tabs d-flex align-items-center mb-0" style="gap: 10px;">
+                                <li><strong class="text-muted mr-2">Filter by Year:</strong></li>
+                                <li>
+                                    <a class="<?php echo $selected_year === 'All' ? 'active p_nav-link' : 'p_nav-link text-muted'; ?> px-3 py-2" style="border-radius:20px; font-weight:600;" href="project.php?cusid=<?php echo urlencode($cus_id); ?>&year=All">All Years</a>
+                                </li>
+                                <?php foreach($available_years as $year): ?>
+                                <li>
+                                    <a class="<?php echo $selected_year == $year ? 'active p_nav-link' : 'p_nav-link text-muted'; ?> px-3 py-2" style="border-radius:20px; font-weight:600;" href="project.php?cusid=<?php echo urlencode($cus_id); ?>&year=<?php echo urlencode($year); ?>"><?php echo htmlspecialchars($year); ?></a>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
 
                         <!-- Summary Cards -->
@@ -866,28 +904,28 @@ $stmt_details->execute();
                                                     
                                                     
                                                     <td>
-                                                        <?php if ($row["project_status"] === 'Completed' && $details['checklist_no']) { ?>
-                                                            <a href="../document/checklist/type/view/<?php echo htmlspecialchars($details['checklist_type']); ?>.php?checklist_type=<?php echo htmlspecialchars($details['checklist_type']); ?>&checklist_no=<?php echo htmlspecialchars($details['checklist_id']); ?>" 
-                                                               class="btn btn-sm btn-primary" target="_blank">
-                                                                View Checklist
+                                                        <?php if (!empty($details['checklist_no']) && strtoupper($details['checklist_status']) === 'CREATED'): ?>
+                                                            <a href="../document/checklist/type/download_pdf.php?type=<?php echo urlencode($details['checklist_type']); ?>&checklist_no=<?php echo urlencode($details['checklist_id']); ?>" 
+                                                               class="btn btn-sm btn-outline-success mb-1" target="_blank" title="Download Checklist">
+                                                                <i class="icofont-download"></i> Checklist
                                                             </a>
-                                                        <?php } else { ?>
+                                                        <?php else: ?>
                                                             <span class="text-muted">
                                                                 <?php echo $row["project_status"] === 'Completed' ? 'Not Created' : 'Not Available'; ?>
                                                             </span>
-                                                        <?php } ?>
+                                                        <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <?php if ($row["project_status"] === 'Completed' && $details['report_no']) { ?>
-                                                            <a href="../document/report/view.php?project_no=<?php echo $project_no; ?>&report_no=<?php echo $details['report_no']; ?>"  
-                                                               class="btn btn-sm btn-primary" target="_blank">
-                                                                View Report
+                                                        <?php if (!empty($details['report_no']) && strtoupper($details['report_status']) === 'GENERATED'): ?>
+                                                            <a href="../document/report/download.php?project_no=<?php echo urlencode($project_no); ?>&report_no=<?php echo urlencode($details['report_no']); ?>"  
+                                                               class="btn btn-sm btn-outline-primary mb-1" target="_blank" title="Download Report">
+                                                                <i class="icofont-download"></i> Report
                                                             </a>
-                                                        <?php } else { ?>
+                                                        <?php else: ?>
                                                             <span class="text-muted">
                                                                 <?php echo $row["project_status"] === 'Completed' ? 'Not Generated' : 'Not Available'; ?>
                                                             </span>
-                                                        <?php } ?>
+                                                        <?php endif; ?>
                                                     </td>
                                                     <td>
                                                         <?php if ($row["project_status"] === 'Completed' && $details['certificate_count'] > 0) { ?>

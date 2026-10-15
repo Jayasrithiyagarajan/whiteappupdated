@@ -526,6 +526,9 @@ $manual_project_no = "CIMS217"; // 👈 change this anytime you need
                                         <a href="../customer/project.php?cusid=<?php echo urlencode($customer['cus_id']); ?>">Projects</a>
                                     </li>
                                     <li>
+                                        <a class="p_nav-link has-before" href="../customer/operator_assessments.php?cusid=<?php echo urlencode($customer['cus_id']); ?>">Operator assessments</a>
+                                    </li>
+                                    <li>
                                         <a href="../dashboard/customer_kpi_dashboard.php">KPI Analytics</a>
                                     </li>
                                     <li>

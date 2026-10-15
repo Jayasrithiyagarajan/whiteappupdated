@@ -143,7 +143,7 @@ function getRemark($itemIndex, $saved_remarks) {
                 <th>LOCATION</th>
                 <td><strong><?php echo $row['location']; ?></strong></td>
                 <th>STICKER NO.</th>
-                <td><strong><?php echo $row['sticker_no']; ?></strong></td>
+                <td><input type="text" name="sticker_no" form="checklistForm" value="<?php echo htmlspecialchars($row['sticker_no'] ?? ''); ?>" class="form-control" style="font-weight: bold; border: none; background: transparent;"></td>
             </tr>
             <tr>
                 <th>EQUIPMENT NO</th>

@@ -126,6 +126,12 @@ function getRemark($itemIndex, $saved_remarks) {
                     <th>EQUIPMENT TYPE:</th>
                     <td><input type="text" name="equipmenttype" value="<?php echo htmlspecialchars($row['equipmenttype'] ?? ''); ?>" class="form-control" style="font-weight: bold; border: none; background: transparent;"></td>
                 </tr>
+                <tr>
+                    <th>STICKER NO.</th>
+                    <td><input type="text" name="sticker_no" value="<?php echo htmlspecialchars($row['sticker_no'] ?? ''); ?>" class="form-control" style="font-weight: bold; border: none; background: transparent;"></td>
+                    <th></th>
+                    <td></td>
+                </tr>
                 
                 
                 <tr>
