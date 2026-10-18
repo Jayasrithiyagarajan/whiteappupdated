@@ -276,7 +276,7 @@ $equipment = $equipment_list;
         .equipment-title {
             background: #062b63;
             color: #ffffff;
-            font-size: 14.5px;
+            font-size: 20px;
             font-weight: 700;
             padding: 6px 12px;
             text-align: center;
@@ -295,24 +295,24 @@ $equipment = $equipment_list;
 
         .equipment-table th {
             background: rgba(240, 244, 248, 0.85);
-            color: #062b63;
+            color: #212529;
             text-align: left;
             padding: 6px 8px;
             border: 1px solid #d6dce6;
             text-transform: uppercase;
-            font-weight: 700;
-            font-size: 12px;
+            font-weight: 600;
+            font-size: 20px;
             vertical-align: middle;
             line-height: 1.35;
         }
 
         .equipment-table td {
-            padding: 6px 8px;
+            padding: 10px 8px;
             border: 1px solid #d6dce6;
-            color: #111;
-            font-weight: 600;
-            font-size: 13px;
-            line-height: 1.45;
+            color: #062b63;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 1.3;
             vertical-align: middle;
             word-break: break-word;
             overflow-wrap: break-word;
@@ -454,9 +454,9 @@ $equipment = $equipment_list;
             .header-title         { font-size: 16px !important; letter-spacing: 0.4px !important; }
             .company-name         { font-size: 19px !important; text-shadow: none !important; }
             .division-name        { font-size: 11px !important; }
-            .equipment-title      { font-size: 16px !important; }
-            .equipment-table th   { font-size: 13px !important; }
-            .equipment-table td   { font-size: 14px !important; font-weight: 600 !important; line-height: 1.45 !important; word-break: break-word !important; }
+            .equipment-title      { font-size: 20px !important; }
+            .equipment-table th   { font-size: 20px !important; font-weight: 600 !important; color: #212529 !important; }
+            .equipment-table td   { font-size: 20px !important; font-weight: 700 !important; color: #062b63 !important; line-height: 1.3 !important; word-break: break-word !important; }
             .equipment-item       { font-size: 14px !important; }
             .center-text          { font-size: 14px !important; position: absolute !important; bottom: 135px !important; left: 0 !important; right: 0 !important; width: 100% !important; text-align: center !important; }
             .footer-text          { font-size: 13.5px !important; font-weight: 700 !important; }
@@ -569,7 +569,7 @@ $equipment = $equipment_list;
 
         <!-- BODY -->
         <div class="id-body">
-            <div class="equipment-box">
+            <div class="equipment-box" id="equipmentBox">
                 <div class="equipment-title">Equipment Details</div>
                 <div class="equipment-list">
                     <?php if (!empty($equipment)): ?>
@@ -585,10 +585,10 @@ $equipment = $equipment_list;
                             <tbody>
                                 <?php foreach ($equipment as $item): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($item['equipment_type']); ?></td>
-                                        <td><?= htmlspecialchars($item['manufacturer']); ?></td>
-                                        <td><?= htmlspecialchars($item['model']); ?></td>
-                                        <td><?= htmlspecialchars($item['capacity']); ?></td>
+                                        <td><?= htmlspecialchars(stripslashes($item['equipment_type'])); ?></td>
+                                        <td><?= htmlspecialchars(stripslashes($item['manufacturer'])); ?></td>
+                                        <td><?= htmlspecialchars(stripslashes($item['model'])); ?></td>
+                                        <td><?= htmlspecialchars(stripslashes($item['capacity'])); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -652,5 +652,35 @@ $equipment = $equipment_list;
         <a href="../operator_assessment/view-assessment.php?id=<?= $id; ?>" class="btn-action" style="background: #333;">Back to Assessment</a>
     </div>
 
+
+    <script>
+    // Auto-fit equipment table: start at 20px and shrink until it clears the notice text
+    (function () {
+        function fitEquipment() {
+            var box = document.getElementById('equipmentBox');
+            var note = document.querySelector('.back-card .center-text');
+            if (!box || !note) return;
+            var cells = box.querySelectorAll('.equipment-table th, .equipment-table td');
+            var title = box.querySelector('.equipment-title');
+            if (!cells.length) return;
+            var MAX = 20, MIN = 9;
+            function apply(fs) {
+                var pad = Math.max(2, Math.round(fs * 0.3));
+                cells.forEach(function (c) {
+                    c.style.setProperty('font-size', fs + 'px', 'important');
+                    c.style.setProperty('padding-top', pad + 'px', 'important');
+                    c.style.setProperty('padding-bottom', pad + 'px', 'important');
+                });
+                if (title) title.style.setProperty('font-size', Math.min(fs, 20) + 'px', 'important');
+            }
+            for (var fs = MAX; fs >= MIN; fs -= 0.5) {
+                apply(fs);
+                if (box.getBoundingClientRect().bottom <= note.getBoundingClientRect().top - 4) break;
+            }
+        }
+        window.addEventListener('load', fitEquipment);
+        window.addEventListener('resize', fitEquipment);
+    })();
+    </script>
 </body>
 </html>
