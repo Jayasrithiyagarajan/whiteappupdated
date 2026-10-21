@@ -576,7 +576,7 @@ $equipment = $equipment_list;
                         <table class="equipment-table">
                             <thead>
                                 <tr>
-                                    <th>Equipment Type</th>
+                                    <th>Equip. Type</th>
                                     <th>Manufacturer</th>
                                     <th>Model</th>
                                     <th>Capacity</th>

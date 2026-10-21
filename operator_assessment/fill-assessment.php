@@ -237,18 +237,8 @@ while ($doc = $docs_result->fetch_assoc()) {
                             </div>
 
                             <div class="form-group">
-                                <label class="font-14 bold mb-2">3. Photo (Upload or Capture) <span class="text-danger">*</span></label>
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <input type="file" class="form-control" name="doc_photo" id="doc_photo" accept="image/*" capture="camera">
-                                    <button type="button" class="btn btn-primary ml-2" id="startCamera" data-toggle="modal" data-target="#cameraModal">
-                                        <i class="fas fa-camera"></i> Capture
-                                    </button>
-                                </div>
-                                <input type="hidden" name="captured_photo" id="captured_photo">
-                                <div id="photoPreview" class="mt-2 d-none">
-                                    <img src="" id="capturedImage" class="img-thumbnail" style="max-height: 150px;">
-                                    <button type="button" class="btn btn-sm btn-danger ml-2" id="removePhoto">Remove</button>
-                                </div>
+                                <label class="font-14 bold mb-2">3. Photo <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="doc_photo" id="doc_photo" accept="image/*">
                                 <?php if (isset($existing_docs['PHOTO'])): ?>
                                     <small class="text-success">✓ File uploaded</small>
                                 <?php endif; ?>
@@ -321,34 +311,6 @@ while ($doc = $docs_result->fetch_assoc()) {
     </div>
 </div>
 
-<!-- Camera Modal -->
-<div class="modal fade" id="cameraModal" tabindex="-1" role="dialog" aria-labelledby="cameraModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cameraModalLabel">Capture Operator Photo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <div id="cameraWrapper" class="mb-3">
-                    <video id="video" width="100%" height="auto" autoplay playsinline class="rounded border"></video>
-                    <canvas id="canvas" class="d-none"></canvas>
-                </div>
-                <div id="previewWrapper" class="mb-3 d-none">
-                    <img id="capturePreview" class="img-fluid rounded border">
-                </div>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary" id="retakePhoto" style="display: none;">Retake</button>
-                <button type="button" class="btn btn-primary" id="captureBtn">Take Snapshot</button>
-                <button type="button" class="btn btn-success" id="usePhoto" style="display: none;">Use This Photo</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?php include_once('../inc/footer.php'); ?>
 
 <style>
@@ -381,7 +343,7 @@ document.querySelector("form").addEventListener("submit", function (event) {
 
     // Validate required fields
     document.querySelectorAll("input[required], select[required]").forEach((input) => {
-        if (!input.value.trim() && !document.getElementById('captured_photo').value) {
+        if (!input.value.trim()) {
             valid = false;
             input.style.border = "2px solid red";
         } else {
@@ -393,89 +355,6 @@ document.querySelector("form").addEventListener("submit", function (event) {
         event.preventDefault();
         alert("Please fill out all required fields!");
     }
-});
-
-// Camera Capture Logic
-let stream = null;
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const captureBtn = document.getElementById('captureBtn');
-const retakeBtn = document.getElementById('retakePhoto');
-const useBtn = document.getElementById('usePhoto');
-const cameraWrapper = document.getElementById('cameraWrapper');
-const previewWrapper = document.getElementById('previewWrapper');
-const capturePreview = document.getElementById('capturePreview');
-const capturedInput = document.getElementById('captured_photo');
-const photoPreview = document.getElementById('photoPreview');
-const capturedImage = document.getElementById('capturedImage');
-const removePhotoBtn = document.getElementById('removePhoto');
-const fileInput = document.getElementById('doc_photo');
-
-$('#cameraModal').on('shown.bs.modal', function () {
-    startCamera();
-});
-
-$('#cameraModal').on('hidden.bs.modal', function () {
-    stopCamera();
-    resetCameraUI();
-});
-
-async function startCamera() {
-    try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
-        video.srcObject = stream;
-    } catch (err) {
-        console.error("Error accessing camera: ", err);
-        alert("Could not access camera. Please check permissions.");
-        $('#cameraModal').modal('hide');
-    }
-}
-
-function stopCamera() {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-    }
-}
-
-function resetCameraUI() {
-    cameraWrapper.classList.remove('d-none');
-    previewWrapper.classList.add('d-none');
-    captureBtn.style.display = 'inline-block';
-    retakeBtn.style.display = 'none';
-    useBtn.style.display = 'none';
-}
-
-captureBtn.addEventListener('click', () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-    capturePreview.src = dataUrl;
-    
-    cameraWrapper.classList.add('d-none');
-    previewWrapper.classList.remove('d-none');
-    captureBtn.style.display = 'none';
-    retakeBtn.style.display = 'inline-block';
-    useBtn.style.display = 'inline-block';
-});
-
-retakeBtn.addEventListener('click', () => {
-    resetCameraUI();
-});
-
-useBtn.addEventListener('click', () => {
-    const dataUrl = capturePreview.src;
-    capturedInput.value = dataUrl;
-    capturedImage.src = dataUrl;
-    photoPreview.classList.remove('d-none');
-    fileInput.value = ''; // Clear file input if a photo is captured
-    $('#cameraModal').modal('hide');
-});
-
-removePhotoBtn.addEventListener('click', () => {
-    capturedInput.value = '';
-    photoPreview.classList.add('d-none');
 });
 
 // Equipment dynamic rows logic
@@ -500,11 +379,4 @@ function updateEquipmentRows(count) {
 
 // Set initial required states
 updateEquipmentRows(parseInt(eqCountSelector.value));
-
-fileInput.addEventListener('change', () => {
-    if (fileInput.value) {
-        capturedInput.value = '';
-        photoPreview.classList.add('d-none');
-    }
-});
 </script>

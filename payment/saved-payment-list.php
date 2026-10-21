@@ -10,8 +10,8 @@ if (!$logged_in_user || $user_role !== 'admin') {
     exit;
 }
 
-// Stats from payment_list
-$statsRes = $conn->query("SELECT COUNT(*) as total_count, COALESCE(SUM(total_amount), 0) as sum_amount, COALESCE(SUM(travel_charge), 0) as sum_travel FROM payment_list");
+// Stats from payment_list for default active year (2026) based on inspection_date
+$statsRes = $conn->query("SELECT COUNT(*) as total_count, COALESCE(SUM(pl.total_amount), 0) as sum_amount, COALESCE(SUM(pl.travel_charge), 0) as sum_travel FROM payment_list pl WHERE YEAR(IFNULL((SELECT ci.inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at))) = 2026");
 $statsRow = $statsRes ? $statsRes->fetch_assoc() : ['total_count' => 0, 'sum_amount' => 0, 'sum_travel' => 0];
 
 $totalRecords     = $statsRow['total_count'];
@@ -497,7 +497,7 @@ table.dataTable {
                         <th>S.No</th>
                         <th>Project ID</th>
                         <th>Action</th>
-                        <th>Submitted Date</th>
+                        <th>Inspection Date</th>
                         <th>Equipment ID</th>
                         <th>Location</th>
                         <th>Client Name</th>

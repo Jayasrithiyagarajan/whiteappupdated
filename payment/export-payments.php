@@ -16,7 +16,7 @@ $output = fopen('php://output', 'w');
 
 // CSV Headers
 fputcsv($output, [
-    'S.No', 'Project ID', 'Payment Mode', 'Creation Date', 'Equipment ID', 'Location', 
+    'S.No', 'Project ID', 'Payment Mode', 'Inspection Date', 'Equipment ID', 'Location', 
     'Client Name', 'Inspector Name', 'Sticker No', 'Equipment Type', 'Inspection Type'
 ]);
 
@@ -38,9 +38,9 @@ $params = [];
 $types  = "";
 
 if ($filter_year !== '' && $filter_year !== 'all') {
-    $whereConditions[] = "pi.creation_date >= ? AND pi.creation_date <= ?";
-    $params[] = "$filter_year-01-01 00:00:00";
-    $params[] = "$filter_year-12-31 23:59:59";
+    $whereConditions[] = "IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pi.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pi.creation_date)) >= ? AND IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pi.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pi.creation_date)) <= ?";
+    $params[] = "$filter_year-01-01";
+    $params[] = "$filter_year-12-31";
     $types .= "ss";
 }
 
@@ -111,13 +111,13 @@ if ($filter_inspection_type !== '' && $filter_inspection_type !== 'all') {
 }
 
 if ($filter_date_from !== '') {
-    $whereConditions[] = "DATE(pi.creation_date) >= ?";
+    $whereConditions[] = "IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pi.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pi.creation_date)) >= ?";
     $params[] = $filter_date_from;
     $types .= "s";
 }
 
 if ($filter_date_to !== '') {
-    $whereConditions[] = "DATE(pi.creation_date) <= ?";
+    $whereConditions[] = "IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pi.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pi.creation_date)) <= ?";
     $params[] = $filter_date_to;
     $types .= "s";
 }
@@ -128,11 +128,12 @@ if (count($whereConditions) > 0) {
 }
 
 $sql = "SELECT pi.project_no, pi.customer_name, pi.inspector_name, pi.payment_mode, pi.creation_date, pi.equipment_id, pi.equipment_location, pi.equipment_type, pi.inspection_type,
-               (SELECT sticker_no FROM checklist_information WHERE project_no = pi.project_no ORDER BY id DESC LIMIT 1) AS sticker_no 
+               (SELECT inspection_date FROM checklist_information WHERE project_no = pi.project_no ORDER BY checklist_id DESC LIMIT 1) AS inspection_date,
+               (SELECT sticker_no FROM checklist_information WHERE project_no = pi.project_no ORDER BY checklist_id DESC LIMIT 1) AS sticker_no 
         FROM project_info pi
         LEFT JOIN payment_list pl ON pi.project_no = pl.project_no
         $where 
-        ORDER BY pi.creation_date DESC";
+        ORDER BY IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pi.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pi.creation_date)) DESC";
 
 $stmt = $conn->prepare($sql);
 if ($stmt) {
@@ -145,11 +146,14 @@ if ($stmt) {
     $sn = 1;
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+            $inspDateRaw = !empty($row['inspection_date']) ? $row['inspection_date'] : $row['creation_date'];
+            $inspDateDisplay = (!empty($inspDateRaw) && $inspDateRaw !== '0000-00-00') ? date('d M Y', strtotime($inspDateRaw)) : '-';
+
             fputcsv($output, [
                 $sn++,
                 $row['project_no'],
                 $row['payment_mode'] ? $row['payment_mode'] : 'Not Specified',
-                date('d M Y', strtotime($row['creation_date'])),
+                $inspDateDisplay,
                 $row['equipment_id'] ?? '-',
                 $row['equipment_location'] ?? '-',
                 $row['customer_name'] ?? '-',

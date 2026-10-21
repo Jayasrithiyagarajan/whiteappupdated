@@ -54,7 +54,7 @@ $cols = [
     0  => 'pl.id',
     1  => 'pl.project_no',
     2  => 'pl.project_no',
-    3  => 'pl.created_at',
+    3  => 'IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at))',
     4  => 'pi.equipment_id',
     5  => 'pi.equipment_location',
     6  => 'pi.customer_name',
@@ -70,7 +70,7 @@ $cols = [
     16 => 'pl.no_of_equipment'
 ];
 
-$orderBy  = 'pl.created_at';
+$orderBy  = 'IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at))';
 $orderDir = 'DESC';
 
 if (isset($_POST['order'][0])) {
@@ -86,9 +86,9 @@ $params = [];
 $types  = "";
 
 if ($filter_year !== '' && $filter_year !== 'all') {
-    $whereConditions[] = "pl.created_at >= ? AND pl.created_at <= ?";
-    $params[] = "$filter_year-01-01 00:00:00";
-    $params[] = "$filter_year-12-31 23:59:59";
+    $whereConditions[] = "IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at)) >= ? AND IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at)) <= ?";
+    $params[] = "$filter_year-01-01";
+    $params[] = "$filter_year-12-31";
     $types .= "ss";
 }
 
@@ -156,13 +156,13 @@ if ($filter_inspection_type !== '' && $filter_inspection_type !== 'all') {
 }
 
 if ($filter_date_from !== '') {
-    $whereConditions[] = "DATE(pl.created_at) >= ?";
+    $whereConditions[] = "IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at)) >= ?";
     $params[] = $filter_date_from;
     $types .= "s";
 }
 
 if ($filter_date_to !== '') {
-    $whereConditions[] = "DATE(pl.created_at) <= ?";
+    $whereConditions[] = "IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = pl.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(pl.created_at)) <= ?";
     $params[] = $filter_date_to;
     $types .= "s";
 }
@@ -175,7 +175,7 @@ if (count($whereConditions) > 0) {
 $totalWhereStr = "";
 if ($filter_year !== '' && $filter_year !== 'all') {
     $fy_esc = $conn->real_escape_string($filter_year);
-    $totalWhereStr = "WHERE created_at >= '$fy_esc-01-01 00:00:00' AND created_at <= '$fy_esc-12-31 23:59:59'";
+    $totalWhereStr = "WHERE IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = payment_list.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(created_at)) >= '$fy_esc-01-01' AND IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = payment_list.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(created_at)) <= '$fy_esc-12-31'";
 }
 
 $totalRes = $conn->query("SELECT COUNT(*) AS cnt FROM payment_list $totalWhereStr");
@@ -208,7 +208,8 @@ $stmt->close();
 
 $sqlData = "SELECT pl.id, pl.project_no, pl.inspector_name, pl.no_of_equipment, pl.total_amount, pl.travel_charge, 
                    pl.broucher_no, pl.remarks, pl.other_inspector_name, pl.created_at, pi.customer_name, pi.equipment_id, pi.equipment_location, pi.inspection_type, pi.equipment_type,
-                   (SELECT sticker_no FROM checklist_information WHERE project_no = pl.project_no ORDER BY id DESC LIMIT 1) AS sticker_no
+                   (SELECT inspection_date FROM checklist_information WHERE project_no = pl.project_no ORDER BY checklist_id DESC LIMIT 1) AS inspection_date,
+                   (SELECT sticker_no FROM checklist_information WHERE project_no = pl.project_no ORDER BY checklist_id DESC LIMIT 1) AS sticker_no
             FROM payment_list pl
             LEFT JOIN project_info pi ON pl.project_no = pi.project_no
             $where
@@ -258,11 +259,16 @@ while ($r = $res->fetch_assoc()) {
 
     $otherInspectorDisplay = (!empty($r['other_inspector_name'])) ? htmlspecialchars($r['other_inspector_name']) : '-';
 
+    $inspDateRaw = !empty($r['inspection_date']) ? $r['inspection_date'] : $r['created_at'];
+    $inspDateDisplay = (!empty($inspDateRaw) && $inspDateRaw !== '0000-00-00') ? date('d M Y', strtotime($inspDateRaw)) : '-';
+
+    $project_link = "<a href='../job/job-details.php?id=" . urlencode($r['project_no']) . "' style='color:#2563eb; font-weight:700; text-decoration:none;'>" . $projectNoEsc . "</a>";
+
     $data[] = [
         "sn"                   => $sn++,
         "project_no"           => $project_link,
         "actions"              => $actionBtn,
-        "created_at"           => htmlspecialchars(date('d M Y, h:i A', strtotime($r['created_at']))),
+        "created_at"           => $inspDateDisplay,
         "equipment_id"         => htmlspecialchars($r['equipment_id'] ?? '-'),
         "equipment_location"   => htmlspecialchars($r['equipment_location'] ?? '-'),
         "customer_name"        => htmlspecialchars($r['customer_name'] ?? '-'),

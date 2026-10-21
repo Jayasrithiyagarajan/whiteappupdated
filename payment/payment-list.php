@@ -12,7 +12,7 @@ if (!$logged_in_user || !in_array($user_role, ['admin', 'inspector'])) {
 
 // Initial KPI Stats (Default to 2026 for fast load)
 $defaultYear = '2026';
-$yearWhere   = " creation_date >= '$defaultYear-01-01 00:00:00' AND creation_date <= '$defaultYear-12-31 23:59:59'";
+$yearWhere   = " IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = project_info.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(creation_date)) >= '$defaultYear-01-01' AND IFNULL((SELECT inspection_date FROM checklist_information ci WHERE ci.project_no = project_info.project_no ORDER BY ci.checklist_id DESC LIMIT 1), DATE(creation_date)) <= '$defaultYear-12-31'";
 
 if ($user_role === 'inspector') {
     $whereClause = " WHERE inspector_name = '" . $conn->real_escape_string($logged_in_user) . "' AND LOWER(payment_mode) = 'cash' AND $yearWhere";
@@ -508,7 +508,7 @@ table.dataTable {
                         <th>Project ID</th>
                         <th>Actions</th>
                         <th>Payment Mode</th>
-                        <th>Creation Date</th>
+                        <th>Inspection Date</th>
                         <th>Equipment ID</th>
                         <th>Location</th>
                         <th>Client Name</th>
