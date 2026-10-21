@@ -114,9 +114,10 @@ th {
 
 <br>
 
-<h2 style="text-align: center;">NDT CHECKLIST <br>
-REFERENCE: ASME B30 STANDARDS</h2>
-
+<h2 style="text-align: center;">
+ WHEEL, BACKHOE & SKIDLOADER, & PIPE LOGGER<br>
+        (EARTH MOVING MACHINERY) <br>
+        DS/EN 474-1:2006+A6:2019</h2>
 <br>
 
 <table>

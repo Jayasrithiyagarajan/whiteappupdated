@@ -13,7 +13,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
            p.project_no, p.creation_date, p.sticker_status, p.customer_name, p.equipment_location,
            p.inspector_name, p.checklist_type, p.equipment_id,
            r.report_no, r.model, r.type, r.prev_sticker_no, r.issued_company, 
-           r.next_inspection_due_date, r.deficiency, r.corrective_action, r.inspection_status, r.no_of_equipments_inspected, r.jrn, r.capacity
+           r.next_inspection_due_date, r.deficiency, r.corrective_action, r.inspection_status, r.no_of_equipments_inspected, r.jrn, r.capacity, r.sticker_number_issued
     FROM checklist_information c
     JOIN project_info p ON c.project_no = p.project_no
     JOIN reports r ON r.project_no = p.project_no AND r.report_no = '$report_no'
@@ -33,7 +33,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
         $inspection_date = $row['inspection_date'];
         $manufacturer = $row['manufacturer'];
         $capacity_swl = (isset($row['capacity']) && $row['capacity'] !== '') ? $row['capacity'] : $row['capacity_swl'];
-        $sticker_no = $row['sticker_no'];
+        $sticker_no = (!empty($row['sticker_number_issued']) && strtolower(trim($row['sticker_number_issued'])) !== 'na') ? $row['sticker_number_issued'] : $row['sticker_no'];
         $crane_serial_no = $row['crane_serial_no'];
         $creation_date = $row['creation_date'];
         $sticker_status = $row['sticker_status'];
@@ -347,6 +347,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                         <form action="update_report.php" method="POST" class="create-job-form" enctype="multipart/form-data">
                             <input type="hidden" name="report_no" value="<?php echo $report_no; ?>">
                             <input type="hidden" name="project_no" value="<?php echo $project_no; ?>">
+                            <input type="hidden" name="sticker_number_issued_hidden" value="<?php echo htmlspecialchars($sticker_no); ?>">
                             <div class="row">
                                 <div class="col-lg-6 mb-30">
                                     <div class="create-job-section">
@@ -447,7 +448,7 @@ if (isset($_GET['project_no']) && isset($_GET['report_no'])) {
                                 <?php if (strtolower(trim($equipment_type)) !== 'ndt equipment'): ?>
                                 <div class="form-group">
                                     <label class="font-14 bold mb-2">Sticker Number Issued</label>
-                                    <input type="text" class="theme-input-style" value="<?php echo htmlspecialchars($sticker_no); ?>" readonly>
+                                    <input type="text" class="theme-input-style" name="sticker_number_issued" value="<?php echo htmlspecialchars($sticker_no); ?>" readonly>
                                 </div>
                                 <?php endif; ?>
 

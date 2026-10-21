@@ -144,7 +144,7 @@ include_once('./view-fetch.php');
     </tr>
     <tr>
         <td colspan="3" class="">
-            <strong>INSPECTION CHECKLIST FOR WHEEL LOADER</strong>
+            <strong>INSPECTION CHECKLIST FOR WHEEL, BACKHOE & SKIDLOADER, & PIPE LOGGER</strong>
         </td>
     </tr>
     <tr>
@@ -161,7 +161,7 @@ include_once('./view-fetch.php');
 </table>
 			</div>
 
-        <h4>WHEEL LOADER, COMPACT SKID LOADER, & PIPE LOGGER</h4>
+        <h4>WHEEL, BACKHOE & SKIDLOADER, & PIPE LOGGER</h4>
         <h4>(EARTH MOVING MACHINERY) </h4>
         <h4>DS/EN 474-1:2006+A6:2019</h4>
 		 <!--<button class="btn btn-primary no-print" onclick="preparePrint()">Print View</button>-->
