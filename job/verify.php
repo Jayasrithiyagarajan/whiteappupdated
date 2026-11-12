@@ -163,6 +163,12 @@ include_once('../file/config.php');
                 }
             });
 
+            $("#stickerNo, #projectNo").on("keypress", function(e) {
+                if (e.which === 13) {
+                    $("#submitVerification").click();
+                }
+            });
+
             $("#submitVerification").click(function() {
                 errorMessage.hide();
                 

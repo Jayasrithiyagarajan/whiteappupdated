@@ -18,8 +18,11 @@ if (empty($identifier)) {
 }
 
 if ($type === 'sticker') {
-    // Check sticker status in the database
-    $query = "SELECT status FROM stickers WHERE sticker_start_no = ?";
+    // Check sticker status and associated project completion in the database
+    $query = "SELECT s.status, s.project_no, p.project_status 
+              FROM stickers s 
+              LEFT JOIN project_info p ON s.project_no = p.project_no 
+              WHERE s.sticker_start_no = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $identifier);
     $stmt->execute();
@@ -27,10 +30,12 @@ if ($type === 'sticker') {
     
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        if ($row['status'] === 'active') {
-            $response['valid'] = true;
-        } else {
+        if (empty($row['project_no']) || strcasecmp(trim($row['project_status'] ?? ''), 'Completed') !== 0) {
+            $response['message'] = 'Project not completed. Contact admin';
+        } elseif (strtolower($row['status'] ?? '') !== 'active') {
             $response['message'] = 'Your sticker number is not active. Kindly contact admin.';
+        } else {
+            $response['valid'] = true;
         }
     } else {
         $response['message'] = 'Sticker number not found.';
