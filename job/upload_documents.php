@@ -1,5 +1,8 @@
 <?php
 include '../file/config.php';
+include_once __DIR__ . '/doc_names.php';
+ensure_doc_name_columns($conn);
+$docNamesPosted = (isset($_POST['doc_names']) && is_array($_POST['doc_names'])) ? $_POST['doc_names'] : [];
 
 header('Content-Type: application/json');
 
@@ -36,6 +39,7 @@ if (!is_dir($uploadDir)) {
 // Initialize arrays for both stored and original filenames
 $filePaths = array_fill(1, 10, null);
 $originalNames = array_fill(1, 10, null);
+$docNames = array_fill(1, 10, null);
 $uploadedCount = 0;
 
 // Process uploaded files
@@ -71,30 +75,27 @@ foreach ($_FILES['documents']['tmp_name'] as $key => $tmpName) {
     if (move_uploaded_file($tmpName, $filePath)) {
         $filePaths[$key + 1] = $safeName;  // Stored filename
         $originalNames[$key + 1] = $originalName;  // Original filename
+        $docNames[$key + 1] = clean_doc_name($docNamesPosted[$key] ?? '');  // Name typed by the inspector
         $uploadedCount++;
     }
 }
 
-// Prepare SQL columns and values - now including original filenames
+// Build the INSERT: project_no, 10 x (file, original name, document name), uploaded_by
 $columns = [];
-$fileValues = [];
-$originalValues = [];
-$placeholders = [];
-
+$params  = [$project_no];
 for ($i = 1; $i <= 10; $i++) {
     $columns[] = "file_$i";
-    $columns[] = "original_filename_$i";  // Assuming you have these columns
-    $placeholders[] = "?";
-    $placeholders[] = "?";
-    $fileValues[] = $filePaths[$i] ?? null;
-    $originalValues[] = $originalNames[$i] ?? null;
+    $columns[] = "original_filename_$i";
+    $columns[] = "doc_name_$i";
+    $params[]  = $filePaths[$i] ?? null;
+    $params[]  = $originalNames[$i] ?? null;
+    $params[]  = $docNames[$i] ?? null;
 }
-
+$params[] = $uploaded_by;
 $columnsStr = implode(', ', $columns);
-$placeholdersStr = implode(', ', $placeholders);
+$placeholdersStr = implode(', ', array_fill(0, 30, '?'));
 
-// Insert into database
-$sql = "INSERT INTO documents (project_no, $columnsStr, uploaded_by, uploaded_at) 
+$sql = "INSERT INTO documents (project_no, $columnsStr, uploaded_by, uploaded_at)
         VALUES (?, $placeholdersStr, ?, NOW())";
 
 $stmt = $conn->prepare($sql);
@@ -102,14 +103,7 @@ if (!$stmt) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
     exit;
 }
-
-// Bind parameters (project_no + 10 files + 10 original names + uploaded_by)
-$types = 's' . str_repeat('ss', 10) . 's'; // s for string for each value
-$params = array_merge([$project_no], array_merge_recursive(array_map(null, $fileValues, $originalValues)), [$uploaded_by]);
-$flatParams = [];
-array_walk_recursive($params, function($a) use (&$flatParams) { $flatParams[] = $a; });
-
-$stmt->bind_param($types, ...$flatParams);
+$stmt->bind_param(str_repeat('s', count($params)), ...$params);
 
 if ($stmt->execute()) {
     echo json_encode([

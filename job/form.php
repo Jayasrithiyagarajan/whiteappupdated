@@ -149,24 +149,26 @@ if (!empty($projectId)) {
 
 // Retrieve the project number from the query parameter
 $documents = [];
+$documentNames = [];
 
 if (!empty($projectId)) {
-    // Query the documents table for available files
-    $query = "SELECT file_1, file_2, file_3, file_4, file_5, file_6, file_7, file_8, file_9, file_10 FROM documents WHERE project_no = ?";
+    // Query the documents table for available files (every upload, with the name typed for each file)
+    include_once __DIR__ . '/doc_names.php';
+    ensure_doc_name_columns($conn);
+    $query = "SELECT * FROM documents WHERE project_no = ? ORDER BY uploaded_at ASC, id ASC";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $projectId);
     $stmt->execute();
-    $stmt->bind_result($file1, $file2, $file3, $file4, $file5, $file6, $file7, $file8, $file9, $file10);
-    $stmt->fetch();
-    $stmt->close();
-
-    // Store available files in an array
-    $files = [$file1, $file2, $file3, $file4, $file5, $file6, $file7, $file8, $file9, $file10];
-    foreach ($files as $file) {
-        if (!empty($file)) {
-            $documents[] = $file;
+    $docRes = $stmt->get_result();
+    while ($docRow = $docRes->fetch_assoc()) {
+        for ($n = 1; $n <= 10; $n++) {
+            if (!empty($docRow["file_$n"])) {
+                $documents[] = $docRow["file_$n"];
+                $documentNames[] = $docRow["doc_name_$n"] ?? '';
+            }
         }
     }
+    $stmt->close();
 }
 
 // Check if sticker is expired
@@ -488,7 +490,7 @@ endif; ?>
                     <div class="value">
                         <?php foreach ($documents as $index => $document): ?>
                             <a href="../uploads/<?php echo htmlspecialchars($projectId); ?>/<?php echo urlencode($document); ?>" class="download-link">
-                                Download Document <?php echo $index + 1; ?>
+                                <?php echo !empty($documentNames[$index]) ? htmlspecialchars($documentNames[$index]) : 'Download Document ' . ($index + 1); ?>
                             </a>
                             <br>
                         <?php

@@ -338,6 +338,15 @@ body {
     box-shadow: 0 4px 15px rgba(244,92,67,0.4);
 }
 
+.status-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+.status-actions a { margin: 0 !important; text-decoration: none; }
+.status-actions .status-btn { margin: 0 !important; white-space: nowrap; display: inline-block; }
 .status-btn:hover {
     transform: translateY(-2px);
     filter: brightness(1.1);
@@ -584,12 +593,14 @@ echo ucwords(str_replace(['-', '_'], ' ', htmlspecialchars($data['checklist_type
     </span>
 </li>
                                             <li><span class="key">Review Status:</span> <span class="text-success"><?php echo htmlspecialchars($reviewStatus); ?></span></li>
+                                            <div class="status-actions">
                                             <a href="../document/checklist/type/view/<?php echo htmlspecialchars($data['checklist_type']); ?>.php?checklist_type=<?php echo htmlspecialchars($data['checklist_type']); ?>&checklist_no=<?php echo htmlspecialchars($data['checklist_id']); ?>" target="_blank">
                                                 <span class="bg-primary text-white status-btn completed"> View Checklist</span>
                                             </a>
                                             <a href="../document/checklist/type/download_pdf.php?checklist_type=<?php echo htmlspecialchars($data['checklist_type']); ?>&checklist_no=<?php echo htmlspecialchars($data['checklist_id']); ?>" target="_blank">
-                                                <span class="bg-success text-white status-btn completed" style="margin-left: 8px;"> Download Checklist</span>
+                                                <span class="bg-success text-white status-btn completed"> Download Checklist</span>
                                             </a>
+                                            </div>
                                         </ul>
                                     <?php
 else: ?>
@@ -624,11 +635,12 @@ endif; ?>
     </span>
 </li>
                                             <li><span class="key">Review Status:</span> <span class="text-success"><?php echo htmlspecialchars($reviewStatus); ?></span></li>                                            
-                                            <a href="../document/report/view.php?project_no=<?php echo $data['project_no']; ?>&report_no=<?php echo $data['report_no']; ?>" target="_blank">
+                                            <div class="status-actions">
+<a href="../document/report/view.php?project_no=<?php echo $data['project_no']; ?>&report_no=<?php echo $data['report_no']; ?>" target="_blank">
     <span class="bg-primary text-white status-btn completed"> View Report</span>
 </a>
 <a href="../document/report/download.php?project_no=<?php echo $data['project_no']; ?>&report_no=<?php echo $data['report_no']; ?>" target="_blank">
-    <span class="bg-success text-white status-btn completed" style="margin-left: 8px;"> Download Report</span>
+    <span class="bg-success text-white status-btn completed"> Download Report</span>
 </a>
 
 <!--<a href="../sticker/download-white.php?sticker_start_no=<?php echo $data['sticker_number_issued']; ?>" target="_blank">-->
@@ -660,6 +672,7 @@ endif; ?>
     </a>
 <?php
     endif; ?>
+                                            </div>
                                         </ul>
                                     <?php
 else: ?>
@@ -764,9 +777,18 @@ endif; ?>
 <!--<div class="mt-5 ml-3 mr-3">-->
 <div class="col-lg-4 col-md-6 mt-5">
     <div class="invoice invoice-form">
-    <div class="black bold font-17 mb-3">Uploaded Documents:</div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3" style="gap: 10px;">
+        <div class="black bold font-17">Uploaded Documents:</div>
+        <?php if ($userRole === 'inspector'): ?>
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#uploadModal" style="white-space: nowrap;">
+                <i class="fas fa-upload mr-2"></i> Upload Documents
+            </button>
+        <?php endif; ?>
+    </div>
     <?php
 // Fetch uploaded documents from the database
+include_once __DIR__ . '/doc_names.php';
+ensure_doc_name_columns($conn);
 $project_no = $data['project_no'];
 $query = "SELECT * FROM documents WHERE project_no = ? ORDER BY uploaded_at DESC";
 $stmt = $conn->prepare($query);
@@ -834,6 +856,9 @@ foreach ($documents as $doc) {
 
     </div>
 </div>
+<?php if (!empty($doc["doc_name_$i"])): ?>
+    <div class="doc-name-label mt-2"><i class="fas fa-tag mr-1 text-muted"></i><strong><?php echo htmlspecialchars($doc["doc_name_$i"]); ?></strong></div>
+<?php endif; ?>
 
                             
                             <!--<?php if ($isImage): ?>-->
@@ -891,15 +916,7 @@ endif; ?>
 </div>
 </div>
 
-    
-    <?php if ($userRole === 'inspector'): ?>
-        <div class="justify-content-center mt-3">
-            <button class="btn btn-primary mt-3" data-toggle="modal" data-target="#uploadModal">
-                <i class="fas fa-upload mr-2"></i> Upload Documents
-            </button>
-        </div>
-    <?php
-endif; ?>
+
 
 
 <?php
@@ -1117,7 +1134,7 @@ endif; ?>
 ?>
                                     <tr>
                                         <td class="bold">#<?php echo htmlspecialchars($document['id']); ?></td>
-                                        <td>Uploaded Document (File <?php echo $i; ?>)</td>
+                                        <td>Uploaded Document (File <?php echo $i; ?>)<?php if (!empty($document["doc_name_$i"])): ?><br><strong><?php echo htmlspecialchars($document["doc_name_$i"]); ?></strong><?php endif; ?></td>
                                         <td><?php echo date('F d, Y', strtotime($uploadedAt)); ?></td>
                                         <td><?php echo htmlspecialchars($uploadedBy); ?></td>
                                         <td>Uploaded</td>
@@ -1574,6 +1591,15 @@ $(document).ready(function() {
             
             fileInfo.append(statusIcon);
             filePreview.append(fileInfo);
+
+            // Name box for this document (posted as doc_names[], same order as the files)
+            if (isValid) {
+                filePreview.append('<div class="mt-2"><label class="small mb-1">Document name</label>' +
+                    '<textarea name="doc_names[]" class="form-control form-control-sm" rows="2" maxlength="255" ' +
+                    'placeholder="Enter a name for this document"></textarea></div>');
+            } else {
+                filePreview.append('<input type="hidden" name="doc_names[]" value="">');   // keeps the order aligned
+            }
             
             // Add thumbnail preview for images
             if (file.type.match('image.*') && isValid) {

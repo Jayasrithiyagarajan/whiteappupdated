@@ -8,6 +8,8 @@ header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 0);
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 include_once '../file/config.php';
+include_once __DIR__ . '/doc_names.php';
+ensure_doc_name_columns($conn);
 
 function out(array $p, int $code = 200) { http_response_code($code); echo json_encode($p); exit; }
 
@@ -33,7 +35,7 @@ try {
     $stored = basename($row["file_$slot"]);
 
     // $slot is an int 1-10, so these column names are safe
-    $upd = $conn->prepare("UPDATE documents SET file_$slot = NULL, original_filename_$slot = NULL WHERE id = ?");
+    $upd = $conn->prepare("UPDATE documents SET file_$slot = NULL, original_filename_$slot = NULL, doc_name_$slot = NULL WHERE id = ?");
     $upd->bind_param('i', $id);
     if (!$upd->execute()) throw new Exception('Database error: ' . $upd->error);
     $upd->close();
