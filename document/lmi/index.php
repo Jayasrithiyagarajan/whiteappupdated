@@ -132,11 +132,20 @@ foreach ($colors as $letter => $color) {
             <p>Monitor LMI certificates, crane records, inspection status, clients, and locations.</p>
         </div>
 
-        <!-- <div class="hero-actions">
-            <a href="create.php" class="btn btn-primary px-4" style="min-height:46px; display:inline-flex; align-items:center; gap:8px;">
-                <i class="fa fa-plus"></i> Create New
-            </a>
-        </div> -->
+        <div class="hero-actions">
+            <div class="hero-stat">
+                <strong id="kpi-total">0</strong>
+                <span>Total Certificates</span>
+            </div>
+            <div class="hero-stat is-active">
+                <strong id="kpi-active">0</strong>
+                <span>Active</span>
+            </div>
+            <div class="hero-stat is-expired">
+                <strong id="kpi-expired">0</strong>
+                <span>Expired</span>
+            </div>
+        </div>
     </div>
 
     <!-- Filter Section -->
@@ -163,8 +172,12 @@ foreach ($colors as $letter => $color) {
                 </select>
             </div>
             <div class="filter-item">
-                <label>Date</label>
-                <input type="date" id="filter-date" class="form-control">
+                <label>From Date</label>
+                <input type="date" id="filter-date-from" class="form-control">
+            </div>
+            <div class="filter-item">
+                <label>To Date</label>
+                <input type="date" id="filter-date-to" class="form-control">
             </div>
             <div class="filter-item">
                 <label>Client</label>
@@ -189,7 +202,7 @@ foreach ($colors as $letter => $color) {
                 <select id="filter-year" class="form-select">
                     <option value="">All Years</option>
                     <?php 
-                    $years = $conn->query("SELECT DISTINCT YEAR(created_at) as y FROM lmi_certificates ORDER BY y DESC");
+                    $years = $conn->query("SELECT DISTINCT YEAR(COALESCE(NULLIF(inspection_date, '0000-00-00'), created_at)) as y FROM lmi_certificates WHERE COALESCE(NULLIF(inspection_date, '0000-00-00'), created_at) IS NOT NULL ORDER BY y DESC");
                     while($row = $years->fetch_assoc()) echo "<option value='{$row['y']}'>{$row['y']}</option>";
                     ?>
                 </select>
@@ -260,11 +273,42 @@ var lmiTable = $('#inspection-table').DataTable({
     dom: 'Brtip',
     buttons: [
         {
-            extend: 'csv',
-            text: '<i class="fa fa-file-csv me-1"></i> Export CSV',
+            text: '<i class="fa fa-file-excel me-1"></i> Export Excel',
             className: 'btn btn-primary',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            action: function () {
+                var params = new URLSearchParams({
+                    filter_inspector: $('#filter-inspector').val() || '',
+                    filter_date_from: $('#filter-date-from').val() || '',
+                    filter_date_to:   $('#filter-date-to').val() || '',
+                    filter_client:    $('#filter-client').val() || '',
+                    filter_status:    $('#filter-status').val() || '',
+                    filter_year:      $('#filter-year').val() || '',
+                    search:           $('#customSearch').val() || ''
+                });
+                window.location.href = 'export_lmi_certificates_excel.php?' + params.toString();
+            }
+        },
+        {
+            text: '<i class="fa fa-file-csv me-1"></i> Export CSV',
+            className: 'btn btn-secondary',
+            action: function (e, dt, node, config) {
+                var form = $('<form>', {
+                    action: 'lmi-datatable.php',
+                    method: 'POST'
+                });
+
+                form.append($('<input>', { type: 'hidden', name: 'filter_inspector', value: $('#filter-inspector').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_date_from', value: $('#filter-date-from').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_date_to',   value: $('#filter-date-to').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_client',    value: $('#filter-client').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_status',    value: $('#filter-status').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_year',      value: $('#filter-year').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'search[value]',    value: $('#customSearch').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'export',           value: 'true' }));
+
+                $('body').append(form);
+                form.submit();
+                form.remove();
             }
         }
     ],
@@ -274,10 +318,11 @@ var lmiTable = $('#inspection-table').DataTable({
         type: 'POST',
         data: function(d) {
             d.filter_inspector = $('#filter-inspector').val();
-            d.filter_date = $('#filter-date').val();
-            d.filter_client = $('#filter-client').val();
-            d.filter_status = $('#filter-status').val();
-            d.filter_year = $('#filter-year').val();
+            d.filter_date_from = $('#filter-date-from').val();
+            d.filter_date_to   = $('#filter-date-to').val();
+            d.filter_client    = $('#filter-client').val();
+            d.filter_status    = $('#filter-status').val();
+            d.filter_year      = $('#filter-year').val();
         },
         dataSrc: function(json) {
             $('#kpi-total').text(json.kpi.total);

@@ -18,6 +18,9 @@ $equipmentLocation = '';
 $equipmentNo = '';
 $inspectionDate = '';
 $stickerStatus = '';
+$stickerDbStatus = '';
+$stickerExpiryDate = '';
+$stickerNextDueDate = '';
 
 // New fields from reports table
 $prevStickerNo = '';
@@ -29,12 +32,12 @@ $nextInspectionDueDate = '';
 
 if (!empty($stickerNo)) {
     // Case 1: User came with stickerNo
-    // Step 1: Query the stickers table to get project_no
-    $query = "SELECT project_no, sticker_status FROM stickers WHERE sticker_start_no = ?";
+    // Step 1: Query the stickers table to get project_no, status, and dates
+    $query = "SELECT project_no, sticker_status, status, expiry_date, next_inspection_due_date FROM stickers WHERE sticker_start_no = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $stickerNo);
     $stmt->execute();
-    $stmt->bind_result($projectId, $stickerStatus);
+    $stmt->bind_result($projectId, $stickerStatus, $stickerDbStatus, $stickerExpiryDate, $stickerNextDueDate);
     $stmt->fetch();
     $stmt->close();
 }
@@ -43,11 +46,11 @@ elseif (!empty($projectNo)) {
     $projectId = $projectNo;
 
     // Try to get the stickerNo associated with this project
-    $query = "SELECT sticker_start_no, sticker_status FROM stickers WHERE project_no = ? LIMIT 1";
+    $query = "SELECT sticker_start_no, sticker_status, status, expiry_date, next_inspection_due_date FROM stickers WHERE project_no = ? LIMIT 1";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $projectId);
     $stmt->execute();
-    $stmt->bind_result($stickerNo, $stickerStatus);
+    $stmt->bind_result($stickerNo, $stickerStatus, $stickerDbStatus, $stickerExpiryDate, $stickerNextDueDate);
     $stmt->fetch();
     $stmt->close();
 }
@@ -165,6 +168,17 @@ if (!empty($projectId)) {
         }
     }
 }
+
+// Check if sticker is expired
+$isExpired = false;
+$currentDate = date('Y-m-d');
+$effectiveDueDate = !empty($nextInspectionDueDate) ? $nextInspectionDueDate : (!empty($stickerExpiryDate) ? $stickerExpiryDate : (!empty($stickerNextDueDate) ? $stickerNextDueDate : ''));
+
+if (strtolower(trim($stickerDbStatus ?? '')) === 'expired') {
+    $isExpired = true;
+} elseif (!empty($effectiveDueDate) && strtotime($currentDate) > strtotime($effectiveDueDate)) {
+    $isExpired = true;
+}
 ?>
 
 <!DOCTYPE html>
@@ -176,22 +190,66 @@ if (!empty($projectId)) {
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 25px 15px;
             background-color: #f1f1f1;
             font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .expired-banner {
+            width: 100%;
+            max-width: 520px;
+            background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+            color: #ffffff;
+            padding: 13px 18px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(198, 40, 40, 0.28);
+            box-sizing: border-box;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .card {
-            width: 520px;
+            width: 100%;
+            max-width: 520px;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: white;
             text-align: center;
             border: 2px solid green;
+            box-sizing: border-box;
+        }
+
+        .card.is-expired {
+            border: 2px solid #e53935;
+        }
+
+        .card-expired-bar {
+            background-color: #e53935;
+            color: #ffffff;
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .card-header {
@@ -279,8 +337,24 @@ if (!empty($projectId)) {
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="card-header" style="margin-top:40px">
+    <?php if ($isExpired): ?>
+        <div class="expired-banner">
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Sticker is Expired</span>
+        </div>
+    <?php endif; ?>
+
+    <div class="card <?php echo $isExpired ? 'is-expired' : ''; ?>">
+        <?php if ($isExpired): ?>
+            <div class="card-expired-bar">
+                <span>⚠️ Sticker is Expired</span>
+            </div>
+        <?php endif; ?>
+        <div class="card-header" style="<?php echo $isExpired ? 'border-top-left-radius:0;border-top-right-radius:0;' : 'margin-top:40px;'; ?>">
             <svg class="checkmark" viewBox="0 0 52 52">
                 <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
                 <path class="checkmark-check" fill="none" stroke="white" stroke-width="5" d="M14 27l7 7 15-15"/>
@@ -302,7 +376,15 @@ endif; ?>
 endif; ?>
             
             <?php if (!empty($stickerNo)): ?>
-                <div class="row"><div class="label">Sticker No:</div> <div class="value"><?php echo htmlspecialchars($stickerNo); ?></div></div>
+                <div class="row">
+                    <div class="label">Sticker No:</div> 
+                    <div class="value">
+                        <?php echo htmlspecialchars($stickerNo); ?>
+                        <?php if ($isExpired): ?>
+                            <span style="background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: 6px; font-weight: normal; vertical-align: middle;">Expired</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
             <?php
 endif; ?>
             

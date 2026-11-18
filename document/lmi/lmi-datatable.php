@@ -1,61 +1,61 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 include_once('../../file/config.php');
-session_start();
 
-$role     = $_SESSION['role'];
-$username = $_SESSION['username'];
+if (!isset($_SESSION['username'])) {
+    echo json_encode([
+        "draw" => 0,
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "data" => []
+    ]);
+    exit;
+}
 
-/* 🔥 FILTER PARAMETERS */
-$filterInspector = $_POST['filter_inspector'] ?? '';
-$filterDate = $_POST['filter_date'] ?? '';
-$filterClient = $_POST['filter_client'] ?? '';
-$filterStatus = $_POST['filter_status'] ?? '';
-$filterYear = $_POST['filter_year'] ?? '';
+$role     = $_SESSION['role'] ?? '';
+$username = $_SESSION['username'] ?? '';
 
-$columns = [
-    0 => 'lmi.project_no',
-    1 => 'lmi.project_no',
-    2 => 'lmi.certificate_no',
-    3 => 'lmi.crane_make',
-    4 => 'lmi.crane_id_no',
-    5 => 'lmi.inspector',
-    6 => 'lmi.customer_name',
-    7 => 'lmi.location',
-    8 => 'lmi.created_at',
-    9 => 'lmi.next_inspection_date'
-];
+/* FILTER PARAMETERS */
+$filterInspector = $_POST['filter_inspector'] ?? $_GET['filter_inspector'] ?? '';
+$filterDate      = $_POST['filter_date'] ?? $_GET['filter_date'] ?? '';
+$filterDateFrom  = $_POST['filter_date_from'] ?? $_GET['filter_date_from'] ?? '';
+$filterDateTo    = $_POST['filter_date_to'] ?? $_GET['filter_date_to'] ?? '';
+$filterClient    = $_POST['filter_client'] ?? $_GET['filter_client'] ?? '';
+$filterStatus    = $_POST['filter_status'] ?? $_GET['filter_status'] ?? '';
+$filterYear      = $_POST['filter_year'] ?? $_GET['filter_year'] ?? '';
+$search          = trim($_POST['search']['value'] ?? $_POST['search'] ?? $_GET['search']['value'] ?? $_GET['search'] ?? "");
+$isExport        = (isset($_POST['export']) && $_POST['export'] === 'true') || (isset($_GET['export']) && $_GET['export'] === 'true');
 
 $limit  = intval($_POST['length'] ?? 10);
 $start  = intval($_POST['start'] ?? 0);
-$orderColumnIndex = $_POST['order'][0]['column'] ?? 8;
-$orderDir         = ($_POST['order'][0]['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
-$search = $_POST['search']['value'] ?? '';
-
-/* 🔥 NUMERIC SORT FOR PROJECT NO */
-if ($orderColumnIndex == 1) {
-    $orderSql = "CAST(SUBSTRING(lmi.project_no, 5) AS UNSIGNED) $orderDir";
-} else {
-    $orderBy = $columns[$orderColumnIndex] ?? 'lmi.created_at';
-    $orderSql = "$orderBy $orderDir";
-}
+$draw   = intval($_POST['draw'] ?? 1);
 
 $where = "WHERE 1=1";
 
 if ($role === 'inspector') {
-    $where .= " AND lmi.inspector = '" . $conn->real_escape_string($username) . "'";
+    $where .= " AND lmi.inspector = '" . mysqli_real_escape_string($conn, $username) . "'";
+}
+
+$dateField = "COALESCE(NULLIF(lmi.inspection_date, '0000-00-00'), NULLIF(DATE(lmi.created_at), '0000-00-00'))";
+
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '" . mysqli_real_escape_string($conn, $filterDateFrom) . "' ";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '" . mysqli_real_escape_string($conn, $filterDateTo) . "' ";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '" . mysqli_real_escape_string($conn, $filterDate) . "' ";
 }
 
 if (!empty($filterInspector)) {
-    $where .= " AND lmi.inspector = '".$conn->real_escape_string($filterInspector)."'";
-}
-if (!empty($filterDate)) {
-    $where .= " AND DATE(lmi.inspection_date) = '".$conn->real_escape_string($filterDate)."'";
+    $where .= " AND lmi.inspector = '" . mysqli_real_escape_string($conn, $filterInspector) . "'";
 }
 if (!empty($filterClient)) {
-    $where .= " AND lmi.customer_name = '".$conn->real_escape_string($filterClient)."'";
+    $where .= " AND lmi.customer_name = '" . mysqli_real_escape_string($conn, $filterClient) . "'";
 }
 if (!empty($filterYear)) {
-    $where .= " AND YEAR(lmi.created_at) = '".$conn->real_escape_string($filterYear)."'";
+    $where .= " AND YEAR($dateField) = '" . mysqli_real_escape_string($conn, $filterYear) . "'";
 }
 if ($filterStatus === 'Active') {
     $where .= " AND (lmi.next_inspection_date >= CURDATE() OR lmi.next_inspection_date IS NULL OR lmi.next_inspection_date = '0000-00-00')";
@@ -64,14 +64,22 @@ if ($filterStatus === 'Active') {
 }
 
 if (!empty($search)) {
-    $s = $conn->real_escape_string($search);
-    $where .= " AND (
-        lmi.project_no LIKE '%$s%' OR
-        lmi.certificate_no LIKE '%$s%' OR
-        lmi.customer_name LIKE '%$s%' OR
-        lmi.inspector LIKE '%$s%' OR
-        lmi.location LIKE '%$s%'
-    )";
+    $safe = mysqli_real_escape_string($conn, $search);
+    $keywords = explode(" ", $safe);
+    foreach ($keywords as $word) {
+        $where .= " AND (
+            lmi.project_no LIKE '%$word%' OR
+            lmi.certificate_no LIKE '%$word%' OR
+            lmi.crane_make LIKE '%$word%' OR
+            lmi.crane_model LIKE '%$word%' OR
+            lmi.crane_id_no LIKE '%$word%' OR
+            lmi.customer_name LIKE '%$word%' OR
+            lmi.inspector LIKE '%$word%' OR
+            lmi.location LIKE '%$word%' OR
+            DATE_FORMAT($dateField, '%d-%m-%Y') LIKE '%$word%' OR
+            DATE_FORMAT($dateField, '%Y-%m-%d') LIKE '%$word%'
+        )";
+    }
 }
 
 /* TOTAL RECORDS */
@@ -90,7 +98,24 @@ $kpi = $conn->query("
     $where
 ")->fetch_assoc();
 
-/* DATA */
+/* COLUMNS & ORDERING */
+$columns = [
+    0 => 'CAST(SUBSTRING(lmi.project_no, 5) AS UNSIGNED)',
+    1 => 'lmi.certificate_no',
+    2 => 'lmi.crane_make',
+    3 => 'lmi.crane_id_no',
+    4 => 'lmi.inspector',
+    5 => 'lmi.customer_name',
+    6 => 'lmi.location',
+    7 => $dateField,
+    8 => 'lmi.next_inspection_date'
+];
+
+$orderColumnIndex = intval($_POST['order'][0]['column'] ?? 0);
+$orderDir         = (($_POST['order'][0]['dir'] ?? 'desc') === 'asc') ? 'ASC' : 'DESC';
+$orderSql         = ($columns[$orderColumnIndex] ?? 'CAST(SUBSTRING(lmi.project_no, 5) AS UNSIGNED)') . " " . $orderDir;
+
+/* DATA QUERY */
 $sql = "
 SELECT 
     lmi.project_no,
@@ -101,6 +126,7 @@ SELECT
     lmi.customer_name,
     lmi.location,
     lmi.inspector,
+    lmi.inspection_date,
     lmi.created_at,
     lmi.next_inspection_date,
     pi.project_status
@@ -108,14 +134,66 @@ FROM lmi_certificates lmi
 LEFT JOIN project_info pi ON lmi.project_no = pi.project_no
 $where
 ORDER BY $orderSql
-LIMIT $start, $limit
 ";
 
+if (!$isExport) {
+    $sql .= " LIMIT $start, $limit";
+}
+
 $dataQ = $conn->query($sql);
+
+if (!$dataQ) {
+    if ($isExport) { die('Query Error: ' . $conn->error); }
+    header('Content-Type: application/json');
+    echo json_encode([
+        "draw" => $draw,
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "kpi" => [
+            "total" => 0,
+            "active" => 0,
+            "expired" => 0
+        ],
+        "data" => [],
+        "error" => $conn->error
+    ]);
+    exit;
+}
+
+/* EXPORT CSV */
+if ($isExport) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="lmi_certificates_' . date('Ymd_His') . '.csv"');
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['Project No', 'Certificate No', 'Crane', 'Crane ID', 'Inspector', 'Client', 'Location', 'Inspection Date', 'Status']);
+    while ($row = $dataQ->fetch_assoc()) {
+        $rawDate = (!empty($row['inspection_date']) && $row['inspection_date'] !== '0000-00-00') ? $row['inspection_date'] : ($row['created_at'] ?? '');
+        $dispDate = (!empty($rawDate) && $rawDate !== '0000-00-00') ? date('d-m-Y', strtotime($rawDate)) : '-';
+
+        $status = 'Active';
+        if (!empty($row['next_inspection_date']) && $row['next_inspection_date'] != '0000-00-00' && strtotime($row['next_inspection_date']) < time()) {
+            $status = 'Expired';
+        }
+
+        fputcsv($out, [
+            $row['project_no'],
+            $row['certificate_no'],
+            trim($row['crane_make'] . ' / ' . $row['crane_model'], ' /'),
+            $row['crane_id_no'],
+            $row['inspector'],
+            $row['customer_name'],
+            $row['location'],
+            $dispDate,
+            $status
+        ]);
+    }
+    fclose($out);
+    exit;
+}
+
 $data = [];
 
 while ($row = $dataQ->fetch_assoc()) {
-    // === Same Avatar Style as Lifting Gear ===
     $initial = strtoupper(substr($row['inspector'] ?? 'U', 0, 1));
     $initialClass = "initial-" . $initial;
 
@@ -126,6 +204,9 @@ while ($row = $dataQ->fetch_assoc()) {
         $status = 'Expired';
         $badgeClass = 'badge-danger';
     }
+
+    $rawDate = (!empty($row['inspection_date']) && $row['inspection_date'] !== '0000-00-00') ? $row['inspection_date'] : ($row['created_at'] ?? '');
+    $dispDate = (!empty($rawDate) && $rawDate !== '0000-00-00') ? date('d-m-Y', strtotime($rawDate)) : '-';
 
     $actions = "<div class='action-icons'>";
     $actions .= "<a href='view.php?project_no={$row['project_no']}' target='_blank' class='view-icon' title='View'><i class='fa fa-eye'></i></a>";
@@ -143,7 +224,7 @@ while ($row = $dataQ->fetch_assoc()) {
     $data[] = [
         "project_no"      => $row['project_no'],
         "certificate_no"  => $row['certificate_no'],
-        "crane"           => $row['crane_make'].' / '.$row['crane_model'],
+        "crane"           => trim($row['crane_make'] . ' / ' . $row['crane_model'], ' /'),
         "crane_id_no"     => $row['crane_id_no'],
         "inspector"       => "
             <div style='display:flex;gap:8px;align-items:center'>
@@ -152,20 +233,20 @@ while ($row = $dataQ->fetch_assoc()) {
             </div>",
         "customer_name"   => $row['customer_name'],
         "location"        => $row['location'],
-        "created_at"      => date('d-m-Y', strtotime($row['created_at'])),
+        "created_at"      => $dispDate,
         "status"          => "<span class='status-badge $badgeClass'>$status</span>",
         "actions"         => $actions
     ];
 }
 
 echo json_encode([
-    "draw" => intval($_POST['draw']),
+    "draw" => $draw,
     "recordsTotal" => intval($totalData),
     "recordsFiltered" => intval($totalFiltered),
     "kpi" => [
-        "total" => intval($kpi['total']),
-        "active" => intval($kpi['active']),
-        "expired" => intval($kpi['expired'])
+        "total"   => intval($kpi['total'] ?? 0),
+        "active"  => intval($kpi['active'] ?? 0),
+        "expired" => intval($kpi['expired'] ?? 0)
     ],
     "data" => $data
 ]);

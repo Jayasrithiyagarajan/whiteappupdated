@@ -32,6 +32,8 @@ $orderDir         = ($_POST['order'][0]['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'D
 /* ================= FILTER PARAMETERS ================= */
 $filterInspector = $_POST['filter_inspector'] ?? '';
 $filterDate      = $_POST['filter_date'] ?? '';
+$filterDateFrom  = $_POST['filter_date_from'] ?? '';
+$filterDateTo    = $_POST['filter_date_to'] ?? '';
 $filterClient    = $_POST['filter_client'] ?? '';
 $filterStatus    = $_POST['filter_status'] ?? '';
 $filterYear      = $_POST['filter_year'] ?? '';
@@ -48,11 +50,11 @@ $columns = [
     5 => 'chc.inspector',
     6 => 'chc.customer_name',
     7 => 'chc.asset_number',
-    8 => 'chc.created_at',
+    8 => "COALESCE(NULLIF(chc.inspection_date, '0000-00-00'), chc.created_at)",
     9 => 'r.next_inspection_due_date'
 ];
 
-$orderBy = $columns[$orderColumnIndex] ?? 'chc.created_at';
+$orderBy = $columns[$orderColumnIndex] ?? "COALESCE(NULLIF(chc.inspection_date, '0000-00-00'), chc.created_at)";
 
 /*
  🔥 NUMERIC SORT FOR PROJECT NO (CIMS50000)
@@ -74,8 +76,17 @@ if ($role === 'inspector') {
 if (!empty($filterInspector)) {
     $where .= " AND chc.inspector = '".$conn->real_escape_string($filterInspector)."'";
 }
-if (!empty($filterDate)) {
-    $where .= " AND DATE(chc.created_at) = '".$conn->real_escape_string($filterDate)."'";
+
+$dateField = "COALESCE(NULLIF(chc.inspection_date, '0000-00-00'), NULLIF(DATE(chc.created_at), '0000-00-00'))";
+
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '".$conn->real_escape_string($filterDateFrom)."'";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '".$conn->real_escape_string($filterDateTo)."'";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '".$conn->real_escape_string($filterDate)."'";
 }
 if (!empty($filterClient)) {
     $where .= " AND chc.customer_name = '".$conn->real_escape_string($filterClient)."'";
@@ -99,7 +110,8 @@ if ($search !== '') {
         chc.inspector LIKE '%$s%' OR
         chc.customer_name LIKE '%$s%' OR
         chc.asset_number LIKE '%$s%' OR
-        DATE_FORMAT(chc.created_at,'%d-%m-%Y') LIKE '%$s%'
+        DATE_FORMAT($dateField,'%d-%m-%Y') LIKE '%$s%' OR
+        DATE_FORMAT($dateField,'%Y-%m-%d') LIKE '%$s%'
     )";
 }
 
@@ -140,6 +152,7 @@ SELECT
     chc.inspector,
     chc.customer_name,
     chc.asset_number,
+    chc.inspection_date,
     chc.created_at,
     r.next_inspection_due_date,
     pi.project_status
@@ -177,13 +190,17 @@ if ($isExport) {
     $output = fopen('php://output', 'w');
     
     // CSV Header
-    fputcsv($output, ['Project No', 'Certificate No', 'Inspected Item', 'Serial No', 'Inspector', 'Client', 'Location', 'Date', 'Status']);
+    fputcsv($output, ['Project No', 'Certificate No', 'Inspected Item', 'Serial No', 'Inspector', 'Client', 'Location', 'Inspection Date', 'Status']);
 
     while ($r = $res->fetch_assoc()) {
         $status = 'Active';
         if ($r['next_inspection_due_date'] && strtotime($r['next_inspection_due_date']) < time()) {
             $status = 'Expired';
         }
+
+        $dispDate = !empty($r['inspection_date']) && $r['inspection_date'] != '0000-00-00'
+            ? date('d-m-Y', strtotime($r['inspection_date']))
+            : (!empty($r['created_at']) ? date('d-m-Y', strtotime($r['created_at'])) : 'N/A');
 
         fputcsv($output, [
             $r['project_no'],
@@ -193,7 +210,7 @@ if ($isExport) {
             strip_tags($r['inspector']), // Clear any HTML if it exists in DB, though normally it's added in JS
             $r['customer_name'],
             $r['asset_number'],
-            date('d-m-Y', strtotime($r['created_at'])),
+            $dispDate,
             $status
         ]);
     }
@@ -215,6 +232,10 @@ while ($r = $res->fetch_assoc()) {
         $badgeClass = 'badge-danger';
     }
 
+    $dispDate = !empty($r['inspection_date']) && $r['inspection_date'] != '0000-00-00'
+        ? date('d-m-Y', strtotime($r['inspection_date']))
+        : (!empty($r['created_at']) ? date('d-m-Y', strtotime($r['created_at'])) : 'N/A');
+
     $data[] = [
         "project_no" => $r['project_no'],
         "project_no_sort" => $sortNo,
@@ -234,7 +255,8 @@ while ($r = $res->fetch_assoc()) {
         
         "customer_name" => $r['customer_name'],
         "asset_number" => $r['asset_number'],
-        "created_at" => date('d-m-Y', strtotime($r['created_at'])),
+        "inspection_date" => $dispDate,
+        "created_at" => $dispDate,
         "status" => "<span class='status-badge $badgeClass'>$status</span>",
         "actions" => '
             <div class="action-icons">

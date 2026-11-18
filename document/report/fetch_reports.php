@@ -13,6 +13,8 @@ $search = $_POST['search']['value'] ?? '';
 /* 🔥 FILTER PARAMETERS */
 $filterInspector = $_POST['filter_inspector'] ?? '';
 $filterDate = $_POST['filter_date'] ?? '';
+$filterDateFrom = $_POST['filter_date_from'] ?? '';
+$filterDateTo = $_POST['filter_date_to'] ?? '';
 $filterClient = $_POST['filter_client'] ?? '';
 $filterYear = $_POST['filter_year'] ?? '';
 $filterExpiry = $_POST['filter_expiry'] ?? '';
@@ -51,8 +53,14 @@ $recordsTotal = $totalCountResult->fetch_assoc()['total'];
 if (!empty($filterInspector)) {
     $where .= " AND r.issued_by='".mysqli_real_escape_string($conn,$filterInspector)."' ";
 }
-if (!empty($filterDate)) {
-    $where .= " AND DATE(r.date_of_inspection)='".mysqli_real_escape_string($conn,$filterDate)."' ";
+if (!empty($filterDateFrom)) {
+    $where .= " AND DATE(r.date_of_inspection) >= '".mysqli_real_escape_string($conn, $filterDateFrom)."' ";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND DATE(r.date_of_inspection) <= '".mysqli_real_escape_string($conn, $filterDateTo)."' ";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND DATE(r.date_of_inspection) = '".mysqli_real_escape_string($conn, $filterDate)."' ";
 }
 if (!empty($filterClient)) {
     $where .= " AND r.client_company_name='".mysqli_real_escape_string($conn,$filterClient)."' ";

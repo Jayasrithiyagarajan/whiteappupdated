@@ -77,8 +77,12 @@ if (!isset($_SESSION['username'])) {
                 </select>
             </div>
             <div class="filter-item">
-                <label>Date</label>
-                <input type="date" id="filter-date">
+                <label>From Date</label>
+                <input type="date" id="filter-date-from">
+            </div>
+            <div class="filter-item">
+                <label>To Date</label>
+                <input type="date" id="filter-date-to">
             </div>
             <div class="filter-item">
                 <label>Client</label>
@@ -175,7 +179,8 @@ $(document).ready(function() {
             type: 'POST',
             data: function(d) {
                 d.filter_inspector = $('#filter-inspector').val();
-                d.filter_date = $('#filter-date').val();
+                d.filter_date_from = $('#filter-date-from').val();
+                d.filter_date_to = $('#filter-date-to').val();
                 d.filter_client = $('#filter-client').val();
                 d.filter_year = $('#filter-year').val();
                 d.filter_expiry = $('#filter-expiry').val();
@@ -187,8 +192,17 @@ $(document).ready(function() {
             {
                 text: 'Export to Excel',
                 className: 'btn btn-secondary',
-                action: function() {
-                    window.location.href = 'export_reports_excel.php';
+                action: function(e, dt, node, config) {
+                    var params = $.param({
+                        filter_inspector: $('#filter-inspector').val(),
+                        filter_date_from: $('#filter-date-from').val(),
+                        filter_date_to: $('#filter-date-to').val(),
+                        filter_client: $('#filter-client').val(),
+                        filter_year: $('#filter-year').val(),
+                        filter_expiry: $('#filter-expiry').val(),
+                        search_value: dt.search()
+                    });
+                    window.location.href = 'export_reports_excel.php?' + params;
                 }
             },
             'copy', 'print'
@@ -206,7 +220,7 @@ $(document).ready(function() {
     loadFilterOptions();
     loadReportKPI();
 
-    $('#filter-inspector, #filter-date, #filter-client, #filter-year, #filter-expiry').on('change', function() {
+    $('#filter-inspector, #filter-date-from, #filter-date-to, #filter-client, #filter-year, #filter-expiry').on('change', function() {
         reportTable.ajax.reload();
         loadReportKPI();
     });
@@ -237,7 +251,8 @@ function loadReportKPI(){
         dataType: 'json',
         data: {
             filter_inspector: $('#filter-inspector').val(),
-            filter_date: $('#filter-date').val(),
+            filter_date_from: $('#filter-date-from').val(),
+            filter_date_to: $('#filter-date-to').val(),
             filter_client: $('#filter-client').val(),
             filter_year: $('#filter-year').val(),
             filter_expiry: $('#filter-expiry').val()
@@ -253,7 +268,7 @@ function loadReportKPI(){
 }
 
 function clearFilters(){
-    $('#filter-inspector, #filter-date, #filter-client, #filter-year, #filter-expiry, #report-search').val('');
+    $('#filter-inspector, #filter-date-from, #filter-date-to, #filter-client, #filter-year, #filter-expiry, #report-search').val('');
     reportTable.search('');
     reportTable.ajax.reload();
     loadReportKPI();

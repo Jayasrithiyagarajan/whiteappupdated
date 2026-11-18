@@ -152,8 +152,12 @@ td:nth-child(6), th:nth-child(6) {
                 </select>
             </div>
             <div class="filter-item">
-                <label>Date</label>
-                <input type="date" id="filter-date" class="form-control">
+                <label>From Date</label>
+                <input type="date" id="filter-date-from" class="form-control">
+            </div>
+            <div class="filter-item">
+                <label>To Date</label>
+                <input type="date" id="filter-date-to" class="form-control">
             </div>
             <div class="filter-item">
                 <label>Client</label>
@@ -178,7 +182,7 @@ td:nth-child(6), th:nth-child(6) {
                 <select id="filter-year" class="form-select">
                     <option value="">All Years</option>
                     <?php 
-                    $years = $conn->query("SELECT DISTINCT YEAR(created_at) as y FROM mpi_certificates ORDER BY y DESC");
+                    $years = $conn->query("SELECT DISTINCT YEAR(COALESCE(NULLIF(inspection_date, '0000-00-00'), created_at)) as y FROM mpi_certificates WHERE inspection_date IS NOT NULL AND inspection_date != '0000-00-00' ORDER BY y DESC");
                     while($row = $years->fetch_assoc()) echo "<option value='{$row['y']}'>{$row['y']}</option>";
                     ?>
                 </select>
@@ -251,10 +255,11 @@ $(function () {
             type: "POST",
             data: function(d) {
                 d.filter_inspector = $('#filter-inspector').val();
-                d.filter_date = $('#filter-date').val();
-                d.filter_client = $('#filter-client').val();
-                d.filter_status = $('#filter-status').val();
-                d.filter_year = $('#filter-year').val();
+                d.filter_date_from = $('#filter-date-from').val();
+                d.filter_date_to   = $('#filter-date-to').val();
+                d.filter_client    = $('#filter-client').val();
+                d.filter_status    = $('#filter-status').val();
+                d.filter_year      = $('#filter-year').val();
             },
             dataSrc: function (json) {
                 if (json.kpi) {
@@ -269,13 +274,42 @@ $(function () {
         dom: 'Brtip',
         buttons: [
             {
-                text: '<i class="fa fa-file-excel"></i> Export Excel',
+                text: '<i class="fa fa-file-excel me-1"></i> Export Excel',
                 className: 'btn btn-primary',
                 action: function () {
-                    const search = table.search();
-                    window.location.href =
-                        'export_certificates_excel.php?search=' +
-                        encodeURIComponent(search);
+                    var params = new URLSearchParams({
+                        filter_inspector: $('#filter-inspector').val() || '',
+                        filter_date_from: $('#filter-date-from').val() || '',
+                        filter_date_to:   $('#filter-date-to').val() || '',
+                        filter_client:    $('#filter-client').val() || '',
+                        filter_status:    $('#filter-status').val() || '',
+                        filter_year:      $('#filter-year').val() || '',
+                        search:           $('#customSearch').val() || ''
+                    });
+                    window.location.href = 'export_certificates_excel.php?' + params.toString();
+                }
+            },
+            {
+                text: '<i class="fa fa-file-csv me-1"></i> Export CSV',
+                className: 'btn btn-secondary',
+                action: function (e, dt, node, config) {
+                    var form = $('<form>', {
+                        action: 'fetch_certificates.php',
+                        method: 'POST'
+                    });
+
+                    form.append($('<input>', { type: 'hidden', name: 'filter_inspector', value: $('#filter-inspector').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_date_from', value: $('#filter-date-from').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_date_to',   value: $('#filter-date-to').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_client',    value: $('#filter-client').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_status',    value: $('#filter-status').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_year',      value: $('#filter-year').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'search[value]',    value: $('#customSearch').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'export',           value: 'true' }));
+
+                    $('body').append(form);
+                    form.submit();
+                    form.remove();
                 }
             }
         ],

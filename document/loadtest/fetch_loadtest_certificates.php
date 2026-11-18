@@ -2,8 +2,8 @@
 session_start();
 include_once('../../file/config.php');
 
-$role     = $_SESSION['role'];
-$username = $_SESSION['username'];
+$role     = $_SESSION['role'] ?? '';
+$username = $_SESSION['username'] ?? '';
 
 $draw   = intval($_POST['draw']);
 $start  = intval($_POST['start']);
@@ -24,45 +24,57 @@ $columns = [
     'lc.project_no'
 ];
 
+$dateField = "COALESCE(NULLIF(lc.examination_date, '0000-00-00'), NULLIF(DATE(lc.created_at), '0000-00-00'))";
+
 $where = " WHERE 1 ";
 if ($role === 'inspector') {
     $where .= " AND lc.inspector_name='".mysqli_real_escape_string($conn,$username)."' ";
 }
-if ($search) {
-    $search = mysqli_real_escape_string($conn,$search);
-    $where .= " AND (
-        lc.project_no LIKE '%$search%' OR
-        lc.certificate_no LIKE '%$search%' OR
-        lc.equipment_description LIKE '%$search%' OR
-        lc.inspector_name LIKE '%$search%' OR
-        lc.employer_address LIKE '%$search%' OR
-        lc.premises_address LIKE '%$search%'
-    )";
-}
-
 
 $filterInspector = $_POST['filter_inspector'] ?? '';
-$filterDate = $_POST['filter_date'] ?? '';
-$filterClient = $_POST['filter_client'] ?? '';
-$filterStatus = $_POST['filter_status'] ?? '';
-$filterYear = $_POST['filter_year'] ?? '';
+$filterDate      = $_POST['filter_date'] ?? '';
+$filterDateFrom  = $_POST['filter_date_from'] ?? '';
+$filterDateTo    = $_POST['filter_date_to'] ?? '';
+$filterClient    = $_POST['filter_client'] ?? '';
+$filterStatus    = $_POST['filter_status'] ?? '';
+$filterYear      = $_POST['filter_year'] ?? '';
 
 if (!empty($filterInspector)) {
     $where .= " AND lc.inspector_name = '" . mysqli_real_escape_string($conn, $filterInspector) . "'";
 }
-if (!empty($filterDate)) {
-    $where .= " AND DATE(lc.examination_date) = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '" . mysqli_real_escape_string($conn, $filterDateFrom) . "'";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '" . mysqli_real_escape_string($conn, $filterDateTo) . "'";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
 }
 if (!empty($filterClient)) {
     $where .= " AND lc.customer_name = '" . mysqli_real_escape_string($conn, $filterClient) . "'";
 }
 if (!empty($filterYear)) {
-    $where .= " AND YEAR(lc.examination_date) = '" . mysqli_real_escape_string($conn, $filterYear) . "'";
+    $where .= " AND YEAR($dateField) = '" . mysqli_real_escape_string($conn, $filterYear) . "'";
 }
 if ($filterStatus === 'Active') {
     $where .= " AND (lc.latest_date_exam >= CURDATE() OR lc.latest_date_exam IS NULL OR lc.latest_date_exam = '0000-00-00')";
 } elseif ($filterStatus === 'Expired') {
     $where .= " AND lc.latest_date_exam < CURDATE() AND lc.latest_date_exam != '0000-00-00' AND lc.latest_date_exam IS NOT NULL";
+}
+
+if ($search) {
+    $searchSafe = mysqli_real_escape_string($conn, $search);
+    $where .= " AND (
+        lc.project_no LIKE '%$searchSafe%' OR
+        lc.certificate_no LIKE '%$searchSafe%' OR
+        lc.equipment_description LIKE '%$searchSafe%' OR
+        lc.equipment_id LIKE '%$searchSafe%' OR
+        lc.inspector_name LIKE '%$searchSafe%' OR
+        lc.employer_address LIKE '%$searchSafe%' OR
+        lc.premises_address LIKE '%$searchSafe%' OR
+        DATE_FORMAT($dateField, '%d-%m-%Y') LIKE '%$searchSafe%'
+    )";
 }
 
 /* KPI counts */
@@ -77,11 +89,15 @@ $where
 $kpiRow = $conn->query($kpiSql)->fetch_assoc();
 
 /* total */
-$total = $conn->query("
+$totalRecordsQuery = "SELECT COUNT(*) total FROM loadtest_certificate";
+$totalRecords = $conn->query($totalRecordsQuery)->fetch_assoc()['total'];
+
+$filteredRecordsQuery = "
 SELECT COUNT(*) total
 FROM loadtest_certificate lc
 LEFT JOIN project_info pi ON lc.project_no = pi.project_no
-$where")->fetch_assoc()['total'];
+$where";
+$filteredRecords = $conn->query($filteredRecordsQuery)->fetch_assoc()['total'];
 
 /* order */
 $idx = $_POST['order'][0]['column'] ?? 0;
@@ -99,6 +115,7 @@ SELECT
  lc.employer_address,
  lc.premises_address,
  lc.examination_date,
+ lc.created_at,
  pi.project_status
 FROM loadtest_certificate lc
 LEFT JOIN project_info pi ON lc.project_no = pi.project_no
@@ -113,6 +130,10 @@ while($r=$res->fetch_assoc()){
     $inspector_name = $r['inspector_name'] ?? '';
     $initial = !empty($inspector_name) ? strtoupper($inspector_name[0]) : '?';
 
+    $dispDate = !empty($r['examination_date']) && $r['examination_date'] != '0000-00-00'
+        ? date('d-m-Y', strtotime($r['examination_date']))
+        : (!empty($r['created_at']) && $r['created_at'] != '0000-00-00' ? date('d-m-Y', strtotime($r['created_at'])) : 'N/A');
+
     $data[]=[
         $r['project_no'],
         $r['certificate_no'],
@@ -124,11 +145,11 @@ while($r=$res->fetch_assoc()){
          </div>",
         $r['employer_address'],
         $r['premises_address'],
-        date('d-m-Y',strtotime($r['examination_date'])),
+        $dispDate,
         "<span class='actions' style='display: flex; gap: 15px; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;'>
             <a href='view.php?project_no={$r['project_no']}' target='_blank' style='text-decoration:none; color:inherit;'><i class='fa fa-eye'></i></a>
             <a href='download.php?project_no={$r['project_no']}' style='text-decoration:none; color:inherit;'><i class='fa fa-download'></i></a>
-            ".(in_array($_SESSION['role'], ['document controller', 'inspector', 'admin']) && $r['project_status']!=='Completed'
+            ".(in_array($role, ['document controller', 'inspector', 'admin']) && $r['project_status']!=='Completed'
                 ?"<i class='fa fa-edit' onclick=\"redirectToEditLoadTest('{$r['project_no']}')\"></i>":"")."
             ".($r['project_status'] !== 'Completed' ? "<i class='fa fa-trash text-danger' onclick=\"deleteRow('{$r['project_no']}')\"></i>" : "")."
         </span>"
@@ -137,8 +158,8 @@ while($r=$res->fetch_assoc()){
 
 echo json_encode([
     "draw"=>$draw,
-    "recordsTotal"=>$total,
-    "recordsFiltered"=>$total,
+    "recordsTotal"=>(int)$totalRecords,
+    "recordsFiltered"=>(int)$filteredRecords,
     "kpi" => [
         "total"   => (int)$kpiRow['total'],
         "active"  => (int)$kpiRow['active'],

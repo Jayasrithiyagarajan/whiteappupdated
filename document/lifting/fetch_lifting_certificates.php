@@ -15,10 +15,12 @@ $search = $_POST['search']['value'] ?? '';
 
 /* 🔥 FILTER PARAMETERS */
 $filterInspector = $_POST['filter_inspector'] ?? '';
-$filterDate = $_POST['filter_date'] ?? '';
-$filterClient = $_POST['filter_client'] ?? '';
-$filterStatus = $_POST['filter_status'] ?? '';
-$filterYear = $_POST['filter_year'] ?? '';
+$filterDate      = $_POST['filter_date'] ?? '';
+$filterDateFrom  = $_POST['filter_date_from'] ?? '';
+$filterDateTo    = $_POST['filter_date_to'] ?? '';
+$filterClient    = $_POST['filter_client'] ?? '';
+$filterStatus    = $_POST['filter_status'] ?? '';
+$filterYear      = $_POST['filter_year'] ?? '';
 
 /* ================= ORDER (FROM DATATABLES) ================= */
 $orderColumnIndex = $_POST['order'][0]['column'] ?? 1;
@@ -57,14 +59,24 @@ if ($role === 'inspector') {
 if (!empty($filterInspector)) {
     $where .= " AND lg.inspector = '" . mysqli_real_escape_string($conn, $filterInspector) . "'";
 }
-if (!empty($filterDate)) {
-    $where .= " AND DATE(lg.date_of_this_examination) = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
+
+$dateField = "COALESCE(NULLIF(lg.date_of_this_examination, '0000-00-00'), NULLIF(DATE(lg.created_at), '0000-00-00'))";
+
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '" . mysqli_real_escape_string($conn, $filterDateFrom) . "'";
 }
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '" . mysqli_real_escape_string($conn, $filterDateTo) . "'";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
+}
+
 if (!empty($filterClient)) {
     $where .= " AND lg.customer_name = '" . mysqli_real_escape_string($conn, $filterClient) . "'";
 }
 if (!empty($filterYear)) {
-    $where .= " AND YEAR(lg.date_of_this_examination) = '" . mysqli_real_escape_string($conn, $filterYear) . "'";
+    $where .= " AND YEAR($dateField) = '" . mysqli_real_escape_string($conn, $filterYear) . "'";
 }
 
 if ($filterStatus === 'Active') {
@@ -85,7 +97,7 @@ if ($search) {
         lg.inspector LIKE '%$safe%' OR
         lg.customer_name LIKE '%$safe%' OR
         lg.address_of_premises LIKE '%$safe%' OR
-        DATE_FORMAT(lg.date_of_this_examination, '%d-%m-%Y') LIKE '%$safe%'
+        DATE_FORMAT($dateField, '%d-%m-%Y') LIKE '%$safe%'
     )";
 }
 
@@ -125,6 +137,7 @@ SELECT
     MIN(lg.customer_name) as customer_name,
     MIN(lg.address_of_premises) as address_of_premises,
     MIN(lg.date_of_this_examination) as date_of_this_examination,
+    MIN(lg.created_at) as created_at,
     MIN(lg.next_examination_date) as next_examination_date,
     MIN(pi.project_status) as project_status
 FROM lifting_gear_certificates lg
@@ -169,6 +182,10 @@ if ($isExport) {
             $status = 'Expired';
         }
 
+        $dispDate = !empty($r['date_of_this_examination']) && $r['date_of_this_examination'] != '0000-00-00'
+            ? date('d-m-Y', strtotime($r['date_of_this_examination']))
+            : (!empty($r['created_at']) && $r['created_at'] != '0000-00-00' ? date('d-m-Y', strtotime($r['created_at'])) : 'N/A');
+
         fputcsv($output, [
             $r['project_no'],
             $r['certificate_no'],
@@ -176,7 +193,7 @@ if ($isExport) {
             strip_tags($r['inspector']),
             $r['customer_name'],
             $r['address_of_premises'],
-            date('d-m-Y', strtotime($r['date_of_this_examination'])),
+            $dispDate,
             $status
         ]);
     }
@@ -198,6 +215,10 @@ $initialClass = "initial-" . $initial;
         $status = 'Expired';
         $badgeClass = 'badge-danger';   // ← Changed here
     }
+
+    $dispDate = !empty($r['date_of_this_examination']) && $r['date_of_this_examination'] != '0000-00-00'
+        ? date('d-m-Y', strtotime($r['date_of_this_examination']))
+        : (!empty($r['created_at']) && $r['created_at'] != '0000-00-00' ? date('d-m-Y', strtotime($r['created_at'])) : 'N/A');
 
     $actions = "
         <div class='action-icons'>
@@ -231,7 +252,8 @@ $initialClass = "initial-" . $initial;
     </div>",
         "customer_name"     => $r['customer_name'],
         "location"          => $r['address_of_premises'],
-        "exam_date"         => date('d-m-Y', strtotime($r['date_of_this_examination'])),
+        "exam_date"         => $dispDate,
+        "inspection_date"   => $dispDate,
         "status"            => "<span class='status-badge $badgeClass'>$status</span>",   // ← Updated
         "actions"           => $actions
     ];

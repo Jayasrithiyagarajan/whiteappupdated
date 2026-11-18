@@ -789,7 +789,7 @@ foreach ($documents as $doc) {
     <?php if ($total_docs > 0): ?>
         <div class="uploaded-documents-container">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="mb-0">Total Documents Uploaded: <span class="badge bg-primary"><?php echo $total_docs; ?></span></h5>
+                <h5 class="mb-0">Total Documents Uploaded: <span class="badge bg-primary" id="total-docs-badge"><?php echo $total_docs; ?></span></h5>
             </div>
             
             <div class="row">
@@ -800,7 +800,7 @@ foreach ($documents as $doc) {
                 $fileName = htmlspecialchars(basename($doc["file_$i"]));
                 $isImage = isImageFile($doc["file_$i"]);
 ?>
-                <div class="col-12 col-md-12 col-lg-12 mb-4">
+                <div class="col-12 col-md-12 col-lg-12 mb-4 doc-item">
 
                     <div class="card document-card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center py-2">
@@ -814,16 +814,23 @@ foreach ($documents as $doc) {
     <h6 class="card-title text-truncate mb-0 flex-grow-1" title="<?php echo $fileName; ?>">
         <?php echo $fileName; ?>
     </h6>
-    <div class="ms-2 d-flex align-items-center gap-2">
+    <div class="ms-2 d-flex align-items-center" style="gap: 14px;">
         <a href="<?php echo $filePath; ?>" 
            target="_blank" 
            download 
-           class="text-primary me-2">
+           class="text-primary">
             <i class="fas fa-download"></i>
         </a>
         <a href="<?php echo $filePath; ?>" target="_blank" class="text-secondary">
     <i class="fas fa-eye"></i>
 </a>
+        <?php if ($userRole === 'inspector'): ?>
+        <a href="#" class="text-danger delete-doc-btn" title="Delete this document"
+           data-id="<?php echo (int)$doc['id']; ?>" data-slot="<?php echo $i; ?>"
+           data-project="<?php echo htmlspecialchars($doc['project_no']); ?>" data-name="<?php echo $fileName; ?>">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+        <?php endif; ?>
 
     </div>
 </div>
@@ -1957,5 +1964,37 @@ $(document).ready(function() {
 <?php
 include_once('../inc/footer.php');
 ?>
+<script>
+// Delete an uploaded document (inspectors only - the button is not rendered for other roles)
+document.addEventListener('click', async function (e) {
+    const btn = e.target.closest('.delete-doc-btn');
+    if (!btn) return;
+    e.preventDefault();
+    if (btn.dataset.busy) return;
+    if (!confirm('Delete this document permanently?\n\n' + btn.dataset.name + '\n\nThis cannot be undone.')) return;
+    btn.dataset.busy = '1';
+    btn.style.opacity = '.4';
+    try {
+        const fd = new FormData();
+        fd.append('id', btn.dataset.id);
+        fd.append('slot', btn.dataset.slot);
+        fd.append('project_no', btn.dataset.project);
+        const res = await fetch('delete_document.php', { method: 'POST', body: fd, credentials: 'same-origin' });
+        let data; try { data = await res.json(); } catch (_) { throw new Error('Unexpected reply from the server.'); }
+        if (!data.success) throw new Error(data.message || 'Delete failed.');
+        const item = btn.closest('.doc-item');
+        if (item) item.remove();
+        const badge = document.getElementById('total-docs-badge');
+        if (badge) {
+            const n = Math.max(0, (parseInt(badge.textContent, 10) || 1) - 1);
+            badge.textContent = n;
+            if (n === 0) { const c = document.querySelector('.uploaded-documents-container'); if (c) c.innerHTML = '<div class="alert alert-info">No documents uploaded yet.</div>'; }
+        }
+    } catch (err) {
+        alert(err.message);
+        btn.style.opacity = ''; delete btn.dataset.busy;
+    }
+});
+</script>
 </body>
 </html>

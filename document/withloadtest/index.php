@@ -151,8 +151,12 @@ td:nth-child(7), th:nth-child(7) {
             </div>
             <?php endif; ?>
             <div class="filter-item">
-                <label>Date</label>
-                <input type="date" id="filter-date" class="form-control">
+                <label>From Date</label>
+                <input type="date" id="filter-date-from" class="form-control">
+            </div>
+            <div class="filter-item">
+                <label>To Date</label>
+                <input type="date" id="filter-date-to" class="form-control">
             </div>
             <div class="filter-item">
                 <label>Client</label>
@@ -177,7 +181,7 @@ td:nth-child(7), th:nth-child(7) {
                 <select id="filter-year" class="form-select">
                     <option value="">All Years</option>
                     <?php
-                    $years = $conn->query("SELECT DISTINCT YEAR(examination_date) as yr FROM withload WHERE examination_date IS NOT NULL ORDER BY yr DESC");
+                    $years = $conn->query("SELECT DISTINCT YEAR(COALESCE(NULLIF(examination_date, '0000-00-00'), created_at)) as yr FROM withload WHERE examination_date IS NOT NULL AND examination_date != '0000-00-00' ORDER BY yr DESC");
                     while($r = $years->fetch_assoc()) echo "<option value='{$r['yr']}'>{$r['yr']}</option>";
                     ?>
                 </select>
@@ -254,33 +258,35 @@ $(document).ready(function() {
             {
                 text: '<i class="fa fa-file-excel me-1"></i> Export Excel',
                 className: 'btn btn-primary',
+                action: function () {
+                    var params = new URLSearchParams({
+                        filter_inspector: $('#filter-inspector').length ? ($('#filter-inspector').val() || '') : '',
+                        filter_date_from: $('#filter-date-from').val() || '',
+                        filter_date_to:   $('#filter-date-to').val() || '',
+                        filter_client:    $('#filter-client').val() || '',
+                        filter_status:    $('#filter-status').val() || '',
+                        filter_year:      $('#filter-year').val() || '',
+                        search:           $('#customSearch').val() || ''
+                    });
+                    window.location.href = 'export_withload_certificates_excel.php?' + params.toString();
+                }
+            },
+            {
+                text: '<i class="fa fa-file-csv me-1"></i> Export CSV',
+                className: 'btn btn-secondary',
                 action: function (e, dt, node, config) {
-                    var params = dt.ajax.params();
                     var form = $('<form>', {
                         action: 'fetch_withload_certificates.php',
                         method: 'POST'
                     });
 
-                    $.each(params, function (key, value) {
-                        if (typeof value === 'object') {
-                            if (key === 'search') {
-                                form.append($('<input>', { type: 'hidden', name: 'search[value]', value: value.value }));
-                            } else if (key === 'order') {
-                                $.each(value, function(i, v) {
-                                    form.append($('<input>', { type: 'hidden', name: 'order['+i+'][column]', value: v.column }));
-                                    form.append($('<input>', { type: 'hidden', name: 'order['+i+'][dir]',    value: v.dir }));
-                                });
-                            }
-                        } else {
-                            form.append($('<input>', { type: 'hidden', name: key, value: value }));
-                        }
-                    });
-
-                    form.append($('<input>', { type: 'hidden', name: 'filter_inspector', value: $('#filter-inspector').val() }));
-                    form.append($('<input>', { type: 'hidden', name: 'filter_date',      value: $('#filter-date').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_inspector', value: $('#filter-inspector').length ? $('#filter-inspector').val() : '' }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_date_from', value: $('#filter-date-from').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'filter_date_to',   value: $('#filter-date-to').val() }));
                     form.append($('<input>', { type: 'hidden', name: 'filter_client',    value: $('#filter-client').val() }));
                     form.append($('<input>', { type: 'hidden', name: 'filter_status',    value: $('#filter-status').val() }));
                     form.append($('<input>', { type: 'hidden', name: 'filter_year',      value: $('#filter-year').val() }));
+                    form.append($('<input>', { type: 'hidden', name: 'search[value]',    value: $('#customSearch').val() }));
                     form.append($('<input>', { type: 'hidden', name: 'export',           value: 'true' }));
 
                     $('body').append(form);
@@ -294,8 +300,9 @@ $(document).ready(function() {
             url: 'fetch_withload_certificates.php',
             type: 'POST',
             data: function(d) {
-                d.filter_inspector = $('#filter-inspector').val();
-                d.filter_date      = $('#filter-date').val();
+                d.filter_inspector = $('#filter-inspector').length ? $('#filter-inspector').val() : '';
+                d.filter_date_from = $('#filter-date-from').val();
+                d.filter_date_to   = $('#filter-date-to').val();
                 d.filter_client    = $('#filter-client').val();
                 d.filter_status    = $('#filter-status').val();
                 d.filter_year      = $('#filter-year').val();
@@ -337,7 +344,7 @@ $(document).ready(function() {
     $('#filter-inspector, #filter-client, #filter-status, #filter-year').on('change', function() {
         table.ajax.reload();
     });
-    $('#filter-date').on('change', function() {
+    $('#filter-date-from, #filter-date-to').on('change keyup', function() {
         table.ajax.reload();
     });
 
@@ -349,7 +356,7 @@ $(document).ready(function() {
 
 function clearWithloadFilters() {
     $('#filter-inspector, #filter-client, #filter-status, #filter-year').val('');
-    $('#filter-date').val('');
+    $('#filter-date-from, #filter-date-to').val('');
     $('#customSearch').val('');
     $('#withload-table').DataTable().search('');
     $('#withload-table').DataTable().ajax.reload();

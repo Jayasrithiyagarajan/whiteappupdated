@@ -344,6 +344,14 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
             padding: 15px 20px !important;
         }
     }
+
+    /* Save progress / saved state */
+    .certificate-entry.saved-entry .cert-accordion-header { border-left: 6px solid #38a169; }
+    .saved-badge { margin-left: 12px; font-size: 12px; font-weight: 700; color: #276749; background: #c6f6d5; padding: 4px 10px; border-radius: 8px; }
+    #save-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); z-index: 99999; display: none; align-items: center; justify-content: center; }
+    #save-overlay .box { background: #fff; border-radius: 20px; padding: 32px 40px; text-align: center; min-width: 320px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    #save-overlay .bar { height: 10px; background: #e2e8f0; border-radius: 6px; overflow: hidden; margin-top: 18px; }
+    #save-overlay .bar > div { height: 100%; width: 0; background: var(--primary-gradient); transition: width .2s ease; }
 </style>
 
 <div class="main-content">
@@ -388,7 +396,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
 
     <!-- Forms Container -->
     <div class="container-fluid">
-        <form action="display.php" method="POST" enctype="multipart/form-data">
+        <form id="cert-form" action="display.php" method="POST" enctype="multipart/form-data" novalidate>
             
             <div id="certificate-container">
                 <!-- First Certificate Entry -->
@@ -397,17 +405,22 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
                     <!-- Dynamic Entry Header Accordion Trigger -->
                     <div class="cert-accordion-header mb-0">
                         <div class="row align-items-center">
-                            <div class="col-8 d-flex align-items-center">
+                            <div class="col-7 d-flex align-items-center">
                                 <i class="fa-solid fa-chevron-down cert-chevron mr-3" style="transition: transform 0.3s ease; color: var(--accent-color); font-size: 18px;"></i>
                                 <h5 class="m-0 font-weight-bold d-inline-block" style="color: #2d3748; border: none; padding: 0; margin: 0; font-size: 17px;">
                                     Certificate #<span class="cert-index">1</span> 
                                     <span class="cert-summary-no ml-3" style="font-size: 13px; font-weight: 500; color: #718096; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px;">(<?= $newCertificateNo ?>)</span>
                                 </h5>
                             </div>
-                            <div class="col-4 text-right remove-cert-btn" style="display: none;">
+                            <div class="col-5 text-right">
+                                <button type="button" class="btn-primary save-cert" title="Save only this certificate" style="padding: 8px 18px !important; border-radius: 12px !important; font-size: 13px !important; font-weight: 600; margin-right: 8px;">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i> Save
+                                </button>
+                                <span class="remove-cert-btn" style="display: none;">
                                 <button type="button" class="btn-primary remove-cert" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%) !important; box-shadow: 0 4px 15px rgba(255, 8, 68, 0.2) !important; padding: 8px 18px !important; border-radius: 12px !important; font-size: 13px !important; font-weight: 600;">
                                     <i class="fa-solid fa-trash-can mr-1"></i> Remove
                                 </button>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -469,7 +482,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
                                         </div>
                                         <div class="col-md-6">
                                             <label>Mobile</label>
-                                            <input type="number" class="theme-input-style" name="mobile[]" value="<?php echo $data['customer_mobile'] ?? ''; ?>" placeholder="Contact Number">
+                                            <input type="tel" class="theme-input-style" name="mobile[]" value="<?php echo $data['customer_mobile'] ?? ''; ?>" placeholder="Contact Number">
                                         </div>
                                         <div class="col-md-6">
                                             <label>Inspector</label>
@@ -683,6 +696,13 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
                                 </div>
                             </div>
                         </div>
+
+                        <div class="text-right mt-3">
+                            <span class="save-status mr-3" style="font-size:13px;font-weight:600;"></span>
+                            <button type="button" class="btn-primary save-cert" style="padding: 10px 26px !important; border-radius: 12px !important; font-weight: 600;">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Save this certificate
+                            </button>
+                        </div>
                         
                     </div>
                 </div>
@@ -693,7 +713,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
                 <button type="button" class="btn-secondary" id="add-more-btn" style="margin-right: 15px;">
                     <i class="fa-solid fa-circle-plus mr-2"></i> Add More Certificates
                 </button>
-                <button type="submit" class="btn-primary" name="save_all">
+                <button type="submit" class="btn-primary" id="save-all-btn" name="save_all">
                     <i class="fa-solid fa-floppy-disk mr-2"></i> Save All Certificates
                 </button>
             </div>
@@ -711,6 +731,17 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
     const year = "<?= $currentYear ?>";
     let cert_counter = <?= $nextNumber ?>;
 
+    // A clone of an already-saved entry must start as a fresh, editable entry.
+    function resetCloneState(entry) {
+        delete entry.dataset.saved;
+        delete entry.dataset.token;
+        entry.classList.remove('saved-entry');
+        entry.querySelectorAll('.saved-badge').forEach(b => b.remove());
+        entry.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = false; });
+        entry.querySelectorAll('.save-cert').forEach(b => { b.style.display = ''; });
+        const st = entry.querySelector('.save-status'); if (st) st.textContent = '';
+    }
+
     function initAccordion(entry) {
         const header = entry.querySelector('.cert-accordion-header');
         const body = entry.querySelector('.cert-body');
@@ -718,7 +749,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
         
         header.addEventListener('click', function(e) {
             // Do not toggle expand/collapse if clicking remove button
-            if (e.target.closest('.remove-cert')) return;
+            if (e.target.closest('.remove-cert, .save-cert')) return;
             
             const isCollapsed = body.style.display === 'none';
             body.style.display = isCollapsed ? 'block' : 'none';
@@ -787,7 +818,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
         const entries = document.querySelectorAll('.certificate-entry');
         entries.forEach((entry, index) => {
             entry.querySelector('.cert-index').textContent = index + 1;
-            entry.querySelector('.remove-cert-btn').style.display = entries.length > 1 ? "block" : "none";
+            entry.querySelector('.remove-cert-btn').style.display = (entries.length > 1 && !entry.dataset.saved) ? "inline-block" : "none";
             
             // Fix checkbox name for each clone
             const checkboxes = entry.querySelectorAll('.pill-checkbox input[type="checkbox"]');
@@ -838,6 +869,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
             
             for (let i = 0; i < itemsToAdd; i++) {
                 const newEntry = firstEntry.cloneNode(true);
+                resetCloneState(newEntry);
                 const firstInputs = firstEntry.querySelectorAll('input, select, textarea');
                 const newInputs = newEntry.querySelectorAll('input, select, textarea');
                 
@@ -920,6 +952,7 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
 
         const firstEntry = entries[0];
         const newEntry = firstEntry.cloneNode(true);
+                resetCloneState(newEntry);
 
         // Map values from firstEntry to newEntry
         const firstInputs = firstEntry.querySelectorAll('input, select, textarea');
@@ -988,4 +1021,198 @@ $newCertificateNo = "CEC-{$formattedNumber}-{$currentYear}-{$project_no}";
     });
     updateIndexes();
 </script>
-
+
+<script>
+    // ===== Save: one certificate per request (no PHP input/file limits, no double inserts) =====
+    (function () {
+        const form    = document.getElementById('cert-form');
+        const saveBtn = document.getElementById('save-all-btn');
+        const addBtn  = document.getElementById('add-more-btn');
+        const bulkBtn = document.getElementById('bulk-generate-btn');
+        const saveBtnHtml = saveBtn.innerHTML;
+        let saving = false;
+
+        // progress overlay
+        const overlayEl = document.createElement('div');
+        overlayEl.id = 'save-overlay';
+        overlayEl.innerHTML = '<div class="box"><h4 id="so-title" style="border:none;justify-content:center;margin:0 0 6px;padding:0;">Saving…</h4>' +
+                              '<div id="so-sub" style="color:#718096;font-size:14px;"></div><div class="bar"><div id="so-bar"></div></div></div>';
+        document.body.appendChild(overlayEl);
+        function overlay(show, title, sub, pct) {
+            overlayEl.style.display = show ? 'flex' : 'none';
+            if (title !== undefined) document.getElementById('so-title').textContent = title;
+            if (sub !== undefined)   document.getElementById('so-sub').textContent = sub;
+            if (pct !== undefined)   document.getElementById('so-bar').style.width = pct + '%';
+        }
+
+        function setBusy(busy) {
+            saving = busy;
+            [saveBtn, addBtn, bulkBtn].forEach(b => b.disabled = busy);
+            saveBtn.innerHTML = busy ? '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Saving…' : saveBtnHtml;
+        }
+
+        function uuid() {
+            return (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+                 : 't' + Date.now().toString(36) + Math.random().toString(36).slice(2);
+        }
+
+        function expandOnly(entry) {
+            document.querySelectorAll('.certificate-entry').forEach(en => {
+                en.querySelector('.cert-body').style.display = 'none';
+                en.querySelector('.cert-chevron').style.transform = 'rotate(-90deg)';
+            });
+            entry.querySelector('.cert-body').style.display = 'block';
+            entry.querySelector('.cert-chevron').style.transform = 'rotate(0deg)';
+        }
+
+        function buildFormData(entry) {
+            const fd = new FormData();
+            fd.append('save_one', '1');
+            if (!entry.dataset.token) entry.dataset.token = uuid();
+            fd.append('client_token', entry.dataset.token);
+
+            entry.querySelectorAll('input, select, textarea').forEach(el => {
+                if (!el.name || el.type === 'checkbox') return;
+                const key = el.name.replace(/\[\]$/, '');
+                if (el.type === 'file') {
+                    if (el.files && el.files[0]) fd.append(key, el.files[0]);
+                    return;
+                }
+                fd.append(key, el.value);
+            });
+            const mm = Array.from(entry.querySelectorAll('input[type="checkbox"]:checked')).map(c => c.value);
+            fd.append('ref_block_type_mm', mm.join(','));
+            return fd;
+        }
+
+        function markSaved(entry, certNo) {
+            entry.dataset.saved = '1';
+            entry.querySelectorAll('.save-cert').forEach(b => { b.style.display = 'none'; });
+            const st = entry.querySelector('.save-status'); if (st) st.textContent = '';
+            entry.classList.add('saved-entry');
+            const certInput = entry.querySelector('.cert-no');
+            certInput.value = certNo;
+            const summary = entry.querySelector('.cert-summary-no');
+            const jrn = entry.querySelector('input[name="jrn[]"]').value;
+            summary.textContent = '(' + certNo + (jrn ? ' | JRN: ' + jrn : '') + ')';
+            if (!entry.querySelector('.saved-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'saved-badge';
+                badge.textContent = '✔ Saved';
+                summary.after(badge);
+            }
+            entry.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+            entry.querySelector('.remove-cert-btn').style.display = 'none';
+        }
+
+        async function saveEntry(entry) {
+            const res  = await fetch('display.php', { method: 'POST', body: buildFormData(entry), credentials: 'same-origin' });
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); }
+            catch (_) { throw new Error('Unexpected reply from the server: ' + text.replace(/<[^>]*>/g, ' ').trim().slice(0, 200)); }
+            if (res.status === 401 || data.expired) { const e = new Error(data.message || 'Your login session has expired.'); e.expired = true; throw e; }
+            if (!data.ok) throw new Error(data.message || 'Save failed.');
+            markSaved(entry, data.certificate_no);
+            return data;
+        }
+
+        // Save button on every certificate: saves just that one (works for cloned entries too)
+        document.addEventListener('click', async function (ev) {
+            const btn = ev.target.closest('.save-cert');
+            if (!btn || saving) return;
+            const entry = btn.closest('.certificate-entry');
+            const st = entry.querySelector('.save-status');
+            const jrn = entry.querySelector('input[name="jrn[]"]');
+            if (!jrn.value.trim()) {
+                expandOnly(entry); jrn.focus();
+                st.style.color = '#c53030'; st.textContent = 'JRN is required.';
+                return;
+            }
+            const btns = entry.querySelectorAll('.save-cert');
+            const html = Array.from(btns).map(b => b.innerHTML);
+            setBusy(true);
+            btns.forEach(b => { b.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Saving…'; });
+            try {
+                await saveEntry(entry);
+                const badge = entry.querySelector('.saved-badge');
+                if (badge) badge.textContent = '✔ Saved ' + new Date().toLocaleTimeString();
+            } catch (err) {
+                st.style.color = '#c53030'; st.textContent = err.message;
+                if (err.expired) alert(err.message);
+            } finally {
+                setBusy(false);
+                btns.forEach((b, i) => { b.innerHTML = html[i]; });
+            }
+        });
+
+        // keep the login alive while this long form is open
+        let sessionWarned = false;
+        async function keepAlive() {
+            try {
+                const r = await fetch('ping.php', { credentials: 'same-origin', cache: 'no-store' });
+                if (r.status === 401 && !sessionWarned) {
+                    sessionWarned = true;
+                    const bar = document.createElement('div');
+                    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:100000;background:#c53030;color:#fff;padding:12px 20px;text-align:center;font-weight:600;';
+                    bar.innerHTML = 'Your login session expired. Your entries on this page are kept - <a href="../../index.php" target="_blank" style="color:#fff;text-decoration:underline;">log in again in a new tab</a>, then press Save.';
+                    document.body.appendChild(bar);
+                } else if (r.ok) { sessionWarned = false; }
+            } catch (_) {}
+        }
+        setInterval(keepAlive, 4 * 60 * 1000);
+        keepAlive();
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (saving) return;                       // ignore double clicks / Enter key
+
+            const entries = Array.from(document.querySelectorAll('.certificate-entry'));
+            const pending = entries.filter(en => !en.dataset.saved);
+            if (!pending.length) { window.location.href = 'index.php'; return; }
+
+            // Validate everything first and jump to the first problem (hidden "required" fields used to block silently)
+            for (const entry of pending) {
+                const jrn = entry.querySelector('input[name="jrn[]"]');
+                if (!jrn.value.trim()) {
+                    expandOnly(entry);
+                    jrn.focus();
+                    alert('Certificate #' + (entries.indexOf(entry) + 1) + ': JRN is required.');
+                    return;
+                }
+            }
+
+            setBusy(true);
+            let saved = entries.length - pending.length;
+
+            for (const entry of pending) {
+                const number = entries.indexOf(entry) + 1;
+                overlay(true, 'Saving certificate ' + number + ' of ' + entries.length + '…',
+                        entry.querySelector('.cert-no').value, Math.round(saved / entries.length * 100));
+                try {
+                    const data = await saveEntry(entry);
+                    markSaved(entry, data.certificate_no);
+                    saved++;
+                } catch (err) {
+                    overlay(false);
+                    setBusy(false);
+                    expandOnly(entry);
+                    alert('Certificate #' + number + ' could not be saved:\n' + err.message + '\n\n' +
+                          saved + ' of ' + entries.length + ' saved so far. Fix the problem and press Save again - ' +
+                          'certificates already saved will NOT be saved twice.');
+                    return;
+                }
+            }
+
+            overlay(true, 'All ' + entries.length + ' certificate(s) saved', 'Opening the register…', 100);
+            saving = false;                           // allow the redirect without a "leave site?" prompt
+            window.location.href = 'index.php?msg=' + encodeURIComponent(entries.length + ' Eddy Current Inspection Certificate(s) created successfully.');
+        });
+
+        window.addEventListener('beforeunload', function (e) {
+            if (saving) { e.preventDefault(); e.returnValue = ''; }
+        });
+    })();
+</script>
+
+

@@ -5,32 +5,46 @@ error_reporting(E_ALL);
 if (session_status() === PHP_SESSION_NONE) session_start();
 include_once('../../file/config.php');
 
-function getInitialColor($name) {
-    $colors = [
-        '#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#c026d3',
-        '#0891b2', '#15803d', '#b45309', '#be123c', '#4338ca'
-    ];
-    $hash = crc32($name ?? 'A');
-    return $colors[$hash % count($colors)];
+if (!function_exists('getInitialColor')) {
+    function getInitialColor($name) {
+        $colors = [
+            '#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#c026d3',
+            '#0891b2', '#15803d', '#b45309', '#be123c', '#4338ca'
+        ];
+        $hash = crc32($name ?? 'A');
+        return $colors[$hash % count($colors)];
+    }
+}
+
+if (!isset($_SESSION['username'])) {
+    echo json_encode([
+        "draw" => 0,
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "data" => []
+    ]);
+    exit;
 }
 
 $role     = $_SESSION['role'] ?? '';
 $username = $_SESSION['username'] ?? '';
 
-$draw   = intval($_POST['draw'] ?? 1);
-$start  = intval($_POST['start'] ?? 0);
-$length = intval($_POST['length'] ?? 10);
-$search = $_POST['search']['value'] ?? '';
+$draw   = intval($_POST['draw'] ?? $_GET['draw'] ?? 1);
+$start  = intval($_POST['start'] ?? $_GET['start'] ?? 0);
+$length = intval($_POST['length'] ?? $_GET['length'] ?? 10);
+$search = trim($_POST['search']['value'] ?? $_POST['search'] ?? $_GET['search']['value'] ?? $_GET['search'] ?? "");
 
-/* 🔥 FILTER PARAMETERS */
-$filterInspector = $_POST['filter_inspector'] ?? '';
-$filterDate = $_POST['filter_date'] ?? '';
-$filterClient = $_POST['filter_client'] ?? '';
-$filterStatus = $_POST['filter_status'] ?? '';
-$filterYear = $_POST['filter_year'] ?? '';
+/* FILTER PARAMETERS */
+$filterInspector = $_POST['filter_inspector'] ?? $_GET['filter_inspector'] ?? '';
+$filterDate      = $_POST['filter_date'] ?? $_GET['filter_date'] ?? '';
+$filterDateFrom  = $_POST['filter_date_from'] ?? $_GET['filter_date_from'] ?? '';
+$filterDateTo    = $_POST['filter_date_to'] ?? $_GET['filter_date_to'] ?? '';
+$filterClient    = $_POST['filter_client'] ?? $_GET['filter_client'] ?? '';
+$filterStatus    = $_POST['filter_status'] ?? $_GET['filter_status'] ?? '';
+$filterYear      = $_POST['filter_year'] ?? $_GET['filter_year'] ?? '';
 
 /* ===============================
-   Role-based WHERE clause
+   Role-based & Filter WHERE clause
  ================================ */
 $where = " WHERE 1=1 ";
 
@@ -38,17 +52,26 @@ if ($role === 'inspector') {
     $where .= " AND ec.inspector = '" . mysqli_real_escape_string($conn, $username) . "'";
 }
 
-if (!empty($filterInspector)) {
-    $where .= " AND ec.inspector = '" . mysqli_real_escape_string($conn, $filterInspector) . "'";
+$dateField = "COALESCE(NULLIF(ec.inspection_date, '0000-00-00'), NULLIF(DATE(ec.created_at), '0000-00-00'))";
+
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '" . mysqli_real_escape_string($conn, $filterDateFrom) . "' ";
 }
-if (!empty($filterDate)) {
-    $where .= " AND DATE(ec.inspection_date) = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '" . mysqli_real_escape_string($conn, $filterDateTo) . "' ";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '" . mysqli_real_escape_string($conn, $filterDate) . "' ";
+}
+
+if (!empty($filterInspector)) {
+    $where .= " AND ec.inspector = '" . mysqli_real_escape_string($conn, $filterInspector) . "' ";
 }
 if (!empty($filterClient)) {
-    $where .= " AND ec.customer_name = '" . mysqli_real_escape_string($conn, $filterClient) . "'";
+    $where .= " AND ec.customer_name = '" . mysqli_real_escape_string($conn, $filterClient) . "' ";
 }
 if (!empty($filterYear)) {
-    $where .= " AND YEAR(ec.inspection_date) = '" . mysqli_real_escape_string($conn, $filterYear) . "'";
+    $where .= " AND YEAR($dateField) = '" . mysqli_real_escape_string($conn, $filterYear) . "' ";
 }
 
 if ($filterStatus === 'Active') {
@@ -60,21 +83,26 @@ if ($filterStatus === 'Active') {
 /* ===============================
    Search (Global)
  ================================ */
-if ($search) {
+if ($search !== "") {
     $safe = mysqli_real_escape_string($conn, $search);
-    $where .= " AND (
-        ec.project_no LIKE '%$safe%' OR
-        ec.certificate_no LIKE '%$safe%' OR
-        ec.inspected_item LIKE '%$safe%' OR
-        ec.serial_no LIKE '%$safe%' OR
-        ec.inspector LIKE '%$safe%' OR
-        ec.customer_name LIKE '%$safe%' OR
-        ec.location LIKE '%$safe%'
-    )";
+    $keywords = explode(" ", $safe);
+    foreach ($keywords as $word) {
+        $where .= " AND (
+            ec.project_no LIKE '%$word%' OR
+            ec.certificate_no LIKE '%$word%' OR
+            ec.inspected_item LIKE '%$word%' OR
+            ec.serial_no LIKE '%$word%' OR
+            ec.inspector LIKE '%$word%' OR
+            ec.customer_name LIKE '%$word%' OR
+            ec.location LIKE '%$word%' OR
+            DATE_FORMAT($dateField,'%d-%m-%Y') LIKE '%$word%' OR
+            DATE_FORMAT($dateField,'%Y-%m-%d') LIKE '%$word%'
+        )";
+    }
 }
 
 /* ===============================
-   KPI COUNTS (FAST & OPTIMIZED)
+   KPI COUNTS
  ================================ */
 $kpiSql = "
 SELECT
@@ -98,13 +126,13 @@ $filteredRecords = $conn->query($filteredRecordsQuery)->fetch_assoc()['cnt'];
 /* ===============================
    Export Mode
  ================================ */
-$isExport = isset($_POST['export']) && $_POST['export'] === 'true';
+$isExport = (isset($_POST['export']) && $_POST['export'] === 'true') || (isset($_GET['export']) && $_GET['export'] === 'true');
 
 /* ===============================
    ORDER
  ================================ */
-$idx = intval($_POST['order'][0]['column'] ?? 7);
-$dir = ($_POST['order'][0]['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
+$idx = intval($_POST['order'][0]['column'] ?? 0);
+$dir = (($_POST['order'][0]['dir'] ?? 'desc') === 'asc') ? 'ASC' : 'DESC';
 $columns = [
     0 => 'CAST(SUBSTRING(ec.project_no,5) AS UNSIGNED)',
     1 => 'ec.certificate_no',
@@ -113,9 +141,10 @@ $columns = [
     4 => 'ec.inspector',
     5 => 'ec.customer_name',
     6 => 'ec.location',
-    7 => 'ec.inspection_date',
+    7 => $dateField,
+    8 => 'ec.next_inspection_date'
 ];
-$orderCol = $columns[$idx] ?? 'ec.inspection_date';
+$orderCol = $columns[$idx] ?? 'CAST(SUBSTRING(ec.project_no,5) AS UNSIGNED)';
 
 $sql = "
 SELECT
@@ -149,13 +178,24 @@ if ($isExport) {
     $out = fopen('php://output','w');
     fputcsv($out, ['Project No','Certificate No','Inspected Item','Serial No','Inspector','Client','Location','Inspection Date','Status']);
     while ($r = $res->fetch_assoc()) {
-        $isExpired = !empty($r['next_inspection_date']) && $r['next_inspection_date'] != '0000-00-00' && strtotime($r['next_inspection_date']) < time();
+        $rawDate = (!empty($r['inspection_date']) && $r['inspection_date'] !== '0000-00-00') ? $r['inspection_date'] : ($r['created_at'] ?? '');
+        $dispDate = (!empty($rawDate) && $rawDate !== '0000-00-00') ? date('d-m-Y', strtotime($rawDate)) : '-';
+
+        $status = 'Active';
+        if (!empty($r['next_inspection_date']) && $r['next_inspection_date'] != '0000-00-00' && strtotime($r['next_inspection_date']) < time()) {
+            $status = 'Expired';
+        }
+
         fputcsv($out, [
-            $r['project_no'], $r['certificate_no'], $r['inspected_item'],
-            $r['serial_no'], $r['inspector'], $r['customer_name'],
+            $r['project_no'],
+            $r['certificate_no'],
+            $r['inspected_item'],
+            $r['serial_no'],
+            $r['inspector'],
+            $r['customer_name'],
             $r['location'],
-            $r['inspection_date'] ? date('d M Y', strtotime($r['inspection_date'])) : '',
-            $isExpired ? 'Expired' : 'Active'
+            $dispDate,
+            $status
         ]);
     }
     fclose($out);
@@ -175,6 +215,9 @@ while ($r = $res->fetch_assoc()) {
         $badgeClass = 'badge-danger';
     }
 
+    $rawDate = (!empty($r['inspection_date']) && $r['inspection_date'] !== '0000-00-00') ? $r['inspection_date'] : ($r['created_at'] ?? '');
+    $dispDate = (!empty($rawDate) && $rawDate !== '0000-00-00') ? date('d-m-Y', strtotime($rawDate)) : '-';
+
     $actions = '
         <div class="action-icons">
             <a href="view.php?project_no='.$r['project_no'].'" class="view-icon" title="View" target="_blank">
@@ -187,7 +230,7 @@ while ($r = $res->fetch_assoc()) {
 
     if (($role === 'document controller' || $role === 'inspector' || $role === 'admin') && $r['project_status'] !== 'Completed') {
         $actions .= '
-            <a href="edit.php?project_no='.$r['project_no'].'" class="edit-icon" title="Edit" style="color: #b45309; background: #fef3c7;">
+            <a href="edit.php?project_no='.urlencode($r['project_no']).'&certificate_no='.urlencode($r['certificate_no']).'" class="edit-icon" title="Edit" style="color: #b45309; background: #fef3c7;">
                 <i class="fa fa-edit"></i>
             </a>
         ';
@@ -195,7 +238,7 @@ while ($r = $res->fetch_assoc()) {
     
     if ($r['project_status'] !== 'Completed') {
         $actions .= '
-                <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow(\''.$r['project_no'].'\')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
+                <a href="javascript:void(0)" class="delete-icon" onclick="deleteRow('.htmlspecialchars(json_encode($r['certificate_no']), ENT_QUOTES).')" title="Delete" style="color: #e11d48; background: #ffe4e6;">
                     <i class="fa fa-trash"></i>
                 </a>';
     }
@@ -217,7 +260,7 @@ while ($r = $res->fetch_assoc()) {
             </div>',
         "customer_name"     => $r['customer_name'],
         "location"          => $r['location'],
-        "inspection_date"   => date('d-m-Y', strtotime($r['inspection_date'])),
+        "inspection_date"   => $dispDate,
         "status"            => "<span class='status-badge $badgeClass'>$status</span>",
         "action"            => $actions
     ];

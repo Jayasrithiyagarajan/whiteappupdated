@@ -12,6 +12,7 @@ $dateTo          = $_POST['filter_date_to'] ?? '';
 $yearFilter      = $_POST['filter_year'] ?? '';
 $expiryFilter    = $_POST['filter_expiry_status'] ?? '';
 $certificateFilter = $_POST['filter_certificate'] ?? '';
+$certTypeFilter = $_POST['filter_cert_type'] ?? '';
 
 // Base Query - FORCE PENDING
 $where = " WHERE project_status = 'Pending' ";
@@ -71,6 +72,40 @@ if (!empty($certificateFilter)) {
         $where .= " AND p.checklist_status = 'Created' AND p.report_status = 'Generated' AND p.review_status = 'Completed' AND p.certificatestatus = 'Pending' ";
     } elseif ($certificateFilter === 'Completed') {
         $where .= " AND p.certificatestatus = 'Completed' ";
+    }
+}
+
+// Certificate Type Logic
+if (!empty($certTypeFilter)) {
+    $certTableMap = [
+        'Healthcheck' => 'crane_health_check_certificate',
+        'Loadtestwithload' => 'loadtest_certificate',
+        'Mobile' => 'mobile_crane_loadtest',
+        'WithLoadTest' => 'withload',
+        'Lifting' => 'lifting_gear_certificates',
+        'MPI' => 'mpi_certificates',
+        'EddyCurrent' => 'eddy_current_inspection',
+        'LiquidPenetrantInspection' => 'liquid_penetrant_inspection',
+        'RockTest' => 'rocking_test_certificate',
+        'LMI' => 'lmi_certificates'
+    ];
+
+    if ($certTypeFilter === 'none') {
+        $where .= " AND NOT EXISTS (
+            SELECT 1 FROM crane_health_check_certificate WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM loadtest_certificate WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM mobile_crane_loadtest WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM withload WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM lifting_gear_certificates WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM mpi_certificates WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM eddy_current_inspection WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM liquid_penetrant_inspection WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM rocking_test_certificate WHERE project_no = p.project_no
+            UNION ALL SELECT 1 FROM lmi_certificates WHERE project_no = p.project_no
+        ) ";
+    } elseif (isset($certTableMap[$certTypeFilter])) {
+        $tbl = $certTableMap[$certTypeFilter];
+        $where .= " AND EXISTS (SELECT 1 FROM {$tbl} cert WHERE cert.project_no = p.project_no) ";
     }
 }
 

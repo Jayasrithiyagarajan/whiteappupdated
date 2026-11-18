@@ -163,7 +163,7 @@ if (!$logged_in_user) {
                     <tr>
                         <th>Sticker ID</th>
                         <th>Project ID</th>
-                        <th>Equipment No</th>
+                        <th>Equipment Id</th>
                         <th>Equipment Serial No</th>
                         <th>Inspect By</th>
                         <th>Created At</th>

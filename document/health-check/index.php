@@ -145,8 +145,12 @@ td:nth-child(7), th:nth-child(7) {
                 </select>
             </div>
             <div class="filter-item">
-                <label>Date</label>
-                <input type="date" id="filter-date" class="form-control">
+                <label>From Date</label>
+                <input type="date" id="filter-date-from" class="form-control">
+            </div>
+            <div class="filter-item">
+                <label>To Date</label>
+                <input type="date" id="filter-date-to" class="form-control">
             </div>
             <div class="filter-item">
                 <label>Client</label>
@@ -211,7 +215,7 @@ td:nth-child(7), th:nth-child(7) {
                         <th>Inspector</th>
                         <th>Client</th>
                         <th>Location</th>
-                        <th>Date</th>
+                        <th>Inspection Date</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -273,7 +277,8 @@ var healthTable = $('#health-table').DataTable({
 
                 // Add explicit filter values from the UI
                 form.append($('<input>', { type: 'hidden', name: 'filter_inspector', value: $('#filter-inspector').val() }));
-                form.append($('<input>', { type: 'hidden', name: 'filter_date', value: $('#filter-date').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_date_from', value: $('#filter-date-from').val() }));
+                form.append($('<input>', { type: 'hidden', name: 'filter_date_to', value: $('#filter-date-to').val() }));
                 form.append($('<input>', { type: 'hidden', name: 'filter_client', value: $('#filter-client').val() }));
                 form.append($('<input>', { type: 'hidden', name: 'filter_status', value: $('#filter-status').val() }));
                 form.append($('<input>', { type: 'hidden', name: 'filter_year', value: $('#filter-year').val() }));
@@ -293,7 +298,8 @@ var healthTable = $('#health-table').DataTable({
         type:'POST',
         data: function(d) {
             d.filter_inspector = $('#filter-inspector').val();
-            d.filter_date = $('#filter-date').val();
+            d.filter_date_from = $('#filter-date-from').val();
+            d.filter_date_to = $('#filter-date-to').val();
             d.filter_client = $('#filter-client').val();
             d.filter_status = $('#filter-status').val();
             d.filter_year = $('#filter-year').val();

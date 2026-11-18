@@ -13,6 +13,8 @@ $role = $_SESSION['role'];
 /* 🔥 FILTER PARAMETERS */
 $filterInspector = $_GET['filter_inspector'] ?? '';
 $filterDate = $_GET['filter_date'] ?? '';
+$filterDateFrom = $_GET['filter_date_from'] ?? '';
+$filterDateTo = $_GET['filter_date_to'] ?? '';
 $filterClient = $_GET['filter_client'] ?? '';
 $filterYear = $_GET['filter_year'] ?? '';
 $filterExpiry = $_GET['filter_expiry'] ?? '';
@@ -28,8 +30,14 @@ if (trim(strtolower($role)) === 'inspector') {
 if (!empty($filterInspector)) {
     $where .= " AND r.issued_by='".mysqli_real_escape_string($conn,$filterInspector)."' ";
 }
-if (!empty($filterDate)) {
-    $where .= " AND DATE(r.date_of_inspection)='".mysqli_real_escape_string($conn,$filterDate)."' ";
+if (!empty($filterDateFrom)) {
+    $where .= " AND DATE(r.date_of_inspection) >= '".mysqli_real_escape_string($conn, $filterDateFrom)."' ";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND DATE(r.date_of_inspection) <= '".mysqli_real_escape_string($conn, $filterDateTo)."' ";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND DATE(r.date_of_inspection) = '".mysqli_real_escape_string($conn, $filterDate)."' ";
 }
 if (!empty($filterClient)) {
     $where .= " AND r.client_company_name='".mysqli_real_escape_string($conn,$filterClient)."' ";

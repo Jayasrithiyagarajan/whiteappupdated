@@ -131,6 +131,7 @@ if ($role == '' || $role == 'guest') {
                   <li><a href="<?php echo $url; ?>job/overall-job-list.php">Over all Projects</a></li>
                   <li><a href="<?php echo $url; ?>job/current_year_completed.php">Current Year Completed projects</a></li>
                   <li><a href="<?php echo $url; ?>job/pending_projects.php">Pending Projects</a></li>
+                  <li><a href="<?php echo $url; ?>job/cancelled_projects.php">Cancelled Projects</a></li>
                </ul>
                <!-- End Sub Menu -->
             </li>
@@ -251,6 +252,24 @@ if ($role == '' || $role == 'guest') {
                <ul class="nav sub-menu">
                   <li><a href="<?php echo $url; ?>customer/customer-list.php">Customer List</a></li>
                   <!-- <li><a href="<?php echo $url; ?>customer/view-customer.php">Customer Status</a></li> -->
+               </ul>
+               <!-- End Sub Menu -->
+            </li>
+            <?php endif; ?>
+
+            <!-- Payment Portal (Visible to Admin & Inspector) -->
+            <?php if (in_array($_SESSION['role'], ['admin', 'inspector'])): ?>
+            <li>
+               <a href="#">
+                  <i class="icofont-credit-card"></i>
+                  <span class="link-title">Payment</span>
+               </a>
+               <!-- Sub Menu -->
+               <ul class="nav sub-menu">
+                  <li><a href="<?php echo $url; ?>payment/payment-list.php">Payment list</a></li>
+                  <?php if ($_SESSION['role'] === 'admin'): ?>
+                  <li><a href="<?php echo $url; ?>payment/saved-payment-list.php">Inspector Payment List</a></li>
+                  <?php endif; ?>
                </ul>
                <!-- End Sub Menu -->
             </li>

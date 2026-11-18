@@ -20,14 +20,16 @@ $username = $_SESSION['username'] ?? '';
 $draw   = intval($_POST['draw'] ?? 1);
 $start  = intval($_POST['start'] ?? 0);
 $length = intval($_POST['length'] ?? 10);
-$search = $_POST['search']['value'] ?? '';
+$search = $_POST['search']['value'] ?? $_POST['search'] ?? $_GET['search']['value'] ?? $_GET['search'] ?? '';
 
 /* ── FILTER PARAMETERS ── */
-$filterInspector = $_POST['filter_inspector'] ?? '';
-$filterDate      = $_POST['filter_date'] ?? '';
-$filterClient    = $_POST['filter_client'] ?? '';
-$filterStatus    = $_POST['filter_status'] ?? '';
-$filterYear      = $_POST['filter_year'] ?? '';
+$filterInspector = $_GET['filter_inspector'] ?? $_POST['filter_inspector'] ?? '';
+$filterDate      = $_GET['filter_date'] ?? $_POST['filter_date'] ?? '';
+$filterDateFrom  = $_GET['filter_date_from'] ?? $_POST['filter_date_from'] ?? '';
+$filterDateTo    = $_GET['filter_date_to'] ?? $_POST['filter_date_to'] ?? '';
+$filterClient    = $_GET['filter_client'] ?? $_POST['filter_client'] ?? '';
+$filterStatus    = $_GET['filter_status'] ?? $_POST['filter_status'] ?? '';
+$filterYear      = $_GET['filter_year'] ?? $_POST['filter_year'] ?? '';
 
 /* ── SORTING ── */
 $orderColumnIndex = intval($_POST['order'][0]['column'] ?? 1);
@@ -54,11 +56,21 @@ $where = " WHERE 1=1 ";
 if ($role === 'inspector') {
     $where .= " AND w.inspector_name = '" . mysqli_real_escape_string($conn, $username) . "'";
 }
+
+$dateField = "COALESCE(NULLIF(w.examination_date, '0000-00-00'), NULLIF(DATE(w.created_at), '0000-00-00'))";
+
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '" . mysqli_real_escape_string($conn, $filterDateFrom) . "'";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '" . mysqli_real_escape_string($conn, $filterDateTo) . "'";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
+}
+
 if (!empty($filterInspector)) {
     $where .= " AND w.inspector_name = '" . mysqli_real_escape_string($conn, $filterInspector) . "'";
-}
-if (!empty($filterDate)) {
-    $where .= " AND w.examination_date = '" . mysqli_real_escape_string($conn, $filterDate) . "'";
 }
 if (!empty($filterClient)) {
     $where .= " AND w.customer_name LIKE '%" . mysqli_real_escape_string($conn, $filterClient) . "%'";
@@ -71,7 +83,7 @@ if (!empty($filterStatus)) {
     }
 }
 if (!empty($filterYear)) {
-    $where .= " AND YEAR(w.examination_date) = '" . intval($filterYear) . "'";
+    $where .= " AND YEAR($dateField) = '" . intval($filterYear) . "'";
 }
 if (!empty($search)) {
     $s = mysqli_real_escape_string($conn, $search);
@@ -81,7 +93,8 @@ if (!empty($search)) {
         w.equipment_description LIKE '%$s%' OR
         w.inspector_name LIKE '%$s%' OR
         w.customer_name LIKE '%$s%' OR
-        w.premises_address LIKE '%$s%'
+        w.premises_address LIKE '%$s%' OR
+        DATE_FORMAT($dateField, '%d-%m-%Y') LIKE '%$s%'
     )";
 }
 
@@ -106,7 +119,7 @@ $filteredRes = $conn->query("SELECT COUNT(*) as cnt FROM withload w $where");
 $filteredRecords = $filteredRes ? intval($filteredRes->fetch_assoc()['cnt']) : 0;
 
 /* ── EXPORT MODE ── */
-$isExport = isset($_POST['export']) && $_POST['export'] === 'true';
+$isExport = (isset($_POST['export']) && $_POST['export'] === 'true') || (isset($_GET['export']) && $_GET['export'] === 'true');
 
 /* ── MAIN DATA QUERY ── */
 $sql = "
@@ -119,6 +132,7 @@ SELECT
     w.customer_name,
     w.premises_address,
     w.examination_date,
+    w.created_at,
     w.latest_date_exam,
     pi.project_status
 FROM withload w
@@ -156,6 +170,10 @@ if ($isExport) {
         } else {
             $status = 'Active';
         }
+        $dispDate = !empty($row['examination_date']) && $row['examination_date'] != '0000-00-00'
+            ? date('d-m-Y', strtotime($row['examination_date']))
+            : (!empty($row['created_at']) && $row['created_at'] != '0000-00-00' ? date('d-m-Y', strtotime($row['created_at'])) : 'N/A');
+
         fputcsv($out, [
             $row['project_no'],
             $row['certificate_no'],
@@ -164,8 +182,8 @@ if ($isExport) {
             $row['inspector_name'],
             $row['customer_name'],
             $row['premises_address'],
-            $row['examination_date'] ? date('d M Y', strtotime($row['examination_date'])) : '',
-            $nextDate && $nextDate !== '0000-00-00' ? date('d M Y', strtotime($nextDate)) : 'N/A',
+            $dispDate,
+            $nextDate && $nextDate !== '0000-00-00' ? date('d-m-Y', strtotime($nextDate)) : 'N/A',
             $status
         ]);
     }
@@ -190,7 +208,9 @@ while ($row = $res->fetch_assoc()) {
         ? "<span class='status-badge badge-success'>Active</span>"
         : "<span class='status-badge badge-danger'>Expired</span>";
 
-    $examDate = $row['examination_date'] ? date('d-m-Y', strtotime($row['examination_date'])) : 'N/A';
+    $dispDate = !empty($row['examination_date']) && $row['examination_date'] != '0000-00-00'
+        ? date('d-m-Y', strtotime($row['examination_date']))
+        : (!empty($row['created_at']) && $row['created_at'] != '0000-00-00' ? date('d-m-Y', strtotime($row['created_at'])) : 'N/A');
     $projectNoSort = intval(preg_replace('/[^0-9]/', '', $row['project_no']));
 
     $inspectorHtml = '
@@ -238,7 +258,8 @@ while ($row = $res->fetch_assoc()) {
         'inspector'       => $inspectorHtml,
         'customer_name'   => $row['customer_name'],
         'location'        => $row['premises_address'],
-        'exam_date'       => $examDate,
+        'exam_date'       => $dispDate,
+        'inspection_date' => $dispDate,
         'status'          => $statusBadge,
         'actions'         => $actions,
     ];

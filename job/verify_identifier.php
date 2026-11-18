@@ -32,8 +32,6 @@ if ($type === 'sticker') {
         $row = $result->fetch_assoc();
         if (empty($row['project_no']) || strcasecmp(trim($row['project_status'] ?? ''), 'Completed') !== 0) {
             $response['message'] = 'Project not completed. Contact admin';
-        } elseif (strtolower($row['status'] ?? '') !== 'active') {
-            $response['message'] = 'Your sticker number is not active. Kindly contact admin.';
         } else {
             $response['valid'] = true;
         }

@@ -1,0 +1,241 @@
+<?php
+session_start();
+// Increase memory limit for large exports
+ini_set('memory_limit', '512M');
+set_time_limit(300);
+
+include_once('../file/config.php');
+
+$user = $_SESSION['username'];
+$role = $_SESSION['role'];
+
+// Filter parameters
+$search       = $_GET['search_value'] ?? '';
+$inspectorFilter = $_GET['filter_inspector'] ?? '';
+$clientFilter    = $_GET['filter_client'] ?? '';
+$dateFrom        = $_GET['filter_date_from'] ?? '';
+$dateTo          = $_GET['filter_date_to'] ?? '';
+$yearFilter      = $_GET['filter_year'] ?? '';
+$expiryFilter    = $_GET['filter_expiry_status'] ?? '';
+$certificateFilter = $_GET['filter_certificate'] ?? '';
+$certTypeFilter = $_GET['filter_cert_type'] ?? '';
+
+// Base Query - FORCE CANCELLED
+$sqlBase = "FROM project_info pi LEFT JOIN checklist_information ci ON pi.project_no = ci.project_no";
+$where = " WHERE pi.project_status = 'Cancelled' "; 
+$params = [];
+$types = "";
+
+// Role-based filtering
+if ($role === 'customer') {
+    $where .= " AND pi.customer_name = ? ";
+    $params[] = $user;
+    $types .= "s";
+} elseif (!in_array($role, ['admin','reviewer','quality controller','document controller'])) {
+    $where .= " AND pi.inspector_name = ? ";
+    $params[] = $user;
+    $types .= "s";
+}
+
+// --- APPLY FILTERS ---
+
+if (!empty($inspectorFilter)) {
+    $where .= " AND pi.inspector_name = ? ";
+    $params[] = $inspectorFilter;
+    $types .= "s";
+}
+if (!empty($clientFilter)) {
+    $where .= " AND pi.customer_name = ? ";
+    $params[] = $clientFilter;
+    $types .= "s";
+}
+if (!empty($dateFrom)) {
+    $where .= " AND DATE(pi.creation_date) >= ? ";
+    $params[] = $dateFrom;
+    $types .= "s";
+}
+if (!empty($dateTo)) {
+    $where .= " AND DATE(pi.creation_date) <= ? ";
+    $params[] = $dateTo;
+    $types .= "s";
+}
+if (!empty($yearFilter)) {
+    $where .= " AND YEAR(pi.creation_date) = ? ";
+    $params[] = $yearFilter;
+    $types .= "s";
+}
+
+// Active/Expired Logic
+if (!empty($expiryFilter)) {
+    if ($expiryFilter === 'Expired') {
+        $where .= " AND (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = pi.project_no) < CURDATE() ";
+    } elseif ($expiryFilter === 'Active') {
+        $where .= " AND ( (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = pi.project_no) >= CURDATE() OR (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = pi.project_no) IS NULL ) ";
+    }
+}
+
+// Certificate Logic
+if (!empty($certificateFilter)) {
+    if ($certificateFilter === 'Pending') {
+        $where .= " AND pi.checklist_status = 'Created' AND pi.report_status = 'Generated' AND pi.review_status = 'Completed' AND pi.certificatestatus = 'Pending' ";
+    } elseif ($certificateFilter === 'Completed') {
+        $where .= " AND pi.certificatestatus = 'Completed' ";
+    }
+}
+
+// Certificate Type Logic
+if (!empty($certTypeFilter)) {
+    $certTableMap = [
+        'Healthcheck' => 'crane_health_check_certificate',
+        'Loadtestwithload' => 'loadtest_certificate',
+        'Mobile' => 'mobile_crane_loadtest',
+        'WithLoadTest' => 'withload',
+        'Lifting' => 'lifting_gear_certificates',
+        'MPI' => 'mpi_certificates',
+        'EddyCurrent' => 'eddy_current_inspection',
+        'LiquidPenetrantInspection' => 'liquid_penetrant_inspection',
+        'RockTest' => 'rocking_test_certificate',
+        'LMI' => 'lmi_certificates'
+    ];
+
+    if ($certTypeFilter === 'none') {
+        $where .= " AND NOT EXISTS (
+            SELECT 1 FROM crane_health_check_certificate WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM loadtest_certificate WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM mobile_crane_loadtest WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM withload WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM lifting_gear_certificates WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM mpi_certificates WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM eddy_current_inspection WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM liquid_penetrant_inspection WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM rocking_test_certificate WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM lmi_certificates WHERE project_no = pi.project_no
+        ) ";
+    } elseif (isset($certTableMap[$certTypeFilter])) {
+        $tbl = $certTableMap[$certTypeFilter];
+        $where .= " AND EXISTS (SELECT 1 FROM {$tbl} cert WHERE cert.project_no = pi.project_no) ";
+    }
+}
+
+// Global Search
+if (!empty($search)) {
+    $searchWildcard = "%{$search}%";
+    $where .= " AND (
+        pi.project_no LIKE ? OR
+        pi.customer_name LIKE ? OR
+        pi.inspector_name LIKE ? OR
+        pi.equipment_id LIKE ? OR
+        pi.equipment_location LIKE ? OR
+        pi.checklist_type LIKE ? OR
+        pi.project_status LIKE ? OR
+        ci.sticker_no LIKE ?
+    ) ";
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $params[] = $searchWildcard;
+    $types .= "ssssssss";
+}
+
+// Query
+$sql = "SELECT pi.*, ci.sticker_no, 
+       (SELECT MAX(next_inspection_due_date) FROM reports r WHERE r.project_no = pi.project_no) as due_date
+       $sqlBase $where ORDER BY pi.creation_date DESC";
+
+$stmt = $conn->prepare($sql);
+if(!empty($params)){
+    $stmt->bind_param($types, ...$params);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+
+$rows = [];
+$projectIds = [];
+while($r = $result->fetch_assoc()) {
+    $rows[] = $r;
+    $projectIds[] = $r['project_no'];
+}
+
+$projectCertificates = [];
+if (!empty($projectIds)) {
+    $idsStr = implode(',', array_map('intval', $projectIds));
+    $certSql = "
+        SELECT project_no, 'Healthcheck' as type FROM crane_health_check_certificate WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'Loadtestwithload' FROM loadtest_certificate WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'Mobile' FROM mobile_crane_loadtest WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'WithLoadTest' FROM withload WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'Lifting' FROM lifting_gear_certificates WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'MPI' FROM mpi_certificates WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'EddyCurrent' FROM eddy_current_inspection WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'LiquidPenetrantInspection' FROM liquid_penetrant_inspection WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'RockTest' FROM rocking_test_certificate WHERE project_no IN ($idsStr)
+        UNION ALL SELECT project_no, 'LMI' FROM lmi_certificates WHERE project_no IN ($idsStr)
+    ";
+    $certRes = $conn->query($certSql);
+    if ($certRes) {
+        while($cRow = $certRes->fetch_assoc()){
+            $projectCertificates[$cRow['project_no']][] = $cRow['type'];
+        }
+    }
+}
+
+// Headers
+header('Content-Type: text/csv');
+header('Content-Disposition: attachment; filename="cancelled_jobs_'.date('Y-m-d_H-i-s').'.csv"');
+
+$output = fopen('php://output', 'w');
+fputcsv($output, array('Project No', 'Date', 'Equipment ID', 'Sticker No', 'Location', 'Customer', 'Inspector', 'Project Status', 'Expiry Status', 'Checklist Name', 'Equipment Type', 'Checklist Status', 'Report Status', 'Review Status', 'Certificate Status', 'Certificate Type', 'Inspection Type'));
+
+foreach($rows as $row) {
+    
+    // Determine expiry string
+    $expiryStr = 'Active';
+    if ($row['due_date']) {
+        if (strtotime($row['due_date']) < time()) {
+             $expiryStr = 'Expired';
+        }
+    }
+
+    $certTypeStr = "";
+    $cTypes = $projectCertificates[$row['project_no']] ?? [];
+    if(!empty($cTypes)){
+        $formattedTypes = [];
+        foreach(array_unique($cTypes) as $t){
+             $label = ucfirst($t);
+             if(strtolower($t) == 'loadtestwithload') $label = 'Crane Without Load Test';
+             if(strtolower($t) == 'mobile') $label = 'Crane With Load Test';
+             $formattedTypes[] = $label;
+        }
+        $certTypeStr = implode(', ', $formattedTypes);
+    } else {
+        $certTypeStr = 'N/A';
+    }
+
+    fputcsv($output, array(
+        $row['project_no'],
+        date('d-m-Y', strtotime($row['creation_date'])),
+        $row['equipment_id'],
+        $row['sticker_no'],
+        $row['equipment_location'],
+        $row['customer_name'],
+        $row['inspector_name'],
+        $row['project_status'],
+        $expiryStr,
+        ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
+        $row['equipment_type'],
+        $row['checklist_status'],
+        $row['report_status'],
+        $row['review_status'],
+        $row['certificatestatus'],
+        $certTypeStr,
+        ucwords(str_replace(['-', '_'], ' ', $row['inspection_type'] ?? 'N/A'))
+    ));
+}
+
+fclose($output);
+exit();
+?>

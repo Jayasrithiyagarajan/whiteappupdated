@@ -20,6 +20,19 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['role'])) {
 $role = $_SESSION['role'];
 $username = $_SESSION['username'];
 $user_id = $_SESSION['user_id']; // Add this line
+
+// --- Security Rule: Prevent customers from accessing restricted modules ---
+if ($role === 'customer') {
+    $restricted_paths = ['/job/', '/inspector/', '/user/', '/profileupdate/', '/sticker/', '/payment/', '/setup/'];
+    $current_uri = $_SERVER['REQUEST_URI'];
+    foreach ($restricted_paths as $restricted_path) {
+        if (strpos($current_uri, $restricted_path) !== false) {
+            header("Location: " . $url . "file/logout.php");
+            exit();
+        }
+    }
+}
+
 // --- Fetch Profile Photo and User Details ---
 $profile_photo = $url . 'assets/img/avatar.png'; // Global default
 
@@ -181,6 +194,7 @@ if ($role == 'customer') {
                         </div>
                         <!-- End Main Header User -->
 
+                        <?php if ($role !== 'customer'): ?>
                         <!-- Main Header Menu -->
                         <div class="main-header-menu d-block d-lg-none">
                            <div class="header-toogle-menu">
@@ -189,6 +203,7 @@ if ($role == 'customer') {
                            </div>
                         </div>
                         <!-- End Main Header Menu -->
+                        <?php endif; ?>
                      </div>
                      <!-- End Header Left -->
                   </div>

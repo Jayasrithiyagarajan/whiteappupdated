@@ -179,8 +179,12 @@ foreach ($colors as $letter => $color) {
                 </select>
             </div>
             <div class="filter-item">
-                <label>Date</label>
-                <input type="date" id="filter-date" class="form-control">
+                <label>From Date</label>
+                <input type="date" id="filter-date-from" class="form-control">
+            </div>
+            <div class="filter-item">
+                <label>To Date</label>
+                <input type="date" id="filter-date-to" class="form-control">
             </div>
             <div class="filter-item">
                 <label>Client</label>
@@ -272,7 +276,8 @@ $(function () {
             type: "POST",
             data: function(d) {
                 d.filter_inspector = $('#filter-inspector').val();
-                d.filter_date = $('#filter-date').val();
+                d.filter_date_from = $('#filter-date-from').val();
+                d.filter_date_to = $('#filter-date-to').val();
                 d.filter_client = $('#filter-client').val();
                 d.filter_status = $('#filter-status').val();
                 d.filter_year = $('#filter-year').val();
@@ -291,7 +296,16 @@ $(function () {
                 text: '<i class="fa fa-file-excel me-1"></i> Export Excel',
                 className: 'btn btn-primary',
                 action: function () {
-                    window.location.href = 'export_loadtest_certificates_excel.php';
+                    var params = new URLSearchParams({
+                        filter_inspector: $('#filter-inspector').val() || '',
+                        filter_date_from: $('#filter-date-from').val() || '',
+                        filter_date_to: $('#filter-date-to').val() || '',
+                        filter_client: $('#filter-client').val() || '',
+                        filter_status: $('#filter-status').val() || '',
+                        filter_year: $('#filter-year').val() || '',
+                        search: $('#customSearch').val() || ''
+                    });
+                    window.location.href = 'export_loadtest_certificates_excel.php?' + params.toString();
                 }
             }
         ],

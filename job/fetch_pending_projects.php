@@ -19,6 +19,7 @@ $dateTo          = $_POST['filter_date_to'] ?? '';
 $yearFilter      = $_POST['filter_year'] ?? '';
 $expiryFilter    = $_POST['filter_expiry_status'] ?? '';
 $certificateFilter = $_POST['filter_certificate'] ?? '';
+$certTypeFilter = $_POST['filter_cert_type'] ?? '';
 // Note: We force 'Pending' status, so no status filter needed.
 
 // Columns mapping
@@ -104,6 +105,40 @@ if (!empty($certificateFilter)) {
         $where .= " AND pi.checklist_status = 'Created' AND pi.report_status = 'Generated' AND pi.review_status = 'Completed' AND pi.certificatestatus = 'Pending' ";
     } elseif ($certificateFilter === 'Completed') {
         $where .= " AND pi.certificatestatus = 'Completed' ";
+    }
+}
+
+// Certificate Type Logic
+if (!empty($certTypeFilter)) {
+    $certTableMap = [
+        'Healthcheck' => 'crane_health_check_certificate',
+        'Loadtestwithload' => 'loadtest_certificate',
+        'Mobile' => 'mobile_crane_loadtest',
+        'WithLoadTest' => 'withload',
+        'Lifting' => 'lifting_gear_certificates',
+        'MPI' => 'mpi_certificates',
+        'EddyCurrent' => 'eddy_current_inspection',
+        'LiquidPenetrantInspection' => 'liquid_penetrant_inspection',
+        'RockTest' => 'rocking_test_certificate',
+        'LMI' => 'lmi_certificates'
+    ];
+
+    if ($certTypeFilter === 'none') {
+        $where .= " AND NOT EXISTS (
+            SELECT 1 FROM crane_health_check_certificate WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM loadtest_certificate WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM mobile_crane_loadtest WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM withload WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM lifting_gear_certificates WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM mpi_certificates WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM eddy_current_inspection WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM liquid_penetrant_inspection WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM rocking_test_certificate WHERE project_no = pi.project_no
+            UNION ALL SELECT 1 FROM lmi_certificates WHERE project_no = pi.project_no
+        ) ";
+    } elseif (isset($certTableMap[$certTypeFilter])) {
+        $tbl = $certTableMap[$certTypeFilter];
+        $where .= " AND EXISTS (SELECT 1 FROM {$tbl} cert WHERE cert.project_no = pi.project_no) ";
     }
 }
 
@@ -310,10 +345,11 @@ foreach ($projects as $row) {
     // Action Details
     $detailsBtn = "<a href='job-details.php?id={$row['project_no']}' target='_blank'><button type='button' class='btn btn-sm' style='padding: 6px 9px; font-size: 11px;'>Details <i class='icofont-arrow-right'></i></button></a>";
 
-    // Delete Button (Admin)
-    $deleteBtn = "";
+    // Cancel & Delete Buttons (Admin)
+    $actionBtns = "";
     if ($role === 'admin') {
-         $deleteBtn = "<button type='button' class='text-danger' onclick='deleteProject(\"{$row['project_no']}\")' style='padding: 6px 9px; font-size: 14px; border:none; background:none;'><i class='icofont-trash'></i></button>";
+         $actionBtns = "<button type='button' class='text-warning mr-1' onclick='cancelProject(\"{$row['project_no']}\")' style='padding: 6px 9px; font-size: 14px; border:none; background:none;' title='Cancel Project'><i class='icofont-ban'></i></button>";
+         $actionBtns .= "<button type='button' class='text-danger' onclick='deleteProject(\"{$row['project_no']}\")' style='padding: 6px 9px; font-size: 14px; border:none; background:none;' title='Delete Project'><i class='icofont-trash'></i></button>";
     }
 
     // row data
@@ -328,7 +364,7 @@ foreach ($projects as $row) {
         $row['customer_name'],
         $row['inspector_name'],
         $statusBtn . $expiryBadge,
-        $deleteBtn,
+        $actionBtns,
         ucwords(str_replace(['-', '_'], ' ', $row['checklist_type'])),
         $row['equipment_type'],
         $row['checklist_status'],

@@ -738,6 +738,23 @@ if (!$logged_in_user) {
                 </select>
             </div>
             <div class="filter-item">
+                <label>Certificate Type</label>
+                <select id="filter-cert-type">
+                    <option value="">All Certificate Types</option>
+                    <option value="Healthcheck">Offshore Crane Health Check</option>
+                    <option value="Loadtestwithload">Crane Without Load Test</option>
+                    <option value="Mobile">Crane With Load Test</option>
+                    <option value="WithLoadTest">Load Test</option>
+                    <option value="Lifting">Below the Hook Lifting Gears</option>
+                    <option value="MPI">MPI</option>
+                    <option value="EddyCurrent">Eddy Current</option>
+                    <option value="LiquidPenetrantInspection">LPI</option>
+                    <option value="RockTest">RT</option>
+                    <option value="LMI">LMI</option>
+                    <option value="none">No Certificate</option>
+                </select>
+            </div>
+            <div class="filter-item">
                 <button class="btn-clear" onclick="clearFilters()"><i class="icofont-close"></i> Clear Filters</button>
             </div>
         </div>
@@ -826,6 +843,7 @@ $(document).ready(function() {
                 d.status_filter = $('#status-filter').val();
                 d.filter_expiry_status = $('#filter-expiry-status').val();
                 d.filter_certificate = $('#filter-certificate').val();
+                d.filter_cert_type = $('#filter-cert-type').val();
             }
         },
 
@@ -843,6 +861,7 @@ $(document).ready(function() {
                         status_filter: $('#status-filter').val(),
                         filter_expiry_status: $('#filter-expiry-status').val(),
                         filter_certificate: $('#filter-certificate').val(),
+                        filter_cert_type: $('#filter-cert-type').val(),
                         search_value: dt.search()
                     });
                     window.location.href = 'export_overall.php?' + params;
@@ -866,7 +885,7 @@ $(document).ready(function() {
     loadFilters();
     loadStats();
 
-    $('#filter-inspector, #filter-client, #filter-date-from, #filter-date-to, #filter-year, #status-filter, #filter-expiry-status, #filter-certificate').on('change', function() {
+    $('#filter-inspector, #filter-client, #filter-date-from, #filter-date-to, #filter-year, #status-filter, #filter-expiry-status, #filter-certificate, #filter-cert-type').on('change', function() {
         table.ajax.reload();
         loadStats();
     });
@@ -914,7 +933,10 @@ function loadStats(){
             filter_date_from: $('#filter-date-from').val(),
             filter_date_to: $('#filter-date-to').val(),
             filter_year: $('#filter-year').val(),
-            filter_expiry_status: $('#filter-expiry-status').val()
+            status_filter: $('#status-filter').val(),
+            filter_expiry_status: $('#filter-expiry-status').val(),
+            filter_certificate: $('#filter-certificate').val(),
+            filter_cert_type: $('#filter-cert-type').val()
         },
         success: function(res){
             $('#stats-total, #hero-stats-total').text(res.total);
@@ -933,6 +955,7 @@ function clearFilters(){
     $('#status-filter').val('');
     $('#filter-expiry-status').val('');
     $('#filter-certificate').val('');
+    $('#filter-cert-type').val('');
     $('#job-search').val('');
 
     table.search('');

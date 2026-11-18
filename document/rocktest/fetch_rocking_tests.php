@@ -1,14 +1,26 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 include_once('../../file/config.php');
 
-function getInitialColor($name) {
-    $colors = [
-        '#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#c026d3',
-        '#0891b2', '#15803d', '#b45309', '#be123c', '#4338ca'
-    ];
-    $hash = crc32($name ?? 'A');
-    return $colors[$hash % count($colors)];
+if (!function_exists('getInitialColor')) {
+    function getInitialColor($name) {
+        $colors = [
+            '#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#c026d3',
+            '#0891b2', '#15803d', '#b45309', '#be123c', '#4338ca'
+        ];
+        $hash = crc32($name ?? 'A');
+        return $colors[$hash % count($colors)];
+    }
+}
+
+if (!isset($_SESSION['username'])) {
+    echo json_encode([
+        "draw" => 0,
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "data" => []
+    ]);
+    exit;
 }
 
 $role     = $_SESSION['role'] ?? '';
@@ -17,57 +29,50 @@ $username = $_SESSION['username'] ?? '';
 /* ===============================
    DataTables Parameters
 ================================ */
-$draw   = intval($_POST['draw'] ?? 1);
-$start  = intval($_POST['start'] ?? 0);
-$length = intval($_POST['length'] ?? 10);
-$search = $_POST['search']['value'] ?? '';
+$draw   = intval($_POST['draw'] ?? $_GET['draw'] ?? 1);
+$start  = intval($_POST['start'] ?? $_GET['start'] ?? 0);
+$length = intval($_POST['length'] ?? $_GET['length'] ?? 10);
+$search = trim($_POST['search']['value'] ?? $_POST['search'] ?? $_GET['search']['value'] ?? $_GET['search'] ?? "");
 
-$orderColumnIndex = $_POST['order'][0]['column'] ?? 7;
-$orderDir         = $_POST['order'][0]['dir'] ?? 'desc';
-
-/* ===============================
-   Column mapping (IMPORTANT)
-================================ */
-$columns = [
-    0 => 'rt.project_no',
-    1 => 'rt.certificate_no',
-    2 => 'rt.inspected_item_type',
-    3 => 'rt.identification_no',
-    4 => 'rt.inspector',
-    5 => 'rt.customer_name',
-    6 => 'rt.location',
-    7 => 'rt.this_exam_date'
-];
-
-$orderColumn = $columns[$orderColumnIndex] ?? 'rt.this_exam_date';
-
-/* 🔥 FILTER PARAMETERS */
-$filterInspector = $_POST['filter_inspector'] ?? '';
-$filterDate = $_POST['filter_date'] ?? '';
-$filterClient = $_POST['filter_client'] ?? '';
-$filterStatus = $_POST['filter_status'] ?? '';
-$filterYear = $_POST['filter_year'] ?? '';
+/* FILTER PARAMETERS */
+$filterInspector = $_POST['filter_inspector'] ?? $_GET['filter_inspector'] ?? '';
+$filterDate      = $_POST['filter_date'] ?? $_GET['filter_date'] ?? '';
+$filterDateFrom  = $_POST['filter_date_from'] ?? $_GET['filter_date_from'] ?? '';
+$filterDateTo    = $_POST['filter_date_to'] ?? $_GET['filter_date_to'] ?? '';
+$filterClient    = $_POST['filter_client'] ?? $_GET['filter_client'] ?? '';
+$filterStatus    = $_POST['filter_status'] ?? $_GET['filter_status'] ?? '';
+$filterYear      = $_POST['filter_year'] ?? $_GET['filter_year'] ?? '';
+$isExport        = (isset($_POST['export']) && $_POST['export'] === 'true') || (isset($_GET['export']) && $_GET['export'] === 'true');
 
 /* ===============================
-   Role-based WHERE clause
+   WHERE clause
  ================================ */
 $where = " WHERE 1=1 ";
 
 if ($role === 'inspector') {
-    $where .= " AND rt.inspector = '" . $conn->real_escape_string($username) . "'";
+    $where .= " AND rt.inspector = '" . mysqli_real_escape_string($conn, $username) . "'";
+}
+
+$dateField = "COALESCE(NULLIF(rt.this_exam_date, '0000-00-00'), NULLIF(rt.inspection_date, '0000-00-00'), NULLIF(DATE(rt.created_at), '0000-00-00'))";
+
+if (!empty($filterDateFrom)) {
+    $where .= " AND $dateField >= '" . mysqli_real_escape_string($conn, $filterDateFrom) . "' ";
+}
+if (!empty($filterDateTo)) {
+    $where .= " AND $dateField <= '" . mysqli_real_escape_string($conn, $filterDateTo) . "' ";
+}
+if (empty($filterDateFrom) && empty($filterDateTo) && !empty($filterDate)) {
+    $where .= " AND $dateField = '" . mysqli_real_escape_string($conn, $filterDate) . "' ";
 }
 
 if (!empty($filterInspector)) {
-    $where .= " AND rt.inspector = '" . $conn->real_escape_string($filterInspector) . "'";
-}
-if (!empty($filterDate)) {
-    $where .= " AND DATE(rt.this_exam_date) = '" . $conn->real_escape_string($filterDate) . "'";
+    $where .= " AND rt.inspector = '" . mysqli_real_escape_string($conn, $filterInspector) . "' ";
 }
 if (!empty($filterClient)) {
-    $where .= " AND rt.customer_name = '" . $conn->real_escape_string($filterClient) . "'";
+    $where .= " AND rt.customer_name = '" . mysqli_real_escape_string($conn, $filterClient) . "' ";
 }
 if (!empty($filterYear)) {
-    $where .= " AND YEAR(rt.this_exam_date) = '" . $conn->real_escape_string($filterYear) . "'";
+    $where .= " AND YEAR($dateField) = '" . mysqli_real_escape_string($conn, $filterYear) . "' ";
 }
 
 if ($filterStatus === 'Active') {
@@ -79,22 +84,26 @@ if ($filterStatus === 'Active') {
 /* ===============================
    Search (Global)
  ================================ */
-if (!empty($search)) {
-    $safe = $conn->real_escape_string($search);
-    $where .= " AND (
-        rt.project_no LIKE '%$safe%' OR
-        rt.certificate_no LIKE '%$safe%' OR
-        rt.inspected_item_type LIKE '%$safe%' OR
-        rt.identification_no LIKE '%$safe%' OR
-        rt.inspector LIKE '%$safe%' OR
-        rt.customer_name LIKE '%$safe%' OR
-        rt.location LIKE '%$safe%' OR
-        DATE_FORMAT(rt.this_exam_date,'%Y-%m-%d') LIKE '%$safe%'
-    )";
+if ($search !== "") {
+    $safe = mysqli_real_escape_string($conn, $search);
+    $keywords = explode(" ", $safe);
+    foreach ($keywords as $word) {
+        $where .= " AND (
+            rt.project_no LIKE '%$word%' OR
+            rt.certificate_no LIKE '%$word%' OR
+            rt.inspected_item_type LIKE '%$word%' OR
+            rt.identification_no LIKE '%$word%' OR
+            rt.inspector LIKE '%$word%' OR
+            rt.customer_name LIKE '%$word%' OR
+            rt.location LIKE '%$word%' OR
+            DATE_FORMAT($dateField,'%d-%m-%Y') LIKE '%$word%' OR
+            DATE_FORMAT($dateField,'%Y-%m-%d') LIKE '%$word%'
+        )";
+    }
 }
 
 /* ===============================
-   KPI COUNTS (FAST & OPTIMIZED)
+   KPI COUNTS
  ================================ */
 $kpiSql = "
 SELECT
@@ -116,6 +125,26 @@ $filteredRecordsQuery = "SELECT COUNT(*) AS cnt FROM rocking_test_certificate rt
 $filteredRecords = $conn->query($filteredRecordsQuery)->fetch_assoc()['cnt'];
 
 /* ===============================
+   Column mapping & Sorting
+ ================================ */
+$orderColumnIndex = intval($_POST['order'][0]['column'] ?? 0);
+$orderDir         = (($_POST['order'][0]['dir'] ?? 'desc') === 'asc') ? 'ASC' : 'DESC';
+
+$columns = [
+    0 => 'CAST(SUBSTRING(rt.project_no, 5) AS UNSIGNED)',
+    1 => 'rt.certificate_no',
+    2 => 'rt.inspected_item_type',
+    3 => 'rt.identification_no',
+    4 => 'rt.inspector',
+    5 => 'rt.customer_name',
+    6 => 'rt.location',
+    7 => $dateField,
+    8 => 'rt.next_exam_date'
+];
+
+$orderColumn = $columns[$orderColumnIndex] ?? 'CAST(SUBSTRING(rt.project_no, 5) AS UNSIGNED)';
+
+/* ===============================
    Main Data Query
  ================================ */
 $dataSql = "
@@ -126,10 +155,60 @@ FROM rocking_test_certificate rt
 LEFT JOIN project_info pi ON pi.project_no = rt.project_no
 $where
 ORDER BY $orderColumn $orderDir
-LIMIT $start, $length
 ";
 
+if (!$isExport) {
+    $dataSql .= " LIMIT $start, $length";
+}
+
 $result = $conn->query($dataSql);
+
+if (!$result) {
+    if ($isExport) { die('Query Error: ' . $conn->error); }
+    header('Content-Type: application/json');
+    echo json_encode([
+        'draw' => $draw,
+        'recordsTotal' => 0,
+        'recordsFiltered' => 0,
+        'kpi' => $kpiRow,
+        'data' => [],
+        'error' => $conn->error
+    ]);
+    exit;
+}
+
+/* ===============================
+   Export CSV
+ ================================ */
+if ($isExport) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="rocking_test_certificates_'.date('Ymd_His').'.csv"');
+    $out = fopen('php://output','w');
+    fputcsv($out, ['Project No','Certificate No','Item Type','Identification No','Inspector','Client','Location','Inspection Date','Status']);
+    while ($row = $result->fetch_assoc()) {
+        $rawDate = (!empty($row['this_exam_date']) && $row['this_exam_date'] !== '0000-00-00') ? $row['this_exam_date'] : ((!empty($row['inspection_date']) && $row['inspection_date'] !== '0000-00-00') ? $row['inspection_date'] : ($row['created_at'] ?? ''));
+        $dispDate = (!empty($rawDate) && $rawDate !== '0000-00-00') ? date('d-m-Y', strtotime($rawDate)) : '-';
+
+        $status = 'Active';
+        if (!empty($row['next_exam_date']) && $row['next_exam_date'] != '0000-00-00' && strtotime($row['next_exam_date']) < time()) {
+            $status = 'Expired';
+        }
+
+        fputcsv($out, [
+            $row['project_no'],
+            $row['certificate_no'],
+            $row['inspected_item_type'],
+            $row['identification_no'],
+            $row['inspector'],
+            $row['customer_name'],
+            $row['location'],
+            $dispDate,
+            $status
+        ]);
+    }
+    fclose($out);
+    exit;
+}
 
 $data = [];
 
@@ -146,10 +225,13 @@ while ($row = $result->fetch_assoc()) {
         $badgeClass = 'badge-danger';
     }
 
+    $rawDate = (!empty($row['this_exam_date']) && $row['this_exam_date'] !== '0000-00-00') ? $row['this_exam_date'] : ((!empty($row['inspection_date']) && $row['inspection_date'] !== '0000-00-00') ? $row['inspection_date'] : ($row['created_at'] ?? ''));
+    $dispDate = (!empty($rawDate) && $rawDate !== '0000-00-00') ? date('d-m-Y', strtotime($rawDate)) : '-';
+
     /* Action buttons */
     $actions = '
         <div class="action-icons">
-            <a href="view.php?project_no='.$row['project_no'].'" class="view-icon" title="View">
+            <a href="view.php?project_no='.$row['project_no'].'" class="view-icon" title="View" target="_blank">
                 <i class="fa fa-eye"></i>
             </a>
             <a href="download.php?project_no='.$row['project_no'].'" class="download-icon" title="Download">
@@ -189,7 +271,7 @@ while ($row = $result->fetch_assoc()) {
             </div>',
         "customer_name"         => $row['customer_name'],
         "location"              => $row['location'],
-        "this_exam_date"        => date('d-m-Y', strtotime($row['this_exam_date'])),
+        "this_exam_date"        => $dispDate,
         "status"                => "<span class='status-badge $badgeClass'>$status</span>",
         "action"                => $actions
     ];
