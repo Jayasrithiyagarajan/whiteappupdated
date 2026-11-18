@@ -2,7 +2,7 @@
 /**
  * Delete ONE uploaded document of a job (called from job-details.php).
  * POST: id (documents.id), slot (1-10), project_no
- * Returns JSON {success, message}. Only inspectors (the role that uploads) may delete.
+ * Returns JSON {success, message}. Only inspectors and admins may delete.
  */
 header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 0);
@@ -15,7 +15,7 @@ function out(array $p, int $code = 200) { http_response_code($code); echo json_e
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') out(['success' => false, 'message' => 'Invalid request.'], 405);
 if (empty($_SESSION['username'])) out(['success' => false, 'expired' => true, 'message' => 'Your login session has expired. Please log in again.'], 401);
-if (($_SESSION['role'] ?? '') !== 'inspector') out(['success' => false, 'message' => 'Only inspectors can delete uploaded documents.'], 403);
+if (!in_array($_SESSION['role'] ?? '', ['inspector', 'admin'], true)) out(['success' => false, 'message' => 'Only inspectors and admins can delete uploaded documents.'], 403);
 
 $id         = (int)($_POST['id'] ?? 0);
 $slot       = (int)($_POST['slot'] ?? 0);

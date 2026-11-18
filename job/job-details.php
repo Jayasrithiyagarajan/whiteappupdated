@@ -779,7 +779,7 @@ endif; ?>
     <div class="invoice invoice-form">
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3" style="gap: 10px;">
         <div class="black bold font-17">Uploaded Documents:</div>
-        <?php if ($userRole === 'inspector'): ?>
+        <?php if (in_array($userRole, ['inspector', 'admin'], true)): ?>
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#uploadModal" style="white-space: nowrap;">
                 <i class="fas fa-upload mr-2"></i> Upload Documents
             </button>
@@ -846,7 +846,7 @@ foreach ($documents as $doc) {
         <a href="<?php echo $filePath; ?>" target="_blank" class="text-secondary">
     <i class="fas fa-eye"></i>
 </a>
-        <?php if ($userRole === 'inspector'): ?>
+        <?php if (in_array($userRole, ['inspector', 'admin'], true)): ?>
         <a href="#" class="text-danger delete-doc-btn" title="Delete this document"
            data-id="<?php echo (int)$doc['id']; ?>" data-slot="<?php echo $i; ?>"
            data-project="<?php echo htmlspecialchars($doc['project_no']); ?>" data-name="<?php echo $fileName; ?>">

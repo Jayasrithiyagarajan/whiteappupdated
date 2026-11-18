@@ -6,6 +6,16 @@ $docNamesPosted = (isset($_POST['doc_names']) && is_array($_POST['doc_names'])) 
 
 header('Content-Type: application/json');
 
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+if (empty($_SESSION['username'])) {
+    echo json_encode(['success' => false, 'message' => 'Your login session has expired. Please log in again.']);
+    exit;
+}
+if (!in_array($_SESSION['role'] ?? '', ['inspector', 'admin'], true)) {
+    echo json_encode(['success' => false, 'message' => 'Only inspectors and admins can upload documents.']);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
     exit;
@@ -18,7 +28,7 @@ if (empty($_POST['project_no'])) {
 }
 
 $project_no = $_POST['project_no'];
-$uploaded_by = $_POST['uploaded_by'] ?? 'Unknown';
+$uploaded_by = $_SESSION['role'] ?? ($_POST['uploaded_by'] ?? 'Unknown');
 $maxFileSize = 5 * 1024 * 1024; // 5MB
 $allowedTypes = [
     'image/jpeg',
